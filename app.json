@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Pictionary",
+    "slug": "Pictionary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/DeepTimeIcon.png",
+    "splash": {
+      "image": "./assets/DeepTimeSplash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f4c82"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "net.danielwind.pictionary"
+    }
+  }
+}
