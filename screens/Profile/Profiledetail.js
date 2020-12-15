@@ -10,7 +10,6 @@ import NavBlackIcon from "../../components/NavBlackIcon"
 import Post from "../../components/Post"
 import { Container, Header, Content, Button, Icon, Text, Row } from "native-base"
 import constants from "../../constants"
-import MainScreen from "./myPost.js/MainScreen"
 const ProfileHeader2 = styled.View`
   width: ${constants.width / 1.7};
   flex: 1;
@@ -62,6 +61,15 @@ const Stat2 = styled.View`
   margin-bottom: 10; */
   /* background-color: rgba(255, 255, 255, 1); */
 `
+const LineView = styled.View`
+  /* margin-bottom: 15px; */
+  /* margin-top: 0px; */
+  width: ${constants.width / 1};
+  height: 0.5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: grey;
+`
 const Stat3 = styled.View`
   flex-direction: row;
   flex: 1;
@@ -79,7 +87,7 @@ const AdView2 = styled.View`
   align-items: flex-start;
   width: ${constants.width / 1.1};
   height: ${constants.height / 9.5};
-  border-width: 1;
+  border-width: 0;
   border-color: rgba(196, 196, 196, 1);
 `
 const QrView = styled.View`
@@ -125,11 +133,11 @@ const Setting = styled.View`
   align-items: flex-end;
 `
 const ProfileMeta2 = styled.View``
-const BlueLine = styled.View`
+const BlueView = styled.View`
   background-color: rgba(34, 76, 126, 1);
   height: 2;
 `
-const Line = styled.View`
+const View = styled.View`
   background-color: rgba(237, 237, 239, 1);
   height: 1;
 `
@@ -171,7 +179,9 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
     isSetModalVisible(!isModalVisible)
     navigation.navigate("QRcode")
   }
-  useEffect(() => {}, [])
+  useEffect(() => {
+    // console.log(data.me.posts[0].id, "000000")
+  }, [])
   return (
     <>
       {/* <Header hasTabs></Header> */}
@@ -240,12 +250,14 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                 </AdView>
               </Box>
             </ProfileBox>
+            <LineView />
             <AdView2>
               <Bold3>{data.me.bio}</Bold3>
             </AdView2>
+            <LineView />
             <AdView>
               <Stat5>
-                <Bold2>게시물</Bold2>
+                <Bold2>게시물 {data.me.posts.length}</Bold2>
               </Stat5>
               <Stat5>
                 <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
@@ -254,22 +266,34 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               </Stat5>
               <Stat5>
                 <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
-                  <Bold2>팔로우 {data.me.followingCount}</Bold2>
+                  <Bold2>팔로잉 {data.me.followingCount}</Bold2>
                 </TouchableOpacity>
               </Stat5>
             </AdView>
           </ProfileHeader>
 
-          <Line />
+          <View />
           <PostView>
             {data.me.posts.map((list) => (
               <TouchableOpacity
+                key={list.id}
                 onPress={() => {
-                  navigation.navigate("DetailScreen", { items: list })
+                  navigation.navigate("MyPostlScreen", { item: list.id })
                 }}
               >
-                <MainScreen key={list.id} item={list} />
+                <Image
+                  key={list.id}
+                  style={{
+                    height: constants.width / 3.5,
+                    width: constants.width / 3.5,
+                    marginLeft: 10,
+                    marginTop: 10,
+                    borderRadius: 10,
+                  }}
+                  source={{ uri: list.files[0].url }}
+                />
               </TouchableOpacity>
+              //<MainScreen key={list.id} item={list} />
             ))}
           </PostView>
         </MainView>

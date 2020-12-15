@@ -6,9 +6,10 @@ import Loader from "../../components/Loader"
 import Post from "../../components/Post"
 
 import { useQuery, useMutation } from "@apollo/react-hooks"
-import FeedPresenter from "./FeedPresenter"
 import constants from "../../constants"
 import Icon from "../../components/Icon"
+import AuthButton from "../../components/AuthButton"
+import LastWidth from "../../components/LastWidth"
 
 export const FEED_ALL_QUERY = gql`
   query seeAllFeed($first: Int!) {
@@ -142,16 +143,16 @@ export default () => {
       alert(realText[1])
     }
   }
-  const refresh = async () => {
-    try {
-      setRefreshing(true)
-      await feedRefetch()
-    } catch (e) {
-      console.log(e)
-    } finally {
-      setRefreshing(false)
-    }
-  }
+  // const refresh = async () => {
+  //   try {
+  //     setRefreshing(true)
+  //     await feedRefetch()
+  //   } catch (e) {
+  //     console.log(e)
+  //   } finally {
+  //     setRefreshing(false)
+  //   }
+  // }
   return (
     <>
       <TopView>
@@ -163,11 +164,14 @@ export default () => {
           />
         </TouchableOpacity>
       </TopView>
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}>
-        {feedLoading ? (
+      {/* <ScrollView> */}
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={feedRefetch} />}
+      >
+        {/* {feedLoading ? (
           <Loader />
-        ) : (
-          feedData &&
+        ) : ( */}
+        {feedData &&
           feedData.seeAllFeed &&
           feedData.seeAllFeed.map((post) => (
             <Post
@@ -180,9 +184,21 @@ export default () => {
               caption={post.caption}
               comments={post.comments}
               isLiked={post.isLiked}
+              createdAt={post.createdAt}
+              feedRefetch={feedRefetch}
             />
-          ))
-        )}
+          ))}
+        <TopView>
+          <AuthButton
+            color="white"
+            onPress={() => {
+              setVariables({ first: variables.first + feedTerm })
+            }}
+            text="게시물 20개 더보기"
+            paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+            // widthRatio={LastWidth(1.7, 2.5, 40)}
+          />
+        </TopView>
       </ScrollView>
     </>
   )

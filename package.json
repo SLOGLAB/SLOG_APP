@@ -27,6 +27,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-fs": "^2.16.6",
     "react-native-paper": "^4.0.1",
+    
     "react-native-picker-select": "^7.0.0",
     "react-native-shapes": "^0.1.0",
     "react-native-svg": "12.1.0",

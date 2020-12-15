@@ -19,15 +19,12 @@ import { Camera } from "expo-camera"
 import * as tf from "@tensorflow/tfjs"
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { cameraWithTensors } from "@tensorflow/tfjs-react-native"
+import * as cocossd from "@tensorflow-models/coco-ssd"
 
 //disable yellow warnings on EXPO client!
 console.disableYellowBox = true
 
 export default function Apps() {
-  const [word, setWord] = useState("")
-  const [translation, setTranslation] = useState("")
-  const [language, setLanguage] = useState("he")
-  const [translationAvailable, setTranslationAvailable] = useState(true)
   const [predictionFound, setPredictionFound] = useState(false)
   const [hasPermission, setHasPermission] = useState(null)
 
@@ -36,14 +33,6 @@ export default function Apps() {
   const [frameworkReady, setFrameworkReady] = useState(false)
 
   //defaults
-
-  // const availableLanguages = [
-  //   { label: "Hebrew", value: "he" },
-  //   { label: "Arabic", value: "ar" },
-  //   { label: "Mandarin Chinese", value: "zh" },
-  // ]
-  // const GoogleTranslateAPI = "https://translation.googleapis.com/language/translate/v2"
-  // const GoogleAPIKey = "AIzaSyDP63u3ionKo4rjXUODHEpZAT8Rjwat1xx"
 
   //TF Camera Decorator
   const TensorCamera = cameraWithTensors(Camera)
@@ -89,21 +78,21 @@ export default function Apps() {
     if (!tensor) {
       return
     }
-
     //topk set to 1
     const prediction = await mobilenetModel.classify(tensor, 1)
-    console.log(`prediction: ${JSON.stringify(prediction)}`)
+    // if (`${JSON.stringify(prediction)}` === "nematode worm") {
+    //   console.log(`prediction: ${JSON.stringify(prediction)}`)
+    // }
+    console.log(`${JSON.stringify(prediction)}`)
 
     if (!prediction || prediction.length === 0) {
       return
     }
-
     //only attempt translation when confidence is higher than 20%
     if (prediction[0].probability > 0.5) {
       //stop looping!
       cancelAnimationFrame(requestAnimationFrameId)
       setPredictionFound(true)
-
       //get translation!
       // await getTranslation(prediction[0].className)
     }
@@ -118,41 +107,12 @@ export default function Apps() {
     if (!predictionFound) loop()
   }
 
-  // const loadNewTranslation = () => {
-  //   setTranslation("")
-  //   setWord("")
-  //   setPredictionFound(false)
-  //   setTranslationAvailable(false)
-  // }
-
-  // const renderCameraView = () => {
-  //   return (
-  //     <View style={styles.cameraView}>
-  //       <TensorCamera
-  //         style={styles.camera}
-  //         type={Camera.Constants.Type.back}
-  //         zoom={0}
-  //         cameraTextureHeight={textureDims.height}
-  //         cameraTextureWidth={textureDims.width}
-  //         resizeHeight={tensorDims.height}
-  //         resizeWidth={tensorDims.width}
-  //         resizeDepth={3}
-  //         onReady={(imageAsTensors) => handleCameraStream(imageAsTensors)}
-  //         autorender={true}
-  //       />
-  //     </View>
-  //   )
-  // }
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Object</Text>
       </View>
-
       <View style={styles.body}>
-        {/* {showLanguageDropdown()}
-        {translationAvailable ? renderCameraView() : renderCameraView()} */}
         <View style={styles.cameraView}>
           <TensorCamera
             style={styles.camera}

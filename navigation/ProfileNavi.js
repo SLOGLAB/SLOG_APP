@@ -9,7 +9,7 @@ import Profiledetail from "../screens/Profile/Profiledetail"
 import Account from "../screens/Profile/Account"
 import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import { stackStyles } from "./config"
-import DetailScreen from "../screens/Profile/myPost.js/DetailScreen"
+import MyPostlScreen from "../screens/Profile/myPost.js/MyPostlScreen"
 
 export default createStackNavigator(
   {
@@ -18,7 +18,12 @@ export default createStackNavigator(
     Profiledetail,
     Account,
     PhotoNavigation,
-    DetailScreen,
+    MyPostlScreen: {
+      screen: MyPostlScreen,
+      navigationOptions: {
+        title: "d",
+      },
+    },
     FollowSwiper: {
       screen: FollowSwiper,
       navigationOptions: {
