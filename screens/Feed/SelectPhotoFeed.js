@@ -61,7 +61,7 @@ export default ({ navigation }) => {
     }
   }
   const handleSelected = () => {
-    navigation.navigate("Upload", { photo: selected })
+    navigation.navigate("UploadFeed", { photo: selected })
   }
   useEffect(() => {
     askPermission()

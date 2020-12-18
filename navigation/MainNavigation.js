@@ -15,6 +15,8 @@ import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import Apps from "../Object/Apps"
+import ExObject from "../Object/ExObject"
+
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -25,6 +27,7 @@ const MainNavigation = createStackNavigator(
     TodoListSwiper,
     Timecontrol,
     Apps,
+    ExObject,
   },
   {
     defaultNavigationOptions: {

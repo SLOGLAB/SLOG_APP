@@ -34,7 +34,7 @@ export const ADD_COMMENT = gql`
 const Container = styled.View`
   margin-bottom: 5px;
   margin-top: 3px;
-  border: 0.2px;
+  border: 0px;
   border-color: grey;
 `
 const Header = styled.View`
@@ -93,8 +93,6 @@ const Line = styled.View`
   /* margin-top: 0px; */
   width: ${constants.width / 1};
   height: 1px;
-  margin-top: 1px;
-  margin-bottom: 1px;
   background-color: grey;
 `
 const TextView = styled.View`
@@ -192,6 +190,7 @@ const Post = ({
   return (
     <>
       <Container>
+        <Line />
         <Header>
           <Touchable onPress={() => navigation.navigate("UserDetail", { username: user.username })}>
             <Image

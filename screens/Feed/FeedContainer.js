@@ -70,7 +70,7 @@ const TopView = styled.View`
   /* padding-right: 20px; */
   margin-top: 1px;
 `
-export default () => {
+export default ({ navigation }) => {
   const feedTerm = 20
 
   const [variables, setVariables] = useState({ first: feedTerm })
@@ -143,6 +143,12 @@ export default () => {
       alert(realText[1])
     }
   }
+  const refeshfeed = () => {
+    if (variables == feedData.seeAllFeed.length) {
+      setVariables({ first: variables.first + feedTerm })
+    }
+  }
+
   // const refresh = async () => {
   //   try {
   //     setRefreshing(true)
@@ -153,10 +159,13 @@ export default () => {
   //     setRefreshing(false)
   //   }
   // }
+  useEffect(() => {
+    // console.log(feedData.seeAllFeed)
+  }, [])
   return (
     <>
       <TopView>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("FeedTabs")}>
           <Icon
             name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
             size={35}
@@ -166,7 +175,7 @@ export default () => {
       </TopView>
       {/* <ScrollView> */}
       <ScrollView
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={feedRefetch} />}
+      // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={feedRefetch} />}
       >
         {/* {feedLoading ? (
           <Loader />
@@ -192,7 +201,7 @@ export default () => {
           <AuthButton
             color="white"
             onPress={() => {
-              setVariables({ first: variables.first + feedTerm })
+              refeshfeed()
             }}
             text="게시물 20개 더보기"
             paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}

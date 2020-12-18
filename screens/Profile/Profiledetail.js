@@ -161,6 +161,9 @@ const PostView = styled.View`
   flex-direction: row;
   margin-top: 10;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: ${constants.width / 1};
 `
 const PostStyle = styled.View`
   margin-left: 5;

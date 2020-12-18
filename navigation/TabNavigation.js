@@ -9,7 +9,7 @@ import MenuButton from "../components/MenuButton"
 import { stackStyles } from "./config"
 import MainController from "../screens/Tabs/MainController"
 import D_day from "../screens/D_day"
-
+import FeedPhotoNavigation from "../navigation/FeedPhotoNavigation"
 import FeedContainer from "../screens/Feed/FeedContainer"
 import TimetableWeek from "../screens/AWeekTime/TimetableWeek"
 import ProfileNavi from "../navigation/ProfileNavi"
@@ -72,12 +72,11 @@ export default createBottomTabNavigator(
         ),
       },
     },
-    FeedContainer: {
-      screen: stackFactory(FeedContainer, {
-        // headerLeft: <D_day />,
-        // headerRight: <ToDoButton />,
-        title: "DEEP TIME",
+    FeedPhotoNavigation: {
+      screen: stackFactory(FeedPhotoNavigation, {
+        title: "Feed",
       }),
+      // screen: FeedPhotoNavigation,
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-list" : "md-list"} />

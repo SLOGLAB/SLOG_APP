@@ -7,7 +7,7 @@ import useInput from "../../hooks/useInput"
 import styles from "../../styles"
 import constants from "../../constants"
 import { useMutation } from "@apollo/react-hooks"
-import { ME } from "../../screens/Profile/UserProfile"
+// import { ME } from "../../screens/Profile/UserProfile"
 // import imageResize from "../../Components/imageResize"
 
 const View = styled.View`
@@ -48,98 +48,98 @@ const Text = styled.Text`
 //   }
 // `
 
-export const EDIT_AVATAR = gql`
-  mutation editAvatar($location: String!, $key: String!) {
-    editAvatar(location: $location, key: $key)
-  }
-`
+// export const EDIT_AVATAR = gql`
+//   mutation editAvatar($location: String!, $key: String!) {
+//     editAvatar(location: $location, key: $key)
+//   }
+// `
 
-export const DELETE_AVATAR = gql`
-  mutation deleteAvatar {
-    deleteAvatar
-  }
-`
+// export const DELETE_AVATAR = gql`
+//   mutation deleteAvatar {
+//     deleteAvatar
+//   }
+// `
 export default ({ navigation }) => {
   const [loading, setIsLoading] = useState(false)
   const photo = navigation.getParam("photo")
   const [selectFile, setSelectFile] = useState(null)
 
-  const [editAvatarMuation] = useMutation(EDIT_AVATAR, {
-    refetchQueries: () => [{ query: ME }],
-  })
-  const [deleteAvatarMuation] = useMutation(DELETE_AVATAR)
+  // const [editAvatarMuation] = useMutation(EDIT_AVATAR, {
+  //   refetchQueries: () => [{ query: ME }],
+  // })
+  // const [deleteAvatarMuation] = useMutation(DELETE_AVATAR)
 
-  const onAvatar = async () => {
-    const formData = new FormData()
+  // const onAvatar = async () => {
+  //   const formData = new FormData()
 
-    // formData.append("file", photo)
+  //   // formData.append("file", photo)
 
-    const name = photo.filename
-    const [, type] = name.split(".")
-    formData.append("file", {
-      name,
-      type: type.toLowerCase(),
-      uri: photo.uri,
-    })
+  //   const name = photo.filename
+  //   const [, type] = name.split(".")
+  //   formData.append("file", {
+  //     name,
+  //     type: type.toLowerCase(),
+  //     uri: photo.uri,
+  //   })
 
-    try {
-      setIsLoading(true)
-      // Alert.alert("프로필 이미지 변경 중...")
-      const { data } = await axios.post(
-        // process.env.REACT_APP_BACKEND_URI + "/api/upload/avatar",
-        "https://slog-iam-pl-backend.herokuapp.com/api/upload/avatar",
-        // `http://${Platform.OS === "ios" ? "localhost" : "10.0.2.2"}:4000/api/upload/avatar`,
-        formData,
-        {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        }
-      )
-      const {
-        data: { editAvatar },
-      } = await editAvatarMuation({
-        variables: { location: data.location, key: data.key },
-      })
-      if (!editAvatar) {
-        Alert.alert("프로필 이미지를 변경할 수 없습니다.")
-      } else {
-        setSelectFile(null)
-        Alert.alert("프로필 이미지가 변경 되었습니다.")
-        // await refetch()
-        // return true
-      }
-    } catch (e) {
-      console.log(e, "안드로이드") //문제
-      // Alert.alert("Error!IAM 사이트에서 변경하세요.")
-      // return false
-      // Alert.alert("Cant upload", "Try later")
-    } finally {
-      navigation.navigate("UserProfile")
-      setIsLoading(false)
-    }
-  }
+  //   try {
+  //     setIsLoading(true)
+  //     // Alert.alert("프로필 이미지 변경 중...")
+  //     const { data } = await axios.post(
+  //       // process.env.REACT_APP_BACKEND_URI + "/api/upload/avatar",
+  //       "https://slog-iam-pl-backend.herokuapp.com/api/upload/avatar",
+  //       // `http://${Platform.OS === "ios" ? "localhost" : "10.0.2.2"}:4000/api/upload/avatar`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "content-type": "multipart/form-data",
+  //         },
+  //       }
+  //     )
+  //     const {
+  //       data: { editAvatar },
+  //     } = await editAvatarMuation({
+  //       variables: { location: data.location, key: data.key },
+  //     })
+  //     if (!editAvatar) {
+  //       Alert.alert("프로필 이미지를 변경할 수 없습니다.")
+  //     } else {
+  //       setSelectFile(null)
+  //       Alert.alert("프로필 이미지가 변경 되었습니다.")
+  //       // await refetch()
+  //       // return true
+  //     }
+  //   } catch (e) {
+  //     console.log(e, "안드로이드") //문제
+  //     // Alert.alert("Error!IAM 사이트에서 변경하세요.")
+  //     // return false
+  //     // Alert.alert("Cant upload", "Try later")
+  //   } finally {
+  //     navigation.navigate("UserProfile")
+  //     setIsLoading(false)
+  //   }
+  // }
 
-  const deleteAvatar = async () => {
-    try {
-      Alert.alert("프로필 이미지를 변경 중...")
-      const {
-        data: { deleteAvatar },
-      } = await deleteAvatarMuation()
-      if (!deleteAvatar) {
-        Alert.alert("프로필 이미지를 변경할 수 없습니다.")
-      } else {
-        setSelectFile(null)
-        await refetch()
-        Alert.alert("프로필 이미지가 변경 되었습니다.")
-        return true
-      }
-    } catch (e) {
-      const realText = e.message.split("GraphQL error: ")
-      Alert.alert(realText[1])
-      return false
-    }
-  }
+  // const deleteAvatar = async () => {
+  //   try {
+  //     Alert.alert("프로필 이미지를 변경 중...")
+  //     const {
+  //       data: { deleteAvatar },
+  //     } = await deleteAvatarMuation()
+  //     if (!deleteAvatar) {
+  //       Alert.alert("프로필 이미지를 변경할 수 없습니다.")
+  //     } else {
+  //       setSelectFile(null)
+  //       await refetch()
+  //       Alert.alert("프로필 이미지가 변경 되었습니다.")
+  //       return true
+  //     }
+  //   } catch (e) {
+  //     const realText = e.message.split("GraphQL error: ")
+  //     Alert.alert(realText[1])
+  //     return false
+  //   }
+  // }
   // const handleSubmit = async () => {
   //   if (captionInput.value === "" || locationInput.value === "") {
   //     Alert.alert("All fields are required")
@@ -206,7 +206,7 @@ export default ({ navigation }) => {
           /> */}
           <Button
             onPress={async () => {
-              await onAvatar()
+              // await onAvatar()
               // const fucResult = await onAvatar()
               // if (fucResult) {
               //   close()
