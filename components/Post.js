@@ -205,7 +205,6 @@ const Post = ({
             </HeaderUserContainer>
           </Touchable>
         </Header>
-        <Line />
 
         {files.length > 1 ? (
           <Swiper showsPagination={false} showsButtons style={{ height: constants.height / 2.5 }}>
@@ -230,7 +229,6 @@ const Post = ({
             ))}
           </>
         )}
-        <Line />
 
         <IconsContainer>
           <HeaderView>
@@ -326,7 +324,7 @@ const Post = ({
             <ComentBody>
               <AuthInput
                 paddingArray={[5, 0, 5, 0]}
-                numberOfLines={1}
+                numberOfLines={2}
                 {...comment}
                 placeholder="  댓글 달기..."
                 returnKeyType="done"

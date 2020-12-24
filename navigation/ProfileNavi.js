@@ -1,7 +1,6 @@
 import React from "react"
 import { createStackNavigator } from "react-navigation-stack"
 import UserProfile from "../screens/Profile/UserProfile"
-import BackButton from "../components/BackButton"
 import QRcode from "../screens/Profile/QRcode"
 import { createAppContainer } from "react-navigation"
 import PhotoNavigation from "./PhotoNavigation"

@@ -17,7 +17,7 @@ import moment from "moment"
 import { withNavigation } from "react-navigation"
 import Swiper from "react-native-swiper"
 import Loader from "../../components/Loader"
-
+import useInput from "../../hooks/useInput"
 import AuthInput from "../../components/AuthInput"
 import Modal from "react-native-modal"
 import AuthButton from "../../components/AuthButton"
@@ -121,7 +121,7 @@ const StyledModalContainer = styled.View`
   align-items: center;
   justify-content: center;
   /* 모달창 크기 조절 */
-  flex: 0.35;
+  flex: 1;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
@@ -132,12 +132,32 @@ const ComentBody = styled.View`
   align-items: flex-start;
   justify-content: space-between;
 `
-export default () => {
+const ImageContainer = styled.Image`
+  width: ${constants.width / 3};
+  height: ${constants.width / 3};
+`
+const RowView = styled.View`
+  flex-direction: row;
+`
+export default ({ navigation }) => {
+  const location = useInput("")
+  const caption = useInput("")
+  const photo = navigation.getParam("photo")
+  const photo2 = navigation.getParam("photo2")
+  const photo3 = navigation.getParam("photo3")
+  // useEffect(() => {
+  //   console.log(photo2)
+  // }, [])
   return (
     <StyledModalContainer>
       <TextView2>
-        <Bold2>게시물 수정</Bold2>
+        <Bold2>게시물 추가</Bold2>
       </TextView2>
+      <RowView>
+        <ImageContainer source={photo} />
+        <ImageContainer source={photo2} />
+        <ImageContainer source={photo3} />
+      </RowView>
       <TextView2 />
       <AuthInput
         paddingArray={[5, 0, 5, 0]}
@@ -166,13 +186,13 @@ export default () => {
         <AuthButton
           color="white"
           onPress={() => onEdit()}
-          text="수정"
+          text="게시"
           paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
           widthRatio={LastWidth(1.7, 2.5, 40)}
         />
         <AuthButton
           color="white"
-          onPress={() => setEmailVisible(!isEmailVisible)}
+          onPress={() => navigation.navigate("Select")}
           text="돌아가기"
           paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
           widthRatio={LastWidth(1.7, 2.5, 40)}

@@ -1,6 +1,13 @@
 import React, { useEffect, useState, useRef } from "react"
 import Main from "./Main"
-import { ScrollView, RefreshControl, Alert, TouchableOpacity, Platform } from "react-native"
+import {
+  ScrollView,
+  RefreshControl,
+  Alert,
+  TouchableOpacity,
+  Platform,
+  Dimensions,
+} from "react-native"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import { useQuery, useMutation } from "@apollo/react-hooks"
@@ -76,6 +83,7 @@ export const ME = gql`
     }
   }
 `
+const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 export default () => {
   var todaydate = new Date().getDate() //Current Date
@@ -139,9 +147,9 @@ export default () => {
       setRefreshing(false)
     }
   }
+
   useEffect(() => {
     onRefresh()
-    // console.log(myInfoData.me.studyDefaultSet)
   }, [])
   return (
     <ScrollView
@@ -187,13 +195,3 @@ export default () => {
     </ScrollView>
   )
 }
-
-// const todayd = new Date().getDate() //Current Date
-// const todaydate = todayd < 10 ? `0${todayd}` : todayd
-// const months = new Date().getMonth() + 1 //Current Month
-// const todaymonth = months < 10 ? `0${months}` : months
-// const todayyear = new Date().getFullYear() //Current Year
-// const today = todayyear + "." + todaymonth + "." + todaydate
-// useEffect(() => {
-//   refetch()
-// }, [NowTime])

@@ -394,7 +394,6 @@ export default ({ navigation }) => {
               </HeaderView>
             </Header>
 
-            <Line />
             {/* <SwipeView> */}
             {/* <Swiper showsPagination={true} showsButtons style={{ height: constants.height / 2.5 }}> */}
             {feedData.seeOneFeed.files.map((file) => (
@@ -407,7 +406,6 @@ export default ({ navigation }) => {
             ))}
             {/* </Swiper> */}
             {/* </SwipeView> */}
-            <Line />
 
             <IconsContainer>
               <HeaderView>

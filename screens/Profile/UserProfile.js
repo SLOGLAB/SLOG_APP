@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { ScrollView, Alert, RefreshControl } from "react-native"
+import { ScrollView, Alert, RefreshControl, Dimensions } from "react-native"
 import styled from "styled-components"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
@@ -88,6 +88,7 @@ export const CONNECT_STUDENT = gql`
 `
 
 const EmView = styled.View``
+const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 const UserProfile = ({ navigation }) => {
   const { loading, data, refetch } = useQuery(ME, {})

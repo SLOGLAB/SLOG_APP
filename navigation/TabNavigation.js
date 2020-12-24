@@ -4,6 +4,8 @@ import { Platform } from "react-native"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 
+import NavGreenIcon from "../components/NavGreenIcon"
+
 import NavIcon from "../components/NavIcon"
 import MenuButton from "../components/MenuButton"
 import { stackStyles } from "./config"
@@ -16,6 +18,8 @@ import ProfileNavi from "../navigation/ProfileNavi"
 import SwiperBase from "../screens/Stat/SwiperBase"
 // import UserProfile from "../screens/Profile/UserProfile"
 import ToDoButton from "../screens/TodoList/ToDoButton"
+import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
+
 import ObjectButton from "../Object/ObjectButton"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
@@ -49,6 +53,17 @@ export default createBottomTabNavigator(
         ),
       },
     },
+    // TodoListSwiper: {
+    //   screen: TodoListSwiper,
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon
+    //         focused={focused}
+    //         name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
+    //       />
+    //     ),
+    //   },
+    // },
     SwiperBase: {
       screen: stackFactory(SwiperBase, {
         title: "Study Log",
@@ -60,7 +75,6 @@ export default createBottomTabNavigator(
         ),
       },
     },
-
     TimetableWeek: {
       screen: TimetableWeek,
       navigationOptions: {

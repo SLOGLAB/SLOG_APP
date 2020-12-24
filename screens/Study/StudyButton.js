@@ -20,10 +20,11 @@ const ButtonText = styled.Text`
 export default withNavigation(({ navigation }) => (
   <Container
     onPress={() => {
-      navigation.navigate("TodoListSwiper")
+      navigation.navigate("StudyContainer")
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
     }}
   >
-    <NavBlackIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={30} />
-    <ButtonText>To do</ButtonText>
+    <NavBlackIcon name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"} size={30} />
+    <ButtonText>Start</ButtonText>
   </Container>
 ))

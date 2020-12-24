@@ -12,6 +12,8 @@ import { stackStyles } from "./config"
 import PhotoNavigation from "./PhotoNavigation"
 import SwiperBase from "../screens/Stat/SwiperBase"
 import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
+import StudyContainer from "../screens/Study/StudyContainer"
+
 import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import Apps from "../Object/Apps"
@@ -25,6 +27,7 @@ const MainNavigation = createStackNavigator(
     TimetableNavi,
     PhotoNavigation,
     TodoListSwiper,
+    StudyContainer,
     Timecontrol,
     Apps,
     ExObject,
