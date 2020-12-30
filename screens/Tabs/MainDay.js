@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import VdayProgress from "../../graphsVictory/VdayProgress"
 import VdayBar from "../../graphsVictory/VdayBar"
@@ -9,19 +9,24 @@ import {
   ScrollView,
   RefreshControl,
   Image,
+  Button,
 } from "react-native"
 import Barcharts from "../../graphs/BarCharts"
 import Icon from "../../components/Icon"
 import Modal from "react-native-modal"
 import AuthButton from "../../components/AuthButton"
 import LastWidth from "../../components/LastWidth"
-
+import Apps from "../../Object/Apps"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 import { EDIT_STUDYSET } from "../Tabs/QueryBox"
 import { ME } from "./MainController"
 import D_day from "../D_day"
+import * as Notifications from "expo-notifications"
+import * as Permissions from "expo-permissions"
+import Constants from "expo-constants"
+import moment, { Moment } from "moment"
 
 const MainTView = styled.View`
   /* height:90%; */
@@ -262,9 +267,16 @@ const AvartarView = styled.View`
   /* background-color: rgba(196, 196, 196, 1); */
 `
 const AvartarView1 = styled.View`
-  flex: 0.1;
+  position: absolute;
   /* background-color: rgba(196, 196, 196, 1); */
 `
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+})
 const MainDay = ({
   nexistTime,
   myData,
@@ -289,7 +301,42 @@ const MainDay = ({
   setModalVisible,
   refreshing,
   setRefreshing,
+  nowEnd,
 }) => {
+  const [expoPushToken, setExpoPushToken] = useState("")
+  const [notification, setNotification] = useState(false)
+  const notificationListener = useRef()
+  const responseListener = useRef()
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification)
+    })
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {}
+    )
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener)
+      Notifications.removeNotificationSubscription(responseListener)
+    }
+  }, [])
+
+  const pushToken = async () => {
+    await sendPushNotification(expoPushToken)
+  }
+  const noti = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "슬로그 알람!",
+        body: "IAM!",
+      },
+      trigger: {
+        seconds: 1,
+      },
+    })
+  }
   // 팔로우한 각 유저 데이터에 알맞은 createdAt 넣어주기(내가가 언제 팔로우 했는지)
   for (let i = 0; i < myData.followDates.length; i++) {
     const findUser = (a) => a.id === myData.followDates[i].followId
@@ -332,7 +379,21 @@ const MainDay = ({
       console.log(e)
     }
   }
-
+  const [studyBool, setStudyBool] = useState(false)
+  // if (nowEnd == moment(now).format("hh:mma")) {
+  //   noti()
+  // }
+  // setInterval(() => {
+  //   if (nowEnd === moment(new Date().format("hh:mma"))) {
+  //     noti()
+  //   }
+  // }, 60000)
+  useEffect(() => {
+    // console.log(nowTitle1, "nowTitle1,")
+    // console.log(nowTitle2, "nowTitle2,")
+    // console.log(nowEnd, "nowEnd")
+    // noti()
+  }, [])
   return (
     <>
       <MainTView>
@@ -399,13 +460,21 @@ const MainDay = ({
             <IndiviList></IndiviList>
           </ScrollView>
         </AvatarView>
+        {/* <AvartarView1>
+          </AvartarView1> */}
+        {studyBool ? <Apps studyBool={studyBool} /> : null}
         <ChartView>
           <ProgressView>
+            <Button
+              title="Start!!!"
+              onPress={() => {
+                setStudyBool(!studyBool)
+              }}
+            />
             <TouchableOpacity onPress={onRefresh}>
               <VdayProgress number={donutPercent} />
             </TouchableOpacity>
           </ProgressView>
-
           <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} />
 
           <ChartTextView>
@@ -553,7 +622,56 @@ const MainDay = ({
 }
 
 export default MainDay
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "슬로그",
+    body: "알림 성공!",
+    data: { data: "goes here" },
+  }
 
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(message),
+  })
+}
+
+async function registerForPushNotificationsAsync() {
+  let token
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+    let finalStatus = existingStatus
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!")
+      return
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data
+    // console.log(token)
+  } else {
+    Alert.alert("Must use physical device for Push Notifications")
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    })
+  }
+
+  return token
+}
 {
   /* <DayText>
           <MainView>

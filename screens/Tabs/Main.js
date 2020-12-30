@@ -43,6 +43,7 @@ let nowScheduleTimeT = 0
 let nowScheduleColor = "rgba(123, 169, 235, 1)"
 let nowTitle1 = ""
 let nowTitle2 = ""
+let nowEnd = ""
 let nextScheduleIndex = -1
 let nextTitle1 = ""
 let nextTitle2 = ""
@@ -54,7 +55,7 @@ let break_countdown = 0
 let target_min = 0
 let target_hour = 0
 let total_min = 0
-let total_hour = 0
+let endPoint = 0
 let existTime_donut = 0
 let targetTime_donut = 0
 const Main = ({
@@ -163,6 +164,7 @@ const Main = ({
       const endPoint = new Date(nowSchedule.end)
       nowTitle1 = nowSchedule.subject?.name + " (" + nowSchedule.title + ")"
       nowTitle2 = moment(startPoint).format("hh:mma") + " ~ " + moment(endPoint).format("hh:mma")
+      nowEnd = moment(endPoint).format("hh:mma")
     } else {
       nowScheduleTime = 0
       nowScheduleTimeT = 0
@@ -409,6 +411,7 @@ const Main = ({
         setRefreshing={setRefreshing}
         goWithMutation={goWithMutation}
         myInfoRefetch={myInfoRefetch}
+        nowEnd={nowEnd}
       />
     </MainView1>
   )

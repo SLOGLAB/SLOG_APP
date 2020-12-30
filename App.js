@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { AppLoading } from "expo"
 import { Asset } from "expo-asset"
 import * as Font from "expo-font"
-import { AsyncStorage } from "react-native"
+import AsyncStorage from "@react-native-community/async-storage"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { persistCache } from "apollo-cache-persist"
 
@@ -35,7 +35,7 @@ export default function App() {
       //     display: FontDisplay.SWAP,
       //   },
       // });
-      await Asset.loadAsync([require("./assets/SlogIAMapp.png")])
+      await Asset.loadAsync([require("./assets/DeepTime.png")])
 
       const cache = new InMemoryCache()
 
@@ -43,10 +43,8 @@ export default function App() {
         cache,
         storage: AsyncStorage,
       })
-
       const client = new ApolloClient({
         cache,
-
         request: async (operation) => {
           const token = await AsyncStorage.getItem("jwt") //json web token
           return operation.setContext({

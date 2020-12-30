@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Pictionary",
-    "slug": "Pictionary",
+    "name": "DeepTime",
+    "slug": "DeepTime",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/DeepTimeIcon.png",
@@ -17,10 +17,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/DeepTimeNoti.png"
     },
     "android": {
-      "package": "net.danielwind.pictionary"
+      "package": "net.danielwind.pictionary",
+      "icon": "./assets/DeepTimeNoti.png"
+    },
+    "notification": {
+      "icon": "./assets/DeepTimeNoti.png",
+      "color": "#002C56",
+      "iosDisplayInForeground": true,
+      "androidMode": "default"
     }
   }
 }

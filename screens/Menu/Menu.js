@@ -2,7 +2,7 @@ import Constants from "expo-constants"
 import * as Notifications from "expo-notifications"
 import * as Permissions from "expo-permissions"
 import React, { useState, useEffect, useRef } from "react"
-import { Text, View, Button, Platform } from "react-native"
+import { Text, View, Button, Platform, Alert } from "react-native"
 import moment from "moment"
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -25,21 +25,17 @@ export default function Menu() {
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification)
     })
-
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
       // console.log(response)
     })
-
     // const localNotification = {
     //   title: "done",
     //   body: "done!",
     // }
-
     // const schedulingOptions = {
     //   time: new Date().getTime(),
     // }
-
     return () => {
       // Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
       Notifications.removeNotificationSubscription(notificationListener)
@@ -65,7 +61,6 @@ export default function Menu() {
   //   )
   //   console.log(notificationId)
   // }
-
   const pushToken = async () => {
     await sendPushNotification(expoPushToken)
   }
@@ -136,13 +131,13 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!")
+      Alert.alert("Failed to get push token for push notification!")
       return
     }
     token = (await Notifications.getExpoPushTokenAsync()).data
     // console.log(token)
   } else {
-    alert("Must use physical device for Push Notifications")
+    Alert.alert("Must use physical device for Push Notifications")
   }
 
   if (Platform.OS === "android") {

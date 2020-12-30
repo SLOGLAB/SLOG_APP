@@ -4,10 +4,11 @@ import * as posenet from '@tensorflow-models/posenet';
 
 export const inputTensorWidth = 152;
 export const inputTensorHeight = 200;
-
+// export const inputTensorWidth = 1;
+// export const inputTensorHeight = 1;
 export const Pose = ({ pose }: { pose?: posenet.Pose }) => {
   const MIN_KEYPOINT_SCORE = 0.2;
-  console.log('pose', pose.score);
+  // console.log('pose', pose.score);
 
   if (pose != null) {
     const keypoints = pose.keypoints
@@ -22,7 +23,6 @@ export const Pose = ({ pose }: { pose?: posenet.Pose }) => {
             strokeWidth="0"
             fill="blue"
           />
-        // <></>
         );
       });
 

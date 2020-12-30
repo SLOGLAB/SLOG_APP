@@ -19,17 +19,22 @@ import * as FileSystem from "expo-file-system"
 
 import * as ImagePicker from "expo-image-picker"
 import * as jpeg from "jpeg-js"
-var image = null
+import { gql } from "apollo-boost"
+import { useMutation } from '@apollo/react-hooks';
 
+var image = null
+const UPDATE_EXISTTOGGLE = gql`
+  mutation update_existToggle($email: String!, $existToggle: Boolean!) {
+    update_existToggle(email: $email, existToggle: $existToggle)
+  }
+`;
 //
 const useInitTensorFlow = (): boolean => {
   const [isTfReady, setIsTfReady] = useState(false);
-
   const initializeTf = async () => {
     await tf.ready();
     setIsTfReady(true);
   };
-
   useEffect(() => {
     initializeTf();
   }, []);
@@ -71,10 +76,9 @@ const useModel = ()=> {
   const [model, setModel] = useState<any>(null);
 
   const initModela = async () => {
-    // const models = await mobilenet.load()
+    const models = await mobilenet.load()
     // const models = await cocoSsd.load({ base: 'mobilenet_v2' });
-    const models = await cocossd.load() // preparing COCO-SSD model
-
+    // const models = await cocossd.load() // preparing COCO-SSD model
     setModel(models)
   };
 
@@ -85,79 +89,56 @@ const useModel = ()=> {
 
   return model;
 };
-
 const TensorCamera = cameraWithTensors(Camera);
 
-
+let a = undefined
 const PoseCamera = () => {
-  // const model =usemodel();
   const posenetModel = usePosenetModel();
   const mobilenetModel =useModel();
   const [pose, setPose] = useState<posenet.Pose | null>(null);
   const rafId = useRef<number | null>(null);
   const camRef = useRef<any>(null);
-  
+  const [button, setButton] = useState(false)
+  const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE);
+
   // const [predictions, setPredictions] = useState()
+  // const getPrediction = async () => {
+  //   const prediction = await mobilenetModel.classify(image, 1)
+  //   // const prediction = await mobilenetModel.detect(tensor)
+  //   console.log(`prediction: ${JSON.stringify(prediction)}`)
+  // }
 
-  const getPrediction = async (tensor) => {
-    if (!tensor) {
-      return
-    }
-    const prediction = await mobilenetModel.classify(tensor, 1)
-    // const prediction = await mobilenetModel.detect(tensor)
-    console.log(`prediction: ${JSON.stringify(prediction)}`)
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
   const handleImageTensorReady = async (
     images: IterableIterator<tf.Tensor3D>,
     updatePreview: () => void,
     gl: ExpoWebGLRenderingContext
   ) => {
-    setInterval(async()=>{
-      if (!AUTORENDER) {
-        updatePreview();
-      }
+    a =  setInterval(async()=>{
+    console.log("button")
+    if (!AUTORENDER && !button) {
+      updatePreview();
+    }
       const imageTensor = images.next().value;
-
       const flipHorizontal = Platform.OS === "ios" ? false : true;
-
       const pose = await posenetModel.estimateSinglePose(imageTensor, {
         flipHorizontal,
       });
-      setPose(pose);
-      tf.dispose([imageTensor]);     
-      // await getPrediction(imageTensor)
+        setPose(pose);
+      tf.dispose([imageTensor]); 
+      console.log(pose.score)    
 
+      if(pose.score>0.1){
+        existToggleMutation({variables: { email: "woobink123@hanmail.net", existToggle: true },
+      });
+    }
       if (!AUTORENDER) {
         gl.endFrameEXP();
       }
-      // rafId.current = requestAnimationFrame(loop);
-    }, 1000);
-  };
-  // const loop = async () => {
-  //   if (!AUTORENDER) {
-  //     updatePreview();
-  //   }
-  //   const imageTensor = images.next().value;
+      }, 40000);
+}
+////////////////////
 
-  //   const flipHorizontal = Platform.OS === "ios" ? false : true;
-
-  //   const pose = await posenetModel.estimateSinglePose(imageTensor, {
-  //     flipHorizontal,
-  //   });
-  //   setPose(pose);
-  //   tf.dispose([imageTensor]);     
-  //   // await getPrediction(imageTensor)
-
-  //   if (!AUTORENDER) {
-  //     gl.endFrameEXP();
-  //   }
-  //   rafId.current = requestAnimationFrame(loop);
-  // };
-  // loop()
-
-
+// //////
   if (!posenetModel) {
     return (
       <View>
@@ -182,29 +163,36 @@ const PoseCamera = () => {
   }
 
   return (
+    <>
     <View style={[{ justifyContent: "center", alignItems: "center" }]}>
       <View style={styles.cameraContainer}>
         <TensorCamera
           ref={camRef}
-          // Standard Camera props
           style={[styles.camera]}
           type={Camera.Constants.Type.front}
           zoom={0}
-          // tensor related props
           cameraTextureHeight={textureDims.height}
           cameraTextureWidth={textureDims.width}
           resizeHeight={inputTensorHeight}
           resizeWidth={inputTensorWidth}
           resizeDepth={3}
           onReady={handleImageTensorReady}
-
-          autorender={AUTORENDER}
+          autorender={false}
         />
-        <View style={[styles.modelResults]}>
-          {pose && <Pose pose={pose} />}
-        </View>
       </View>
+      <View style={[styles.modelResults]}>
+          {pose && <Pose pose={pose} />}
+      </View> 
     </View>
+      <View style={[{ marginTop:50}]}>
+            <Button
+            title="stop"
+            onPress={()=>{
+              clearInterval(a)
+       }}
+            />
+      </View>
+      </>
   );
 };
 
@@ -229,25 +217,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
+  
   cameraContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    height: "100%",
+    width: "50%",
+    height: "50%",
     backgroundColor: "#fff",
   },
   camera: {
     position: "absolute",
-    left: 50,
-    top: 100,
-    width: 600 / 2,
-    height: 800 / 2,
+    width: 600 / 4,
+    height: 800 / 4,
     zIndex: 1,
     borderWidth: 1,
     borderColor: "black",
@@ -255,26 +238,36 @@ const styles = StyleSheet.create({
   },
   modelResults: {
     position: "absolute",
-    left: 50,
-    top: 100,
-    width: 600 / 2,
-    height: 800 / 2,
+    
+    width: 600 / 4,
+    height: 800 / 4,
     zIndex: 20,
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 0,
   },
-  recordingButton: {
-    position: "absolute",
-    left: 50,
-    bottom: 150,
-  },
-  text: {
-    color: "#ffffff",
-    fontSize: 16,
-  },
 });
+ // const loop = async () => {
+  //   if (!AUTORENDER) {
+  //     updatePreview();
+  //   }
+  //   const imageTensor = images.next().value;
 
+  //   const flipHorizontal = Platform.OS === "ios" ? false : true;
+
+  //   const pose = await posenetModel.estimateSinglePose(imageTensor, {
+  //     flipHorizontal,
+  //   });
+  //   setPose(pose);
+  //   tf.dispose([imageTensor]);     
+  //   // await getPrediction(imageTensor)
+
+  //   if (!AUTORENDER) {
+  //     gl.endFrameEXP();
+  //   }
+  //   rafId.current = requestAnimationFrame(loop);
+  // };
+  // loop()
 
 
 // import React, { useEffect, useRef, useState } from "react";

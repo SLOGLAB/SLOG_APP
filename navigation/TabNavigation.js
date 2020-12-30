@@ -19,7 +19,7 @@ import SwiperBase from "../screens/Stat/SwiperBase"
 // import UserProfile from "../screens/Profile/UserProfile"
 import ToDoButton from "../screens/TodoList/ToDoButton"
 import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
-
+import StudyButton from "../screens/Study/StudyButton"
 import ObjectButton from "../Object/ObjectButton"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
@@ -43,7 +43,7 @@ export default createBottomTabNavigator(
   {
     MainController: {
       screen: stackFactory(MainController, {
-        headerLeft: <ObjectButton />,
+        headerLeft: <StudyButton />,
         headerRight: <ToDoButton />,
         title: "DEEP TIME",
       }),

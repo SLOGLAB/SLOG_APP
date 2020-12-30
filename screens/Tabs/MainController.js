@@ -12,6 +12,7 @@ import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
+import * as ScreenOrientation from "expo-screen-orientation"
 
 import { MY_TODOLIST, MY_SUBJECT, GO_WITH, EDIT_STUDYSET } from "../Tabs/QueryBox"
 
@@ -85,7 +86,7 @@ export const ME = gql`
 `
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
-export default () => {
+export default ({ navigation }) => {
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
   var todayyear = new Date().getFullYear() //Current Year
@@ -151,6 +152,7 @@ export default () => {
   useEffect(() => {
     onRefresh()
   }, [])
+
   return (
     <ScrollView
       style={{ backgroundColor: "#FFFFFF" }}

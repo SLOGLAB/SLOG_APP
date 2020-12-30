@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
-import { Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Dimensions, TouchableWithoutFeedback, Keyboard, Button, Text } from "react-native"
 import StudyPresenter from "./StudyPresenter"
 import BackButton from "../../components/BackButton"
 import constants from "../../constants"
@@ -14,8 +14,82 @@ import {
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
+import Apps from "../../Object/Apps"
+import Constants from "expo-constants"
+import * as Notifications from "expo-notifications"
+import * as Permissions from "expo-permissions"
+import { gql } from "apollo-boost"
+
 // import SwipeMenu from "../../components/SwipeMenu"
 // import Apps from "../../Object/Apps"
+export const ME = gql`
+  {
+    me {
+      id
+      username
+      fullName
+      avatar
+      existToggle
+      studyPurpose
+      todayTime {
+        attendanceStatus
+        absenceReason
+      }
+      times {
+        id
+        existTime
+        time_24
+        createdAt
+      }
+      schedules {
+        id
+        isAllDay
+        isPrivate
+        title
+        location
+        state
+        start
+        end
+        totalTime
+        subject {
+          id
+          name
+          bgColor
+        }
+      }
+      studyDefaultSet {
+        nonScheduleRecord
+        autoRefresh
+        autoRefreshTerm
+        startScheduleTerm
+        cutExtenTerm
+        scheduleStart
+        scheduleEnd
+        dDayOn
+        dDateName
+        dDate
+      }
+      followDates {
+        id
+        followId
+        goWith
+        createdAt
+      }
+      withFollowing {
+        id
+        avatar
+        username
+        existToggle
+      }
+      following {
+        id
+        avatar
+        email
+        username
+      }
+    }
+  }
+`
 const Main = styled.View`
   flex: 1;
 `
@@ -33,6 +107,8 @@ const SideView1 = styled.View`
 `
 const AvatarView = styled.View`
   flex: 1;
+  justify-content: center;
+  align-items: center;
 `
 const StudyView = styled.View`
   flex: 3;
@@ -43,49 +119,28 @@ const TimeView = styled.View`
 `
 const RowView = styled.View`
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-
 export default () => {
-  const [refreshing, setRefreshing] = useState(false)
-  const todolistName = useInput("")
+  const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
 
-  const [addTodolistMutation] = useMutation(ADD_TODOLIST)
-  const [deleteTodolistMutation] = useMutation(DELETE_TODOLIST)
-  const [finishTodolistMutation] = useMutation(FINISH_TODOLIST)
-  const {
-    data: subjectData,
-    loading: subjectLoading,
-    refetch: subjectRefetch,
-    networkStatus: subjectnetwork,
-  } = useQuery(MY_SUBJECT, { notifyOnNetworkStatusChange: true })
-  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
-    MY_TODOLIST
-  )
-
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true)
-      await subjectRefetch()
-      await todolistRefetch()
-    } catch (error) {
-      console.log(e)
-    } finally {
-      setRefreshing(false)
-    }
-  }
-
-  useEffect(() => {
-    onRefresh()
-  }, [])
   return (
     <>
       <Main>
         <TopView>
           <BackButton />
         </TopView>
-        <RowView>{/* <AvatarView>
-            </AvatarView> */}</RowView>
+        <RowView>
+          <AvatarView>
+            <Apps />
+          </AvatarView>
+
+          <AvatarView>
+            <StudyPresenter myInfoData={myInfoData} />
+          </AvatarView>
+        </RowView>
       </Main>
     </>
   )

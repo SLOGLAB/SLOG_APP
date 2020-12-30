@@ -274,6 +274,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               </Stat5>
             </AdView>
           </ProfileHeader>
+          {/* <HandleLogout /> */}
 
           <View />
           <PostView>

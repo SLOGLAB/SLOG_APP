@@ -37,6 +37,7 @@ const MainNavigation = createStackNavigator(
       headerStyle: {
         ...stackStyles,
       },
+      gesturesEnabled: false,
     },
     headerMode: "none",
   }
