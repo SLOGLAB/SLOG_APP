@@ -12,6 +12,7 @@ import {
   ScrollView,
 } from "react-native"
 import Timetablecontrol from "../../components/Timetablecontrol"
+
 import WeekView from "./react-native-week-view/src/WeekView/WeekView"
 import Loader from "../../components/Loader"
 import Icon from "../../components/Icon"
@@ -32,8 +33,25 @@ import ObjectCopy from "../../components/ObjectCopy"
 import { Ionicons } from "@expo/vector-icons"
 
 const EmptyView = styled.View``
-const EmptyView92 = styled.View`
-  flex: 0.92;
+const EmptyView10 = styled.View`
+  flex: 0.1;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: ${constants.width / 1.4};
+`
+const EmptyView5 = styled.View`
+  flex: 0.07;
+  align-items: flex-end;
+  justify-content: center;
+  margin-left: 5;
+  margin-top: 10;
+  width: ${constants.width / 1.3};
+`
+const ModalView04 = styled.View`
+  flex: 0.4;
+  /* justify-content: center;
+  align-items: center; */
+  width: ${constants.width / 1.25};
 `
 const EmptyView1 = styled.View`
   flex: 1;
@@ -43,7 +61,11 @@ const ModalView = styled.View`
   justify-content: center;
   align-items: center;
 `
-
+const ModalView2 = styled.View`
+  flex: 0.2;
+  justify-content: center;
+  align-items: center;
+`
 const ModalView_State = styled.View`
   flex: 0.7;
   justify-content: center;
@@ -73,8 +95,21 @@ const StyledModalContainer = styled.View`
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
-const View1 = styled.View`
+const StyledModalSetContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
   flex: 0.5;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const View1 = styled.View`
+  flex: 0.3;
+`
+const SetdayTopView = styled.View`
+  flex: 0.5;
+  align-items: center;
+  justify-content: center;
 `
 
 const View2 = styled.View`
@@ -85,18 +120,34 @@ const View2 = styled.View`
 `
 const View21 = styled.View`
   flex: 1;
-  background-color: rgba(255, 255, 255, 1);
   flex-direction: row;
   justify-content: center;
+  align-items: center;
 `
-
+const RowView = styled.View`
+  /* background-color: rgba(89, 189, 232, 1); */
+  flex-direction: row;
+  width: ${constants.width / 1.7};
+  justify-content: center;
+  align-items: center;
+  height: 5%;
+`
+const View12 = styled.View`
+  flex: 1;
+  /* justify-content: center; */
+  /* background-color: rgba(233, 237, 244, 1); */
+`
 const View3 = styled.View`
-  flex: 0.5;
-  background-color: rgba(255, 255, 255, 1);
-  flex-direction: row;
+  flex: 0.005;
   justify-content: center;
 `
-
+const RowText = styled.Text`
+  font-size: 15;
+`
+const CopyText = styled.Text`
+  font-size: 17;
+  font-weight: bold;
+`
 export const SAVE_SCHEDULE = gql`
   mutation saveSchedule_my($scheduleArray: [ScheduleArray_my!]!) {
     saveSchedule_my(scheduleArray: $scheduleArray)
@@ -106,7 +157,7 @@ export let events_data = []
 let newScheduleArray = []
 export let selectDate = [new Date()]
 
-const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
+const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday }) => {
   const myState = scheduledata.me.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
 
   const lists = [
@@ -129,12 +180,14 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
       }
     }
   })
-  // SubjectList_tmp.push({ label: "TASK 없음", value: "" })
+  // SubjectList_tmp.push({ label: "과목 없음", value: "" })
   const SubjectList = SubjectList_tmp.filter(function (el) {
     return el != undefined
   })
 
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalCopyVisible, setModalCopyVisible] = useState(false)
+
   const [calVisibleStart, setCalVisibleStart] = useState(false)
   const [calVisibleEnd, setCalVisibleEnd] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
@@ -153,6 +206,21 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
   const [modifyLoading, setModifyLoading] = useState(false)
   const [delLoading, setDelLoading] = useState(false)
   const [dateStr, setDateStr] = useState(moment(new Date()).format("YYYY-MM-DD"))
+  //하루 스케줄
+  const [copyDayModal, setCopyDayModal] = useState(false)
+  const [copyStartDay, setCopyStartDay] = useState(new Date())
+  const [copyDaySetMdal, setCopydaySetMdal] = useState(false)
+  const [copySetDay, setCopySetDay] = useState(new Date())
+  const [copyDayLoading, setcopyDayLoading] = useState(false)
+
+  //주간 스케줄
+  const [selectDay, setselectDay] = useState(targetToday)
+  const [CalmodalVisible, setCalModalVisible] = useState(false)
+  const [selectSetDay, setselectSetDay] = useState(targetToday)
+  const [CalmodalWeekVisible, setCalModalWeekVisible] = useState(false)
+  const [copyWeekLoading, setcopyWeekLoading] = useState(false)
+
+  //
   const dateMark = new Object()
   dateMark[dateStr] = { selected: true }
 
@@ -166,6 +234,54 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
     refetchQueries: () => [{ query: SCHEDULE_USER }],
   })
 
+  //copy 모달
+  var currentDay = new Date(selectDay)
+  var theYear = currentDay.getFullYear()
+  var theMonth = currentDay.getMonth()
+  var theDate = currentDay.getDate()
+  var theDayOfWeek = currentDay.getDay() //요일
+  var thisWeek = []
+  var thism = []
+  var thisd = []
+  var thisy = []
+  for (var i = 0; i < 7; i++) {
+    var resultDay = new Date(theYear, theMonth, theDate + (i - theDayOfWeek))
+    var yyyy = resultDay.getFullYear()
+    var mm = Number(resultDay.getMonth()) + 1
+    var dd = resultDay.getDate()
+
+    mm = String(mm).length === 1 ? "0" + mm : mm
+    dd = String(dd).length === 1 ? "0" + dd : dd
+
+    thisWeek[i] = yyyy + "-" + mm + "-" + dd
+    thisy[i] = yyyy
+    thism[i] = mm
+    thisd[i] = dd
+  }
+  var currentSetDay = new Date(selectSetDay)
+  var theSetYear = currentSetDay.getFullYear()
+  var theSetMonth = currentSetDay.getMonth()
+  var theSetDate = currentSetDay.getDate()
+  var theSetDayOfWeek = currentSetDay.getDay() //요일
+  var thisSetWeek = []
+  var thisSetm = []
+  var thisSetd = []
+  var thisSety = []
+  for (var i = 0; i < 7; i++) {
+    var resultDay = new Date(theSetYear, theSetMonth, theSetDate + (i - theSetDayOfWeek))
+    var yyyy = resultDay.getFullYear()
+    var mm = Number(resultDay.getMonth()) + 1
+    var dd = resultDay.getDate()
+
+    mm = String(mm).length === 1 ? "0" + mm : mm
+    dd = String(dd).length === 1 ? "0" + dd : dd
+
+    thisSetWeek[i] = yyyy + "-" + mm + "-" + dd
+    thisSety[i] = yyyy
+    thisSetm[i] = mm
+    thisSetd[i] = dd
+  }
+  ///
   const settingData = async () => {
     try {
       events_data = scheduledata.me.schedules.map((List) => {
@@ -237,7 +353,6 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
       Alert.alert("To Do List를 입력하세요.")
       return
     }
-
     let overlap = false
     const schedules_test = ObjectCopy(events_data)
     const checkExist = (a) => a.id === scheduleId
@@ -370,6 +485,101 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
     }
   }
 
+  //copyStartDay
+  const copyDaySchedule = async () => {
+    var coptSetDay = new Date(copySetDay)
+    var theSetYear = coptSetDay.getFullYear()
+    var theSetMonth = coptSetDay.getMonth() + 1
+    var theSetDate = coptSetDay.getDate()
+    var mm = String(theSetMonth).length === 1 ? "0" + theSetMonth : theSetMonth
+    var dd = String(theSetDate).length === 1 ? "0" + theSetDate : theSetDate
+    var thisCopy = theSetYear + "-" + mm + "-" + dd
+
+    const onday = scheduledata.me.schedules.filter(
+      (i) => moment(i.start).format("YYYY-MM-DD") == moment(copyStartDay).format("YYYY-MM-DD")
+    )
+    // console.log(onday, "onday")
+    for (var i = 0; i < onday.length; i++) {
+      const generateId =
+        Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+
+      const copyDayschedules = {
+        id: generateId,
+        isAllDay: false,
+        isPrivate,
+        title: onday[i].title,
+        location: onday[i].location,
+        state: onday[i].state,
+        start: moment(thisCopy + moment(onday[i].start).format("LT"), "YYYY-MM-DDLT"),
+        end: moment(thisCopy + moment(onday[i].end).format("LT"), "YYYY-MM-DDLT"),
+        totalTime: onday[i].totalTime,
+        calendarId: onday[i].subjectId,
+        option: "create",
+      }
+      newScheduleArray.push(copyDayschedules)
+    }
+    try {
+      setcopyDayLoading(true)
+      const {
+        data: { saveSchedule_my },
+      } = await scheduleMutation()
+      if (!saveSchedule_my) {
+        Alert.alert("스케줄을 수정할 수 없습니다.")
+      } else {
+        setModalCopyVisible(!modalCopyVisible)
+      }
+    } catch (e) {
+      const realText = e.message.split("GraphQL error: ")
+      Alert.alert(realText[1])
+    } finally {
+      setcopyDayLoading(false)
+      newScheduleArray = []
+    }
+  }
+  //copyStartWeek
+  const copyWeekSchedule = async () => {
+    for (var i = 0; i < 7; i++) {
+      const onweekDay = scheduledata.me.schedules.filter(
+        (k) => moment(k.start).format("YYYY-MM-DD") == thisWeek[i]
+      )
+      for (var j = 0; j < onweekDay.length; j++) {
+        const generateId =
+          Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        const copyWeekSchedules = {
+          id: generateId,
+          isAllDay: false,
+          isPrivate,
+          title: onweekDay[j].title,
+          location: onweekDay[j].location,
+          state: onweekDay[j].state,
+          start: moment(thisSetWeek[i] + moment(onweekDay[j].start).format("LT"), "YYYY-MM-DDLT"),
+          end: moment(thisSetWeek[i] + moment(onweekDay[j].end).format("LT"), "YYYY-MM-DDLT"),
+          totalTime: onweekDay[j].totalTime,
+          calendarId: onweekDay[j].subjectId,
+          option: "create",
+        }
+        newScheduleArray.push(copyWeekSchedules)
+      }
+    }
+    try {
+      setcopyWeekLoading(true)
+      const {
+        data: { saveSchedule_my },
+      } = await scheduleMutation()
+      if (!saveSchedule_my) {
+        Alert.alert("스케줄을 수정할 수 없습니다.")
+        newScheduleArray = []
+      } else {
+        setModalCopyVisible(!modalCopyVisible)
+      }
+    } catch (e) {
+      const realText = e.message.split("GraphQL error: ")
+      Alert.alert(realText[1])
+    } finally {
+      setcopyWeekLoading(false)
+      newScheduleArray = []
+    }
+  }
   if (!loading) {
     settingData()
   }
@@ -387,7 +597,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
         <SafeAreaView style={styles.container}>
           <View
             style={{
-              flex: 0.08,
+              flex: 0.05,
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "row",
@@ -396,8 +606,8 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
           >
             <View
               style={{
-                flex: 1,
                 // position: "absolute",
+                width: "15%",
                 alignItems: "center",
               }}
             >
@@ -409,7 +619,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                 <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={25} />
               </TouchableOpacity>
             </View>
-            <View style={{ flex: 2, alignItems: "center" }}>
+            <View style={{ width: "55%", alignItems: "center" }}>
               <TouchableOpacity onPress={() => setModalVisible2(!modalVisible2)}>
                 <Text style={{ fontSize: 17, fontWeight: "bold" }}>스케줄 ({dateStr})</Text>
               </TouchableOpacity>
@@ -440,33 +650,272 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                 />
               </Modal>
             </View>
+
             <View
               style={{
-                flex: 1,
+                width: "15%",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setModalCopyVisible(!modalCopyVisible)
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-copy" : "md-copy"} size={25} />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: "10%",
                 alignItems: "center",
               }}
             >
               <Timetablecontrol />
             </View>
           </View>
-          <WeekView
-            events={events_data}
-            selectedDate={selectDate[0]}
-            numberOfDays={7}
-            onEventPress={onEventPress}
-            headerStyle={styles.headerStyle}
-            formatDateHeader="D(dd)"
-            hoursInDisplay={12}
-            startHour={new Date().getHours()}
-            onSwipeNext={(date) => {
-              selectDate[0].setTime(date.getTime())
-              setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
+          <View
+            style={{
+              flex: 1,
+              // alignItems: "center",
+              // justifyContent: "center",
+              // flexDirection: "row",
+              // position: "relative",
             }}
-            onSwipePrev={(date) => {
-              selectDate[0].setTime(date.getTime())
-              setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
+          >
+            <WeekView
+              events={events_data}
+              selectedDate={selectDate[0]}
+              numberOfDays={7}
+              onEventPress={onEventPress}
+              headerStyle={styles.headerStyle}
+              formatDateHeader="D(dd)"
+              hoursInDisplay={12}
+              startHour={new Date().getHours()}
+              onSwipeNext={(date) => {
+                selectDate[0].setTime(date.getTime())
+                setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
+              }}
+              onSwipePrev={(date) => {
+                selectDate[0].setTime(date.getTime())
+                setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
+              }}
+            />
+          </View>
+          <Modal
+            isVisible={modalCopyVisible}
+            onBackdropPress={() => setModalCopyVisible(false)}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: Math.round(Dimensions.get("window").height),
             }}
-          />
+          >
+            <StyledModalSetContainer style={{ width: constants.width / 1.2 }}>
+              <EmptyView5>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalCopyVisible(!modalCopyVisible)
+                  }}
+                >
+                  <Icon
+                    name={
+                      Platform.OS === "ios" ? "ios-close-circle-outline" : "md-close-circle-outline"
+                    }
+                    size={30}
+                  />
+                </TouchableOpacity>
+              </EmptyView5>
+              <ModalView04>
+                <SetdayTopView>
+                  <CopyText>하루 스케줄 복사</CopyText>
+                </SetdayTopView>
+                <View21>
+                  <ModalView>
+                    <TouchableOpacity onPress={() => setCopyDayModal(!copyDayModal)}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                        }}
+                      >
+                        {moment(copyStartDay).format("YYYY-MM-DD")}(
+                        {dayList[moment(copyStartDay).weekday()]})
+                      </Text>
+                    </TouchableOpacity>
+                  </ModalView>
+                  <ModalView2>
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-arrow-forward" : "md-arrow-forward"}
+                      size={30}
+                    />
+                  </ModalView2>
+                  <ModalView>
+                    <TouchableOpacity onPress={() => setCopydaySetMdal(!copyDaySetMdal)}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                        }}
+                      >
+                        {moment(copySetDay).format("YYYY-MM-DD")}(
+                        {dayList[moment(copySetDay).weekday()]})
+                      </Text>
+                    </TouchableOpacity>
+                  </ModalView>
+                </View21>
+                <View21>
+                  <AuthButton
+                    text={"복사"}
+                    color="white"
+                    bgColor={"#0f4c82"}
+                    onPress={() => {
+                      copyDaySchedule()
+                    }}
+                    widthRatio={5}
+                    marginArray={[0, 0, 0, 0]}
+                    loading={copyDayLoading}
+                  />
+                </View21>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  isVisible={copyDayModal}
+                  backdropColor={"black"}
+                  onBackdropPress={() => setCopyDayModal(!copyDayModal)}
+                >
+                  <Calendar
+                    current={copyStartDay}
+                    onDayPress={(day) => {
+                      const date_tmp = new Date(day.timestamp)
+                      date_tmp.setHours(copyStartDay.getHours())
+                      date_tmp.setMinutes(copyStartDay.getMinutes())
+                      copyStartDay.setTime(date_tmp.getTime())
+                      setCopyDayModal(!copyDayModal)
+                    }}
+                    monthFormat={"yyyy MM"}
+                    onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                    onPressArrowRight={(addMonth) => addMonth()}
+                  />
+                </Modal>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  isVisible={copyDaySetMdal}
+                  backdropColor={"black"}
+                  onBackdropPress={() => setCopydaySetMdal(!copyDaySetMdal)}
+                >
+                  <Calendar
+                    current={copySetDay}
+                    onDayPress={(day) => {
+                      // const date_tmp = new Date(day.timestamp)
+                      // date_tmp.setHours(copySetDay.getHours())
+                      // date_tmp.setMinutes(copySetDay.getMinutes())
+                      // copySetDay.setTime(date_tmp.getTime())
+                      setCopySetDay(day.timestamp)
+                      setCopydaySetMdal(!copyDaySetMdal)
+                    }}
+                    monthFormat={"yyyy MM"}
+                    onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                    onPressArrowRight={(addMonth) => addMonth()}
+                  />
+                </Modal>
+              </ModalView04>
+              <EmptyView5 />
+              <ModalView04>
+                <SetdayTopView>
+                  <CopyText>주간 스케줄 복사</CopyText>
+                </SetdayTopView>
+                <View21>
+                  <ModalView>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCalModalVisible(!CalmodalVisible)
+                      }}
+                    >
+                      <Text>
+                        {thism[0]}.{thisd[0]}(일)~{thism[6]}.{thisd[6]}(토)
+                      </Text>
+                    </TouchableOpacity>
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      isVisible={CalmodalVisible}
+                      onBackdropPress={() => {
+                        setCalModalVisible(!CalmodalVisible)
+                      }}
+                      backdropColor={"black"}
+                    >
+                      <Calendar
+                        current={selectDay}
+                        minDate={"2012-05-10"}
+                        maxDate={"2030-05-30"}
+                        onDayPress={(day) => {
+                          setselectDay(day.timestamp)
+                          setCalModalVisible(!CalmodalVisible)
+                        }}
+                        monthFormat={"yyyy MM"}
+                        onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                        onPressArrowRight={(addMonth) => addMonth()}
+                      />
+                    </Modal>
+                  </ModalView>
+                  <ModalView2>
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-arrow-forward" : "md-arrow-forward"}
+                      size={30}
+                    />
+                  </ModalView2>
+                  <ModalView>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setCalModalWeekVisible(!CalmodalWeekVisible)
+                      }}
+                    >
+                      <Text>
+                        {thisSetm[0]}.{thisSetd[0]}(일)~
+                        {thisSetm[6]}.{thisSetd[6]}(토)
+                      </Text>
+                    </TouchableOpacity>
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      isVisible={CalmodalWeekVisible}
+                      onBackdropPress={() => {
+                        setCalModalWeekVisible(!CalmodalWeekVisible)
+                      }}
+                      backdropColor={"black"}
+                    >
+                      <Calendar
+                        current={selectSetDay}
+                        minDate={"2012-05-10"}
+                        maxDate={"2030-05-30"}
+                        onDayPress={(day) => {
+                          setselectSetDay(day.timestamp)
+                          setCalModalWeekVisible(!CalmodalWeekVisible)
+                        }}
+                        monthFormat={"yyyy MM"}
+                        onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                        onPressArrowRight={(addMonth) => addMonth()}
+                      />
+                    </Modal>
+                  </ModalView>
+                </View21>
+                <View21>
+                  <AuthButton
+                    text={"복사"}
+                    color="white"
+                    bgColor={"#0f4c82"}
+                    onPress={() => {
+                      copyWeekSchedule()
+                    }}
+                    widthRatio={5}
+                    marginArray={[0, 0, 0, 0]}
+                    loading={copyWeekLoading}
+                  />
+                </View21>
+              </ModalView04>
+            </StyledModalSetContainer>
+          </Modal>
+          {/* //////////////////////////////////////////////////////////////////////////////////////// */}
           <Modal
             isVisible={isModalVisible}
             onBackdropPress={() => issetModalVisible(false)}
@@ -477,13 +926,13 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
               minHeight: Math.round(Dimensions.get("window").height),
             }}
           >
-            <StyledModalContainer style={{ width: constants.width / 1.5 }}>
+            <StyledModalContainer style={{ width: constants.width / 1.3 }}>
               <View1 />
               <ModalView style={{ width: constants.width / 1.7 }}>
                 <RNPickerSelect
                   onValueChange={(value) => {
                     if (value === null) {
-                      Alert.alert("TASK을 선택하세요.")
+                      Alert.alert("과목을 선택하세요.")
                     } else {
                       const findSubject = (a) => a.id === value
                       const tmpIndex = scheduledata.mySubject.findIndex(findSubject)
@@ -493,7 +942,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                   }}
                   items={SubjectList}
                   placeholder={{
-                    label: "TASK 선택...",
+                    label: "과목 선택...",
                     value: null,
                   }}
                   value={scheduledata.mySubject[selectIndex].id}
@@ -539,18 +988,21 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
               <View1 />
               {Platform.OS === "ios" ? (
                 <>
-                  <View21>
-                    <TouchableOpacity onPress={() => setCalVisibleStart(!calVisibleStart)}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          color: startTime >= endTime ? "red" : "black",
-                        }}
-                      >
-                        {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
-                        )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </Text>
-                    </TouchableOpacity>
+                  <RowView>
+                    <View3 />
+                    <View12>
+                      <TouchableOpacity onPress={() => setCalVisibleStart(!calVisibleStart)}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            color: startTime >= endTime ? "red" : "black",
+                          }}
+                        >
+                          {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
+                          )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </Text>
+                      </TouchableOpacity>
+                    </View12>
                     <Modal
                       animationType="slide"
                       transparent={true}
@@ -572,26 +1024,34 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                         onPressArrowRight={(addMonth) => addMonth()}
                       />
                     </Modal>
-                    <TouchableOpacity onPress={showMode}>
-                      <View2>
-                        <Text
-                          style={{
-                            fontSize: 15,
-                            color: startTime >= endTime ? "red" : "black",
-                          }}
-                        >
-                          {startTimeText}
+                    <View3 />
+
+                    <View12>
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={startTime}
+                        mode={"time"}
+                        is24Hour={true}
+                        display="spinner"
+                        onChange={startPicker}
+                        minuteInterval={5}
+                        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+                      />
+                    </View12>
+                  </RowView>
+                  <RowView>
+                    <RowText>|</RowText>
+                  </RowView>
+                  <RowView>
+                    <View3 />
+                    <View12>
+                      <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
+                        <Text style={{ fontSize: 15 }}>
+                          {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
+                          )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </Text>
-                      </View2>
-                    </TouchableOpacity>
-                  </View21>
-                  <View21>
-                    <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
-                      <Text style={{ fontSize: 15 }}>
-                        {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
-                        )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </Text>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
+                    </View12>
                     <Modal
                       animationType="slide"
                       transparent={true}
@@ -613,26 +1073,36 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                         onPressArrowRight={(addMonth) => addMonth()}
                       />
                     </Modal>
-                    <TouchableOpacity onPress={showModeEnd}>
-                      <View2>
-                        <Text style={{ fontSize: 15 }}>{endTimeText}</Text>
-                      </View2>
-                    </TouchableOpacity>
-                  </View21>
+                    <View3 />
+                    <View12>
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={endTime}
+                        mode={"time"}
+                        is24Hour={true}
+                        display="spinner"
+                        onChange={endPicker}
+                        minuteInterval={5}
+                        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+                      />
+                    </View12>
+                  </RowView>
                 </>
               ) : (
                 <>
                   <View21>
                     <TouchableOpacity onPress={() => setCalVisibleStart(!calVisibleStart)}>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          color: startTime >= endTime ? "red" : "black",
-                        }}
-                      >
-                        {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
-                        )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </Text>
+                      <View2>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            color: startTime >= endTime ? "red" : "black",
+                          }}
+                        >
+                          {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
+                          )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </Text>
+                      </View2>
                     </TouchableOpacity>
                     <Modal
                       animationType="slide"
@@ -670,10 +1140,12 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                   </View21>
                   <View21>
                     <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
-                      <Text style={{ fontSize: 18 }}>
-                        {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
-                        )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </Text>
+                      <View2>
+                        <Text style={{ fontSize: 18 }}>
+                          {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
+                          )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </Text>
+                      </View2>
                     </TouchableOpacity>
                     <Modal
                       animationType="slide"
@@ -792,64 +1264,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh }) => {
                 />
               </ButtonModalView>
             </StyledModalContainer>
-            {Platform.OS === "ios" ? (
-              <EmptyView>
-                <EmptyView>
-                  <Modal
-                    animationType="slide"
-                    transparent={true}
-                    isVisible={modalVisible}
-                    backdropColor={"white"}
-                  >
-                    <TouchableOpacity onPress={offMode}>
-                      <View style={{ alignItems: "flex-end" }}>
-                        <Text>선택</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View3>
-                      <View1>
-                        <DateTimePicker
-                          testID="dateTimePicker"
-                          value={startTime}
-                          mode={"time"}
-                          is24Hour={true}
-                          display="spinner"
-                          onChange={startPicker}
-                          minuteInterval={5}
-                        />
-                      </View1>
-                    </View3>
-                  </Modal>
-                </EmptyView>
-                <EmptyView>
-                  <Modal
-                    animationType="slide"
-                    transparent={true}
-                    isVisible={modalVisibleEnd}
-                    backdropColor={"white"}
-                  >
-                    <TouchableOpacity onPress={offModeEnd}>
-                      <View style={{ alignItems: "flex-end" }}>
-                        <Text>선택</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View3>
-                      <View1>
-                        <DateTimePicker
-                          testID="dateTimePicker"
-                          value={endTime}
-                          mode={"time"}
-                          is24Hour={true}
-                          display="spinner"
-                          onChange={endPicker}
-                          minuteInterval={5}
-                        />
-                      </View1>
-                    </View3>
-                  </Modal>
-                </EmptyView>
-              </EmptyView>
-            ) : (
+            {Platform.OS === "ios" ? null : (
               <EmptyView>
                 {modalVisible && (
                   <DateTimePicker

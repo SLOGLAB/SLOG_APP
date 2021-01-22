@@ -23,11 +23,11 @@ const MainView = styled.View`
   width: 100%; */
 `
 const AddToDoView = styled.View`
-  height: 7%;
+  height: 10%;
   flex-direction: row;
   margin-left: 5;
   margin-right: 5;
-  margin-top: 20;
+  margin-top: 10;
   align-items: center;
   justify-content: center;
 `
@@ -170,7 +170,7 @@ export default ({
   })
   // todolistData Task 없음이 위로오게
   todolistData.myTodolist.sort(function (a, b) {
-    const word = "TASK 없음"
+    const word = "과목 없음"
     return a.subject.name === word && b.subject.name !== word
       ? -1
       : a.subject.name !== word && b.subject.name === word
@@ -273,7 +273,7 @@ export default ({
               }}
               items={SubjectLists}
               placeholder={{
-                label: "TASK선택...",
+                label: "과목선택...",
                 value: null,
                 color: "red",
               }}
@@ -309,7 +309,7 @@ export default ({
               }}
               items={SubjectLists}
               placeholder={{
-                label: "TASK선택...",
+                label: "과목선택...",
                 value: null,
                 color: "red",
               }}

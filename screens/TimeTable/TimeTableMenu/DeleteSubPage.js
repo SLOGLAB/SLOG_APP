@@ -42,7 +42,7 @@ export default ({
 
   const DeleteSubject = () => {
     if (subjectId === "") {
-      Alert.alert("TASK을 선택하세요.")
+      Alert.alert("과목을 선택하세요.")
       return
     }
 
@@ -90,7 +90,7 @@ export default ({
         <RNPickerSelect
           onValueChange={(value) => {
             if (value === null) {
-              Alert.alert("TASK을 선택하세요.")
+              Alert.alert("과목을 선택하세요.")
             } else {
               setSubjectId(value)
             }
@@ -104,7 +104,7 @@ export default ({
               top: 9,
               right: 20,
             },
-            label: "TASK 선택...",
+            label: "과목 선택...",
             value: null,
             color: "black",
           }}
@@ -124,7 +124,7 @@ export default ({
           color="white"
           onPress={DeleteSubject}
           bgColor={"#0f4c82"}
-          text="TASK 제거"
+          text="과목 제거"
           loading={modifyLoading}
         />
       </View>

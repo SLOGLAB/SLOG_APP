@@ -54,7 +54,13 @@ export default TimetableWeek = () => {
       console.log(e)
     }
   }
+  var todaydate = new Date().getDate() //Current Date
+  var todaymonth = new Date().getMonth() + 1 //Current Month
+  var todayyear = new Date().getFullYear() //Current Year
+  var targetMonth = String(todaymonth).length === 1 ? "0" + todaymonth : todaymonth
+  var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
+  var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
   if (loading) {
     return (
       <LoaderWrapper style={{ minHeight: Math.round(Dimensions.get("window").height) }}>
@@ -69,6 +75,7 @@ export default TimetableWeek = () => {
         onRefresh={onRefresh}
         loading={loading}
         SCHEDULE_USER={SCHEDULE_USER}
+        targetToday={targetToday}
       />
     )
   }

@@ -1,10 +1,10 @@
 import React from "react"
-import { Platform } from "react-native"
+import { Platform, Image } from "react-native"
 import styled from "styled-components"
 import { withNavigation } from "react-navigation"
-import NavBlackIcon from "../../components/NavBlackIcon"
+import Icon from "../../components/Icon"
 import * as ScreenOrientation from "expo-screen-orientation"
-
+// import Group59 from "../../assets/Group59"
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
   flex-direction: row;
@@ -12,19 +12,27 @@ const Container = styled.TouchableOpacity`
   align-items: center;
 `
 const ButtonText = styled.Text`
-  font-size: 15;
+  font-size: 30;
   margin-left: 5;
   margin-bottom: 3;
+  color: rgba(15, 76, 130, 1);
 `
 
 export default withNavigation(({ navigation }) => (
   <Container
     onPress={() => {
       navigation.navigate("StudyContainer")
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
+      // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+      // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
+      // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
     }}
   >
-    <NavBlackIcon name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"} size={30} />
-    <ButtonText>Start</ButtonText>
+    <Icon
+      name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"}
+      size={30}
+      color={"#0F4C82"}
+    />
+    <ButtonText>Play</ButtonText>
   </Container>
 ))

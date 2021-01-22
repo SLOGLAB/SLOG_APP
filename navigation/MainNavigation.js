@@ -13,7 +13,6 @@ import PhotoNavigation from "./PhotoNavigation"
 import SwiperBase from "../screens/Stat/SwiperBase"
 import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import StudyContainer from "../screens/Study/StudyContainer"
-
 import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import Apps from "../Object/Apps"

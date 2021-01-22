@@ -63,7 +63,7 @@ export default Timecontrol = ({ navigation }) => {
           <AButton
             bgColor={"rgb(230, 230, 230)"}
             onPress={() => navigation.navigate("BookmarkSubject")}
-            text="TASK 북마크"
+            text="과목 북마크"
             color={"black"}
           />
         </SubView>
@@ -71,7 +71,7 @@ export default Timecontrol = ({ navigation }) => {
           <AButton
             bgColor={"rgb(230, 230, 230)"}
             onPress={() => navigation.navigate("AddSubject")}
-            text="TASK 추가"
+            text="과목 추가"
             color={"black"}
           />
         </SubView>
@@ -79,7 +79,7 @@ export default Timecontrol = ({ navigation }) => {
           <AButton
             bgColor={"rgb(230, 230, 230)"}
             onPress={() => navigation.navigate("ChangeSubject")}
-            text="TASK 수정"
+            text="과목 수정"
             color={"black"}
           />
         </SubView>
@@ -87,7 +87,7 @@ export default Timecontrol = ({ navigation }) => {
           <AButton
             bgColor={"rgb(230, 230, 230)"}
             onPress={() => navigation.navigate("DeleteSubject")}
-            text="TASK 제거"
+            text="과목 제거"
             color={"black"}
           />
         </SubView>

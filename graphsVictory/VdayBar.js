@@ -30,7 +30,7 @@ const VdayBar = ({ taskArray }) => {
   const hour24 = (taskArray[23] / 60) * 100
 
   useEffect(() => {
-    // console.log(taskArray, "taskArray")
+    // console.log(taskArray, "과목Array")
   }, [])
 
   return (

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native"
 import styled from "styled-components"
 import { Ionicons } from "@expo/vector-icons"
@@ -19,10 +21,26 @@ import Swiper from "react-native-swiper"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import AuthInput from "../../components/AuthInput"
+import AuthInputline from "../../components/AuthInputline"
 import Modal from "react-native-modal"
 import AuthButton from "../../components/AuthButton"
 import LastWidth from "../../components/LastWidth"
 
+export const EDIT_POST = gql`
+  mutation editPost($postId: String!, $caption: String!, $location: String!) {
+    editPost(postId: $postId, caption: $caption, location: $location)
+  }
+`
+export const CREATE_POST = gql`
+  mutation createPost(
+    $location: String!
+    $caption: String!
+    $fileUrl: [String!]!
+    $fileKey: [String!]!
+  ) {
+    createPost(location: $location, caption: $caption, fileUrl: $fileUrl, fileKey: $fileKey)
+  }
+`
 const Container = styled.View`
   /* margin-bottom: 15px; */
   /* margin-top: 0px; */
@@ -138,6 +156,8 @@ const ImageContainer = styled.Image`
 `
 const RowView = styled.View`
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 export default ({ navigation }) => {
   const location = useInput("")
@@ -145,59 +165,125 @@ export default ({ navigation }) => {
   const photo = navigation.getParam("photo")
   const photo2 = navigation.getParam("photo2")
   const photo3 = navigation.getParam("photo3")
-  // useEffect(() => {
-  //   console.log(photo2)
-  // }, [])
-  return (
-    <StyledModalContainer>
-      <TextView2>
-        <Bold2>게시물 추가</Bold2>
-      </TextView2>
-      <RowView>
-        <ImageContainer source={photo} />
-        <ImageContainer source={photo2} />
-        <ImageContainer source={photo3} />
-      </RowView>
-      <TextView2 />
-      <AuthInput
-        paddingArray={[5, 0, 5, 0]}
-        numberOfLines={1}
-        {...location}
-        placeholder=" (선택 항목) 위치"
-        returnKeyType="done"
-        autoCorrect={false}
-        // {...bio}
-        // placeholder={"자기소개 (150자 이내)"}
-        // required={false}
-      />
+  const data = navigation.getParam("data")
 
-      <AuthInput
-        paddingArray={[0, 0, 70, 5]}
-        numberOfLines={4}
-        {...caption}
-        placeholder="(필수 항목) 내용"
-        returnKeyType="done"
-        autoCorrect={false}
-        // {...bio}
-        // placeholder={"자기소개 (150자 이내)"}
-        // required={false}
-      />
-      <InfoContainer>
-        <AuthButton
-          color="white"
-          onPress={() => onEdit()}
-          text="게시"
-          paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
-          widthRatio={LastWidth(1.7, 2.5, 40)}
+  const [editPostMutation] = useMutation(EDIT_POST)
+  const [createPostMutation] = useMutation(CREATE_POST)
+
+  const onSubmit = async (e) => {
+    // let sizeCheck = false;
+    // files.map((file) => {
+    //   if (file.fileSize > 1048576) {
+    //     sizeCheck = true;
+    //     return;
+    //   }
+    // });
+
+    // if (files.length === 0) {
+    //   alert('이미지 파일을 최소 1개 이상 등록해주세요.');
+    //   return;
+    // } else if (sizeCheck) {
+    //   alert('이미지 파일당 최대 크기는 1MB입니다.');
+    //   return;
+    // } else if (caption.value === '') {
+    //   alert('게시물 내용을 작성하세요.');
+    //   return;
+    // }
+
+    try {
+      const formData = new FormData()
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i].file)
+      }
+
+      const { data } = await axios.post(
+        process.env.REACT_APP_BACKEND_URI + "/api/upload/feed",
+        formData,
+        {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        }
+      )
+      const fileUrl = data.map((file) => file.location)
+      const fileKey = data.map((file) => file.key)
+
+      const {
+        data: { createPost },
+      } = await createPostMutation({
+        variables: {
+          location: location.value,
+          caption: caption.value,
+          fileUrl,
+          fileKey,
+        },
+      })
+      if (!createPost) {
+        Alert.alert("게시물을 추가할 수 없습니다.")
+      } else {
+        await refetch()
+        allClear()
+        setMyTabs(0)
+        toast.success("게시물이 추가 되었습니다.")
+      }
+    } catch (e) {
+      const realText = e.message.split("GraphQL error: ")
+      Alert.alert(realText[1], "hi")
+    }
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <StyledModalContainer>
+        <TextView2>
+          <Bold2>게시물 추가</Bold2>
+        </TextView2>
+        <RowView>
+          <ImageContainer source={photo} />
+          {photo2 === null ? null : <ImageContainer source={photo2} />}
+          {photo3 === null ? null : <ImageContainer source={photo3} />}
+        </RowView>
+        <TextView2 />
+        <AuthInput
+          paddingArray={[5, 0, 5, 0]}
+          numberOfLines={1}
+          {...location}
+          placeholder=" (선택 항목) 위치"
+          returnKeyType="done"
+          autoCorrect={false}
+          // {...bio}
+          // placeholder={"자기소개 (150자 이내)"}
+          // required={false}
         />
-        <AuthButton
-          color="white"
-          onPress={() => navigation.navigate("Select")}
-          text="돌아가기"
-          paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
-          widthRatio={LastWidth(1.7, 2.5, 40)}
+
+        <AuthInputline
+          paddingArray={[0, 0, 70, 5]}
+          numberOfLines={4}
+          {...caption}
+          placeholder="(필수 항목) 내용"
+          returnKeyType="done"
+          autoCorrect={false}
+          // {...bio}
+          // placeholder={"자기소개 (150자 이내)"}
+          // required={false}
         />
-      </InfoContainer>
-    </StyledModalContainer>
+        <InfoContainer>
+          <AuthButton
+            color="white"
+            onPress={() => onSubmit()}
+            text="게시"
+            paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+            widthRatio={LastWidth(1.7, 2.5, 40)}
+          />
+          <AuthButton
+            color="white"
+            onPress={() => navigation.navigate("Select")}
+            text="돌아가기"
+            paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+            widthRatio={LastWidth(1.7, 2.5, 40)}
+          />
+        </InfoContainer>
+      </StyledModalContainer>
+    </TouchableWithoutFeedback>
   )
 }

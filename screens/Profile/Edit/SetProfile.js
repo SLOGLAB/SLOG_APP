@@ -15,11 +15,14 @@ import {
 import constants from "../../../constants"
 import AuthButton from "../../../components/AuthButton"
 import AuthInput from "../../../components/AuthInput"
+
+import AuthInputline from "../../../components/AuthInputline"
 import Modal from "react-native-modal"
 import RNPickerSelect from "react-native-picker-select"
 import { CheckBox, Row } from "native-base"
 import LastWidth from "../../../components/LastWidth"
 // import Textarea from "../../../components/Textarea"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 const View = styled.View`
   justify-content: center;
@@ -413,7 +416,7 @@ export default ({
                   </StyledModalContainer>
                 </Modal>
                 <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
-                <SelectView style={{ width: constants.width / 1.7 }}>
+                {/* <SelectView style={{ width: constants.width / 1.7 }}>
                   <RowView>
                     <SelectView style={{ width: constants.width / 2.5, marginRight: 10 }}>
                       <RNPickerSelect
@@ -437,7 +440,7 @@ export default ({
                       bgColor={"#0f4c82"}
                     />
                   </RowView>
-                </SelectView>
+                </SelectView> */}
                 <Modal
                   isVisible={isQVisible}
                   onBackdropPress={() => setisQVisible(false)}
@@ -528,20 +531,23 @@ export default ({
                     }}
                   />
                 </SelectView>
-
-                <SelectView style={{ height: constants.height / 8 }}>
-                  <AuthInput
-                    paddingArray={[0, 0, 70, 5]}
-                    numberOfLines={4}
-                    {...bio}
-                    placeholder="자기소개 (150자 이내)"
-                    returnKeyType="done"
-                    autoCorrect={false}
-                    // {...bio}
-                    // placeholder={"자기소개 (150자 이내)"}
-                    // required={false}
-                  />
-                </SelectView>
+                <KeyboardAwareScrollView>
+                  <>
+                    {/* <SelectView style={{ height: constants.height / 8 }}> */}
+                    <AuthInputline
+                      // paddingArray={[0, 0, 70, 5]}
+                      numberOfLines={3}
+                      {...bio}
+                      placeholder="자기소개 (150자 이내)"
+                      returnKeyType="done"
+                      autoCorrect={false}
+                      // {...bio}
+                      // placeholder={"자기소개 (150자 이내)"}
+                      // required={false}
+                    />
+                    {/* </SelectView> */}
+                  </>
+                </KeyboardAwareScrollView>
                 <CheckWrap style={{ width: constants.width / 1.6 }}>
                   <CheckBox checked={marketing} onPress={() => onChangeMarketing()} />
                   <View style={{ marginLeft: 15 }}>

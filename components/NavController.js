@@ -2,7 +2,6 @@ import React from "react"
 import { useIsLoggedIn } from "../AuthContext"
 import AuthNavigation from "../navigation/AuthNavigation"
 import MainNavigation from "../navigation/MainNavigation"
-
 import { gql } from "apollo-boost"
 import { useQuery } from "@apollo/react-hooks"
 // const CLASSID = gql`

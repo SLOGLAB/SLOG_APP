@@ -270,12 +270,12 @@ const Today = ({
         slicedTime = [...scheduleTime_today, ...scheduleTime_nextday]
       }
       const duplIndex = schedule_label.indexOf(
-        scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "TASK 없음"
+        scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "과목 없음"
       )
       // 중복되는 TASK 인덱스 체크
       if (duplIndex === -1) {
         schedule_label.push(
-          scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "TASK 없음"
+          scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "과목 없음"
         )
         schedule_color.push(
           scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.bgColor : "#A1B56C"
@@ -466,37 +466,24 @@ const Today = ({
         </ChartView>
       </TouchableOpacity>
       <Line />
-      {SumArray(taskArray) === 0 ? (
-        <View>
-          <CenterView>
-            <SubText>시간대별 Deep Time </SubText>
-          </CenterView>
-          <VTodayBar
-            taskArray={taskArray}
-            ylength={1}
-            title={"시간별 Real 시간"}
-            title_y={"Real 시간(분)"}
-          />
-        </View>
-      ) : (
-        <View>
-          <CenterView>
-            {/* <Icon  name={Platform.OS === "ios" ? "ios-time" : "md-time"}
-              color={"black"} size={15}/> */}
-            <SubText>시간대별 Deep Time </SubText>
-          </CenterView>
-          <VTodayBar
-            taskArray={taskArray}
-            ylength={Math.max.apply(null, taskArray)}
-            title={"시간별 Real 시간"}
-            title_y={"Real 시간(분)"}
-          />
-        </View>
-      )}
+
+      <View>
+        <CenterView>
+          {/* <Icon name={Platform.OS === "ios" ? "ios-time" : "md-time"} color={"black"} size={15} /> */}
+          <SubText>시간대별 Deep Time </SubText>
+        </CenterView>
+        <VTodayBar
+          taskArray={taskArray}
+          // ylength={Math.max.apply(null, taskArray)}
+          ylength={60}
+          title={"시간별 Real 시간"}
+          title_y={"Real 시간(분)"}
+        />
+      </View>
       <Line />
       <View>
         <CenterView>
-          <SubText>TASK별 Deep Time </SubText>
+          <SubText>과목 Deep Time </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>Real</BoxText>
@@ -510,7 +497,7 @@ const Today = ({
           labels={schedule_label}
           label_1={"Real"}
           label_2={"Plan"}
-          title={"TASK별 Real 시간"}
+          title={"과목별 Real 시간"}
           title_x={"시간(분)"}
           stepSize_x={60}
         />
@@ -519,7 +506,7 @@ const Today = ({
       <View>
         <CenterView>
           <SubText>
-            {selectPercent ? "TASK별 Plan Deep Time 비율" : "TASK별 Real Deep Time 비율"}
+            {selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
           </SubText>
           <BoxView1>
             {schedule_label.map((name, index) => (
@@ -546,7 +533,7 @@ const Today = ({
               data={selectPercent ? taskArray_percentT : taskArray_percent}
               dataColor={schedule_color}
               labels={schedule_label}
-              title={selectPercent ? "TASK별 Plan Deep Time 비율" : "TASK별 Real Deep Time 비율"}
+              title={selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
               updateBoolean={selectPercent}
             />
           </FlexView>
@@ -562,7 +549,6 @@ const Today = ({
           </FlexView2>
         </RowView>
       </View>
-
       <Line />
       <View>
         <CenterView>

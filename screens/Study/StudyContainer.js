@@ -1,27 +1,20 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useEffect, useState, useRef } from "react"
+import { View, Dimensions, StyleSheet, Platform, StatusBar } from "react-native"
 import styled from "styled-components"
-import { Dimensions, TouchableWithoutFeedback, Keyboard, Button, Text } from "react-native"
-import StudyPresenter from "./StudyPresenter"
-import BackButton from "../../components/BackButton"
+import Apps from "../../Object/Apps"
+import Constants from "expo-constants"
 import constants from "../../constants"
-import {
-  MY_SUBJECT,
-  MY_TODOLIST,
-  ADD_TODOLIST,
-  DELETE_TODOLIST,
-  FINISH_TODOLIST,
-} from "../Tabs/QueryBox"
+import BackButton from "../../components/BackButton"
+import { gql } from "apollo-boost"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
-import Apps from "../../Object/Apps"
-import Constants from "expo-constants"
-import * as Notifications from "expo-notifications"
-import * as Permissions from "expo-permissions"
-import { gql } from "apollo-boost"
-
-// import SwipeMenu from "../../components/SwipeMenu"
-// import Apps from "../../Object/Apps"
+import StudyPoseLand from "../../Object/StudyPoseLand"
+import StudyPresenter from "./StudyPresenter"
+import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
+import TodoListController from "../TodoList/TodoListController"
+import TodoListEndController from "../TodoList/TodoListEndController"
+// const screen = Dimensions.get('screen');
 export const ME = gql`
   {
     me {
@@ -29,6 +22,7 @@ export const ME = gql`
       username
       fullName
       avatar
+      email
       existToggle
       studyPurpose
       todayTime {
@@ -90,58 +84,209 @@ export const ME = gql`
     }
   }
 `
-const Main = styled.View`
-  flex: 1;
+const ContainerLandscape = styled.View`
+  /* background-color: rgba(0, 0, 0, 1); */
+  /* align-items: center;
+  justify-content: center; */
+  /* height: ${(constants.height / 13) * 12}; */
 `
-const TopView = styled.View`
-  height: ${constants.height / 18};
-  background-color: rgba(15, 76, 130, 0.29);
-  align-items: flex-start;
-  justify-content: flex-end;
-`
-const SideView = styled.View`
-  flex: 0.55;
-`
-const SideView1 = styled.View`
-  flex: 0.45;
-`
-const AvatarView = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`
-const StudyView = styled.View`
-  flex: 3;
-  background-color: rgba(15, 76, 130, 0.29);
-`
-const TimeView = styled.View`
-  flex: 1;
-`
+
 const RowView = styled.View`
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  height: ${(constants.height / 14) * 13};
+  /* background-color: rgba(65, 129, 247, 1); */
 `
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-export default () => {
+const SideView = styled.View`
+  width: ${constants.width / 1};
+  flex: 1;
+`
+const SideView1 = styled.View`
+  flex: 1;
+  width: ${constants.width / 1};
+  height: ${constants.height / 2.05};
+`
+
+const useScreenDimensions = () => {
+  const [screenData, setScreenData] = useState(Dimensions.get("screen"))
+
+  useEffect(() => {
+    const onChange = (result) => {
+      setScreenData(result.screen)
+    }
+
+    Dimensions.addEventListener("change", onChange)
+
+    return () => Dimensions.removeEventListener("change", onChange)
+  })
+
+  return {
+    ...screenData,
+    isLandscape: screenData.width > screenData.height,
+  }
+}
+
+export default ({ navigation }) => {
+  const screenData = useScreenDimensions()
   const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
+  var todaydate = new Date().getDate() //Current Date
+  var todaymonth = new Date().getMonth() + 1 //Current Month
+  var todayyear = new Date().getFullYear() //Current Year
+  var targetMonth = String(todaymonth).length === 1 ? "0" + todaymonth : todaymonth
+  var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
+  var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
+
+  ///
+  const minValue_10 = (value) => value >= 10
+  const refreshTerm = useInput(10, minValue_10)
+
+  const todolistName = useInput("")
+  const scheduleTitle = useInput("")
+  const [studyBool, setStudyBool] = useState(false)
+  const [newTodoView, setNewTodoView] = useState(false)
+
+  const [refreshing, setRefreshing] = useState(false)
+  const [selectDate, setSelectDate] = useState(new Date())
+  const [nextDate, setNextDate] = useState(new Date())
+
+  const [selectPercent, setSelectPercent] = useState(true)
+
+  const oneDayHours_tmp = Array.from(Array(24).keys())
+  const oneDayHours = oneDayHours_tmp.map(String)
+
+  const isFirstRun = useRef(true)
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      nextDate.setDate(new Date().getDate() + 1)
+      return
+    }
+    nextDate.setTime(selectDate.getTime())
+    nextDate.setDate(nextDate.getDate() + 1)
+  }, [selectDate])
+  useEffect(() => {
+    myInfoRefetch()
+  }, [])
   return (
+    // <View style={[styles.container, screenData.isLandscape && styles.containerLandscape]}>
+    //   <View style={[styles.box, { width: screenData.width / 2 }]} />
+    // </View>
     <>
-      <Main>
-        <TopView>
-          <BackButton />
-        </TopView>
-        <RowView>
-          <AvatarView>
-            <Apps />
-          </AvatarView>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {Platform.OS == "ios" ? (
+            <StatusBar barStyle="dark-content" />
+          ) : (
+            <StatusBar barStyle="light-content" />
+          )}
+          <>
+            <RowView>
+              <SideView>
+                <StudyPoseLand
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  deg={"270deg"}
+                  // setbool={true}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                />
+              </SideView>
+              <SideView1>
+                <Container>
+                  <Tabs>
+                    <Tab
+                      heading="계획"
+                      tabStyle={
+                        Platform.OS === "ios"
+                          ? { backgroundColor: "#ffffff" }
+                          : { backgroundColor: "#0f4c82" }
+                      }
+                      activeTabStyle={
+                        Platform.OS === "ios"
+                          ? { backgroundColor: "#ffffff" }
+                          : { backgroundColor: "#0f4c82" }
+                      }
+                    >
+                      <TodoListController />
+                    </Tab>
+                    <Tab
+                      heading="완료"
+                      tabStyle={
+                        Platform.OS === "ios"
+                          ? { backgroundColor: "#ffffff" }
+                          : { backgroundColor: "#0f4c82" }
+                      }
+                      activeTabStyle={
+                        Platform.OS === "ios"
+                          ? { backgroundColor: "#ffffff" }
+                          : { backgroundColor: "#0f4c82" }
+                      }
+                    >
+                      <TodoListEndController />
+                    </Tab>
+                  </Tabs>
+                </Container>
+              </SideView1>
+            </RowView>
+          </>
+          {/* {screenData.isLandscape ? (
+          ) : (
+            <ContainerLandscape>
+              <TopView />
+              <BodyView>
+                <SideView>
+                  <Container>
+                    <StudyPoseLand
+                      navigation={navigation}
+                      myInfoData={myInfoData}
+                      myInfoRefetch={myInfoRefetch}
+                      deg={"0deg"}
+                      setbool={screenData.isLandscape}
+                    />
+                  </Container>
+                </SideView>
+                <SideView>
+                  <StudyPresenter
+                    myData={myInfoData.me}
+                    loading={loading}
+                    selectDate={selectDate}
+                    nextDate={nextDate}
+                    myInfoRefetch={myInfoRefetch}
+                  />
+                </SideView>
+              </BodyView>
+            </ContainerLandscape>
+          )} */}
 
-          <AvatarView>
-            <StudyPresenter myInfoData={myInfoData} />
-          </AvatarView>
-        </RowView>
-      </Main>
+          {/* <ContainerLandscape>
+            <TopView />
+            <RowView>
+              <SideView>
+                <Container>
+                  <Apps
+                    navigation={navigation}
+                    myInfoData={myInfoData}
+                    myInfoRefetch={myInfoRefetch}
+                  />
+                </Container>
+              </SideView>
+              <SideView>
+                <StudyPresenter
+                  myData={myInfoData.me}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                  myInfoRefetch={myInfoRefetch}
+                />
+              </SideView>
+            </RowView>
+          </ContainerLandscape> */}
+        </>
+      )}
     </>
   )
 }

@@ -322,13 +322,13 @@ const Months = ({
       const duplIndex = schedule_label.indexOf(
         scheduleList_selectDay_month[j].subject
           ? scheduleList_selectDay_month[j].subject.name
-          : "TASK 없음"
+          : "과목 없음"
       ) // 중복되는 TASK 인덱스 체크
       if (duplIndex === -1) {
         schedule_label.push(
           scheduleList_selectDay_month[j].subject
             ? scheduleList_selectDay_month[j].subject.name
-            : "TASK 없음"
+            : "과목 없음"
         )
         resultArray_schedule.push(SumArray(slicedTime))
         schedule_color.push(
@@ -535,7 +535,7 @@ const Months = ({
       <Line />
       <View>
         <CenterView>
-          <SubText>TASK별 Deep Time(시)</SubText>
+          <SubText>과목 Deep Time(시)</SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>Real</BoxText>
@@ -549,7 +549,7 @@ const Months = ({
           labels={schedule_label}
           label_1={"학습"}
           label_2={"목표"}
-          title={"TASK별 학습 시간"}
+          title={"과목별 학습 시간"}
           title_x={"시간(분)"}
           stepSize_x={60}
         />
@@ -559,7 +559,7 @@ const Months = ({
       <View>
         <CenterView>
           <SubText>
-            {selectPercent ? "TASK별 Plan Deep Time 비율" : "TASK별 Real Deep Time 비율"}
+            {selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
           </SubText>
           <BoxView1>
             {schedule_label.map((name, index) => (
@@ -586,7 +586,7 @@ const Months = ({
               data={selectPercent ? taskArray_percentT : taskArray_percent}
               dataColor={schedule_color}
               labels={schedule_label}
-              title={selectPercent ? "TASK별 Plan Deep Time 비율" : "TASK별 Real Deep Time 비율"}
+              title={selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
               updateBoolean={selectPercent}
             />
           </FlexView>

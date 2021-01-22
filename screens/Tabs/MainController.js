@@ -12,7 +12,6 @@ import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
-import * as ScreenOrientation from "expo-screen-orientation"
 
 import { MY_TODOLIST, MY_SUBJECT, GO_WITH, EDIT_STUDYSET } from "../Tabs/QueryBox"
 
@@ -87,6 +86,8 @@ export const ME = gql`
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 export default ({ navigation }) => {
+  const { loading, error, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
+
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
   var todayyear = new Date().getFullYear() //Current Year
@@ -134,8 +135,6 @@ export default ({ navigation }) => {
     refetchQueries: () => [{ query: ME }],
   })
 
-  const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
-
   const onRefresh = async () => {
     try {
       setRefreshing(true)
@@ -148,11 +147,9 @@ export default ({ navigation }) => {
       setRefreshing(false)
     }
   }
-
   useEffect(() => {
     onRefresh()
   }, [])
-
   return (
     <ScrollView
       style={{ backgroundColor: "#FFFFFF" }}
@@ -167,32 +164,34 @@ export default ({ navigation }) => {
       {loading ? (
         <Loader />
       ) : (
-        <Main
-          myData={myInfoData.me}
-          selectDate={selectDate}
-          nextDate={nextDate}
-          loading={loading}
-          targetToday={targetToday}
-          onRefresh={onRefresh}
-          setSelectDate={setSelectDate}
-          oneDayHours={oneDayHours}
-          //
-          selectPercent={selectPercent}
-          setSelectPercent={setSelectPercent}
-          refreshTerm={refreshTerm}
-          studyBool={studyBool}
-          setStudyBool={setStudyBool}
-          todolistRefetch={todolistRefetch}
-          subjectData={subjectData.mySubject}
-          todolistName={todolistName}
-          newTodoView={newTodoView}
-          setNewTodoView={setNewTodoView}
-          scheduleTitle={scheduleTitle}
-          goWithMutation={goWithMutation}
-          myInfoRefetch={myInfoRefetch}
-          refreshing={refreshing}
-          setRefreshing={setRefreshing}
-        />
+        <>
+          <Main
+            myData={myInfoData.me}
+            selectDate={selectDate}
+            nextDate={nextDate}
+            loading={loading}
+            onRefresh={onRefresh}
+            goWithMutation={goWithMutation}
+            myInfoRefetch={myInfoRefetch}
+            refreshing={refreshing}
+            setRefreshing={setRefreshing}
+            // targetToday={targetToday}
+            // setSelectDate={setSelectDate}
+            // oneDayHours={oneDayHours}
+            //
+            // selectPercent={selectPercent}
+            // setSelectPercent={setSelectPercent}
+            // refreshTerm={refreshTerm}
+            // studyBool={studyBool}
+            // setStudyBool={setStudyBool}
+            // todolistRefetch={todolistRefetch}
+            // subjectData={subjectData.mySubject}
+            // todolistName={todolistName}
+            // newTodoView={newTodoView}
+            // setNewTodoView={setNewTodoView}
+            // scheduleTitle={scheduleTitle}
+          />
+        </>
       )}
     </ScrollView>
   )

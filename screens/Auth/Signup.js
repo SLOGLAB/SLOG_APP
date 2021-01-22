@@ -527,8 +527,8 @@ export default ({ navigation }) => {
           </StyledModalContainer>
         </Modal>
         <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
-        <SelectView style={{ width: constants.width / 1.7 }}>
-          {/* <RNPickerSelect
+        {/* <SelectView style={{ width: constants.width / 1.7 }}>
+           <RNPickerSelect
             {...studyPurpose}
             style={style_tmp}
             placeholder={{
@@ -536,7 +536,7 @@ export default ({ navigation }) => {
               value: null,
               color: "red",
             }}
-          /> */}
+          /> 
           <RowView>
             <SelectView style={{ width: constants.width / 2.5, marginRight: 10 }}>
               <RNPickerSelect
@@ -560,7 +560,7 @@ export default ({ navigation }) => {
               bgColor={"#0f4c82"}
             />
           </RowView>
-        </SelectView>
+        </SelectView> */}
         <Modal
           isVisible={isQVisible}
           onBackdropPress={() => setisQVisible(false)}

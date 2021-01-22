@@ -25,7 +25,7 @@ const TextInput2 = styled.TextInput`
   border-radius: 4px;
 `
 
-const AuthInput = ({
+const AuthInputline = ({
   placeholder,
   value,
   keyboardType = "default",
@@ -56,7 +56,7 @@ const AuthInput = ({
           secureTextEntry={secureTextEntry}
           paddingArray={paddingArray}
           numberOfLines={numberOfLines}
-          multiline={false}
+          multiline
         />
       ) : (
         <TextInput
@@ -72,14 +72,14 @@ const AuthInput = ({
           widthRatio={widthRatio}
           paddingArray={paddingArray}
           numberOfLines={numberOfLines}
-          multiline={false}
+          multiline
         />
       )}
     </Container>
   )
 }
 
-AuthInput.propTypes = {
+AuthInputline.propTypes = {
   placeholder: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   keyboardType: PropTypes.oneOf([
@@ -97,4 +97,4 @@ AuthInput.propTypes = {
   autoCorrect: PropTypes.bool,
 }
 
-export default AuthInput
+export default AuthInputline

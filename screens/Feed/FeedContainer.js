@@ -161,6 +161,7 @@ export default ({ navigation }) => {
   // }
   useEffect(() => {
     // console.log(feedData.seeAllFeed)
+    feedRefetch()
   }, [])
   return (
     <>

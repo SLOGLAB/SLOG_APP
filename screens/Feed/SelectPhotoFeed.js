@@ -38,8 +38,8 @@ const Text = styled.Text`
   font-weight: 600;
 `
 const ChoosePhoto = styled.TouchableOpacity`
-  width: ${constants.width / 2};
-  height: ${constants.width / 2};
+  width: ${constants.width / 2.2};
+  height: ${constants.width / 2.2};
   border-color: rgba(15, 76, 130, 1);
   border-width: 2;
   border-style: dashed;
@@ -47,15 +47,20 @@ const ChoosePhoto = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   margin-bottom: 5;
+  margin-right: ${constants.width / 3}; ;
 `
 
 const ImageContainer = styled.Image`
-  width: ${constants.width / 2.1};
-  height: ${constants.width / 2.1};
+  width: ${constants.width / 2.3};
+  height: ${constants.width / 2.3};
   position: absolute;
 `
-const RowView = styled.View`
-  flex-direction: row;
+const AbsoluteView = styled.View`
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  align-items: flex-end;
+  justify-content: flex-end;
 `
 export default ({ navigation }) => {
   const [loading, setLoading] = useState(true)
@@ -92,7 +97,12 @@ export default ({ navigation }) => {
   }
   const handleSelected = () => {
     if (image !== null) {
-      navigation.navigate("UploadFeed", { photo: image, photo2: image2, photo3: image3 })
+      navigation.navigate("UploadFeed", {
+        photo: image,
+        photo2: image2,
+        photo3: image3,
+        data: [image, image2, image3],
+      })
     } else {
       Alert.alert("이미지 파일을 최소 1개 이상 등록해주세요.")
     }
@@ -170,6 +180,11 @@ export default ({ navigation }) => {
                 style={{ width: constants.width, height: constants.height / 2.5 }}
                 source={{ uri: selected.uri }}
               /> */}
+              <AbsoluteView>
+                <Button onPress={handleSelected}>
+                  <Text>선택 완료</Text>
+                </Button>
+              </AbsoluteView>
               <ChoosePhoto onPress={isModelReady ? selectImage : undefined}>
                 {image && <ImageContainer source={image} />}
 
@@ -222,9 +237,7 @@ export default ({ navigation }) => {
                   )}
                 </ChoosePhoto>
               )}
-              <Button onPress={handleSelected}>
-                <Text>Select Photo</Text>
-              </Button>
+
               {/* <ScrollView
                 contentContainerStyle={{
                   flexDirection: "row",

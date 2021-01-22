@@ -16,7 +16,7 @@ export default createStackNavigator({
   // TimetableWeek: {
   //   screen: TimetableWeek,
   //   navigationOptions: {
-  //     title: "TASK",
+  //     title: "과목",
   //     headerLeft: <BackButton />,
   //     headerStyle: {
   //       ...stackStyles,
@@ -27,7 +27,7 @@ export default createStackNavigator({
   Timecontrol: {
     screen: Timecontrol,
     navigationOptions: {
-      title: "TASK",
+      title: "과목",
       headerLeft: <BackButton />,
       headerRight: <ToDoButton />,
       headerStyle: {
@@ -39,7 +39,7 @@ export default createStackNavigator({
   AddSubject: {
     screen: AddSubject,
     navigationOptions: {
-      title: "설정",
+      title: "과목 추가",
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
@@ -50,7 +50,7 @@ export default createStackNavigator({
   ChangeSubject: {
     screen: ChangeSubject,
     navigationOptions: {
-      title: "설정",
+      title: "과목 수정",
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
@@ -61,7 +61,7 @@ export default createStackNavigator({
   DeleteSubject: {
     screen: DeleteSubject,
     navigationOptions: {
-      title: "설정",
+      title: "과목 삭제",
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
@@ -72,7 +72,7 @@ export default createStackNavigator({
   AddTimetable: {
     screen: AddTimetable,
     navigationOptions: {
-      title: "설정",
+      title: "스케줄 만들기",
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
@@ -83,7 +83,7 @@ export default createStackNavigator({
   BookmarkSubject: {
     screen: BookmarkSubject,
     navigationOptions: {
-      title: "설정",
+      title: "과목 북마크",
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,

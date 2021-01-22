@@ -1,50 +1,47 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import VdayProgress from "../../graphsVictory/VdayProgress"
-import VdayBar from "../../graphsVictory/VdayBar"
+import React, { useEffect, useState, useRef } from "react"
 import {
-  Alert,
-  Dimensions,
-  TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Image,
-  Button,
+  TouchableOpacity,
+  FlatList,
+  Platform,
+  Alert,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native"
-import Barcharts from "../../graphs/BarCharts"
-import Icon from "../../components/Icon"
-import Modal from "react-native-modal"
+import styled from "styled-components"
+import RNPickerSelect from "react-native-picker-select"
+import { Ionicons } from "@expo/vector-icons"
 import AuthButton from "../../components/AuthButton"
+import AuthInput from "../../components/AuthInput"
 import LastWidth from "../../components/LastWidth"
-import Apps from "../../Object/Apps"
-import { gql } from "apollo-boost"
+import Icon from "../../components/Icon"
+import Barcharts from "../../graphs/BarCharts"
+import * as Notifications from "expo-notifications"
 import { useMutation } from "@apollo/react-hooks"
 import { EDIT_STUDYSET } from "../Tabs/QueryBox"
-import { ME } from "./MainController"
-import D_day from "../D_day"
-import * as Notifications from "expo-notifications"
-import * as Permissions from "expo-permissions"
 import Constants from "expo-constants"
+import * as Permissions from "expo-permissions"
+
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-import moment, { Moment } from "moment"
-import StudyButton from "../../screens/Study/StudyButton"
 const MainTView = styled.View`
   /* height:90%; */
-  width: 100%;
 `
 const ChartView = styled.View`
-  border: 2px;
+  border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
-  margin-left: 5;
-  margin-right: 5;
+  margin-left: 15;
+  margin-right: 15;
   /* height: 48%; */
 `
 const TextView = styled.View`
   /* height:35%; */
   margin-top: 10;
-  margin-left: 5;
-  margin-right: 5;
+  margin-left: 15;
+  margin-right: 15;
   background-color: rgba(255, 255, 255, 1);
   border: 2px;
   border-radius: 5;
@@ -62,25 +59,13 @@ const TextCenter = styled.View`
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10;
 `
-const TimeView = styled.View`
-  /* height:35%; */
-  margin-left: 5;
-  margin-right: 5;
-  margin-top: 10;
-  margin-bottom: 10;
-  padding-bottom: 10;
-  padding-top: 5;
-  background-color: rgba(255, 255, 255, 1);
-  border: 2px;
-  border-radius: 5;
-  border-color: rgba(233, 236, 243, 1);
-`
+
 const ChartTextView = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
-  margin-bottom: 10;
+  margin-bottom: 5;
 `
 
 const CoText = styled.Text`
@@ -95,7 +80,7 @@ const SubText = styled.Text`
 `
 const SubText2 = styled.Text`
   color: black;
-  font-size: 15;
+  font-size: 10;
   font-weight: bold;
 `
 const ExistTimeText = styled.Text`
@@ -110,7 +95,7 @@ const ExistText = styled.Text`
 `
 const TargetText = styled.Text`
   color: grey;
-  font-size: 15;
+  font-size: 10;
   font-weight: bold;
 `
 const MainView = styled.View`
@@ -118,6 +103,7 @@ const MainView = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  width: 85%;
 `
 
 const SubView = styled.View`
@@ -128,27 +114,40 @@ const SubView = styled.View`
   border: 2px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
-  margin-left: 5;
   margin-right: 5;
+`
+const TimeView = styled.View`
+  /* height:35%; */
+  margin-top: 5;
+  margin-bottom: 5;
+  padding-bottom: 5;
+  padding-top: 5;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px;
+  border-radius: 5;
+  border-color: rgba(233, 236, 243, 1);
+  width: 65%;
 `
 const SubView2 = styled.View`
   flex: 1;
   background-color: rgba(255, 255, 255, 1);
   justify-content: center;
   align-items: center;
-  border: 2px;
+  border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
   margin-left: 5;
-  margin-right: 5;
 `
 const Text = styled.Text`
   font-weight: bold;
   margin-top: 5;
 `
-const Text1 = styled.Text``
+const Text1 = styled.Text`
+  font-size: 10;
+`
 const RedText = styled.Text`
   color: red;
+  font-size: 10;
 `
 const LeftView = styled.View`
   justify-content: flex-start;
@@ -211,10 +210,7 @@ const ModalSubView = styled.View`
   align-items: center;
   justify-content: center;
 `
-const ModalSubView2 = styled.View`
-  flex: 0.8;
-  width: ${WIDTH / 1.4};
-`
+
 const LineView = styled.View`
   width: ${WIDTH / 1.4};
   height: 2px;
@@ -280,14 +276,12 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 })
-// let a = undefined
 
-const MainDay = ({
+export default ({
   nexistTime,
-  myData,
   nowtarget,
-  taskArray,
   donutPercent,
+  taskArray,
   nowScheduleTime,
   nowScheduleTimeT,
   nowScheduleColor,
@@ -299,14 +293,7 @@ const MainDay = ({
   nextTitle1,
   nextTitle2,
   next_TimeText,
-  onRefresh,
-  goWithMutation,
-  myInfoRefetch,
-  modalVisible,
-  setModalVisible,
-  refreshing,
-  setRefreshing,
-  nowEnd,
+  myData,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
   const [notification, setNotification] = useState(false)
@@ -385,6 +372,7 @@ const MainDay = ({
     }
   }
   const [studyBool, setStudyBool] = useState(false)
+
   // if (nowEnd == moment(now).format("hh:mma")) {
   //   noti()
   // }
@@ -394,117 +382,35 @@ const MainDay = ({
   //   }
   // }, 60000)
   useEffect(() => {
-    // console.log(nowTitle1, "nowTitle1,")
-    // console.log(nowTitle2, "nowTitle2,")
-    // console.log(nowEnd, "nowEnd")
+    // console.log(next_TimeText, "nowTitle1,")
+    // console.log(break_countdown, "break_countdown,")
+    // console.log(break_time, "break_time")
     // noti()
   }, [])
   return (
     <>
-      <MainTView>
-        <AvatarView>
-          <ScrollView style={{ backgroundColor: "#ffffff" }} horizontal={true}>
-            {/* <IndiviList1 /> */}
-            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-              <IndiviList>
-                <AvartarView>
-                  <Image
-                    style={{
-                      height: HEIGHT / 15,
-                      width: HEIGHT / 15,
-                      borderRadius: 30,
-                      marginTop: 0,
-                      marginBottom: 0,
-                      borderWidth: 3.5,
-                      borderColor: myData.existToggle
-                        ? "rgba(65, 129, 247, 1)"
-                        : "rgba(133, 133, 133, 1)",
-                    }}
-                    source={{ uri: myData.avatar }}
-                  />
-                </AvartarView>
-                <RowView>
-                  <Icon
-                    name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
-                    color={"rgba(34, 76, 126, 1)"}
-                    size={20}
-                  />
-                </RowView>
-                <FollowerName_Text>
-                  {myData.username.length > 6
-                    ? myData.username.substr(0, 5) + "..."
-                    : myData.username}
-                </FollowerName_Text>
-              </IndiviList>
-            </TouchableOpacity>
+      <ChartView>
+        {/* <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} /> */}
+        <ChartTextView>
+          <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
+          <ExistText>시간 </ExistText>
+          <ExistTimeText>
+            {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+          </ExistTimeText>
+          <ExistText>분 </ExistText>
+          <ExistText>/</ExistText>
 
-            {myData.withFollowing.map((list) => (
-              <IndiviList key={list.id}>
-                <AvartarView>
-                  <Image
-                    style={{
-                      height: HEIGHT / 15,
-                      width: HEIGHT / 15,
-                      borderRadius: 30,
-                      marginTop: 0,
-                      marginBottom: 0,
-                      borderWidth: 3.5,
-
-                      borderColor: list.existToggle
-                        ? "rgba(65, 129, 247, 1)"
-                        : "rgba(133, 133, 133, 1)",
-                    }}
-                    source={{ uri: list.avatar }}
-                  />
-                </AvartarView>
-                <FollowerName_Text>
-                  {list.username.length > 6 ? list.username.substr(0, 5) + "..." : list.username}
-                </FollowerName_Text>
-              </IndiviList>
-            ))}
-            <IndiviList></IndiviList>
-          </ScrollView>
-        </AvatarView>
-        {/* <AvartarView1> */}
-        {/* {studyBool ? <Apps studyBool={studyBool} setStudyBool={setStudyBool} /> : null} */}
-        {/* </AvartarView1> */}
-        <ChartView>
-          <StudyButton />
-          <ProgressView>
-            {/* {studyBool ? null : (
-              <Button
-                title="Start!!!"
-                onPress={() => {
-                  setStudyBool(!studyBool)
-                }}
-              />
-            )} */}
-            <TouchableOpacity onPress={onRefresh}>
-              <VdayProgress number={donutPercent} />
-            </TouchableOpacity>
-          </ProgressView>
-          <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} />
-
-          <ChartTextView>
-            <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
-            <ExistText>시간 </ExistText>
-            <ExistTimeText>
-              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
-            </ExistTimeText>
-            <ExistText>분 </ExistText>
-            <ExistText>/</ExistText>
-
-            <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
-            <TargetText>시간 </TargetText>
-            <TargetText>
-              {targetminutes - targethour * 60 < 10
-                ? `0${targetminutes - targethour * 60}`
-                : targetminutes - targethour * 60}
-            </TargetText>
-            <TargetText>분 </TargetText>
-          </ChartTextView>
-        </ChartView>
-
+          <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
+          <TargetText>시간 </TargetText>
+          <TargetText>
+            {targetminutes - targethour * 60 < 10
+              ? `0${targetminutes - targethour * 60}`
+              : targetminutes - targethour * 60}
+          </TargetText>
+          <TargetText>분 </TargetText>
+        </ChartTextView>
+      </ChartView>
+      <MainView>
         <TimeView>
           <TextCenter>
             <SubText2>{nowTitle1}</SubText2>
@@ -520,116 +426,32 @@ const MainDay = ({
             />
           )}
         </TimeView>
-        <MainView>
-          <SubView>
-            <Text>{break_title}</Text>
-            {break_countdown == 0 ? (
+        {/* <SubView>
+          <SubText2>{break_title}</SubText2>
+          {break_countdown == 0 ? (
+            <>
+              <Text1>{break_time}</Text1>
               <Text1 />
-            ) : (
+            </>
+          ) : (
+            <>
               <RedText>
                 {Math.floor(break_countdown / 3600000)}시간{" "}
                 {Math.floor(break_countdown / 60000) % 60}분 남음
               </RedText>
-            )}
-            <Text1>{break_time}</Text1>
-          </SubView>
-          <SubView2>
-            <Text>{nextTitle1}</Text>
-            <Text1> {nextTitle2}</Text1>
-            <Text1>{next_TimeText}</Text1>
-          </SubView2>
-        </MainView>
-        <TextView>
-          <LeftView>
-            <Text>시간대별 Deep Time</Text>
-            <SubText>24시 성취율(%)</SubText>
-          </LeftView>
-          <VdayBar taskArray={taskArray} />
-        </TextView>
-      </MainTView>
-
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: Math.round(Dimensions.get("window").height),
-        }}
-      >
-        <StyledModalContainer>
-          <ModalView>
-            <ModalSubView>
-              <CoText>동행자 관리</CoText>
-            </ModalSubView>
-            <LineView />
-            <ModalSubView2>
-              <ScrollView
-                style={{ backgroundColor: "#ffffff" }}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    style={{ backgroundColor: "#ffffff" }}
-                  />
-                }
-              >
-                {myData.following.map((list) => (
-                  <IndiviListView key={list.id}>
-                    <FollowerView>
-                      <Image
-                        style={{
-                          height: 45,
-                          width: 45,
-                          borderRadius: 25,
-                          marginTop: 0,
-                          marginBottom: 0,
-                        }}
-                        source={{ uri: list.avatar }}
-                      />
-                    </FollowerView>
-                    <FollowerNameView>
-                      <FollowerName_T> {list.email}</FollowerName_T>
-                      <FollowerName_Text1>{list.username}</FollowerName_Text1>
-                    </FollowerNameView>
-                    <TaskFlagView>
-                      {list.goWith ? (
-                        <AuthButton
-                          onPress={() => {
-                            onGoWith(list)
-                          }}
-                          text="동행중"
-                          color="black"
-                          bgColor={"#c7c7c7"}
-                          paddingArray={Platform.OS === "ios" ? [10, 10, 10, 10] : [7, 7, 7, 7]}
-                          widthRatio={LastWidth(1.5, 2.5, 18)}
-                        />
-                      ) : (
-                        <AuthButton
-                          onPress={() => {
-                            onGoWith(list)
-                          }}
-                          text="동행"
-                          color="white"
-                          bgColor={"#7BA9EB"}
-                          paddingArray={Platform.OS === "ios" ? [10, 10, 10, 10] : [7, 7, 7, 7]}
-                          widthRatio={LastWidth(1.5, 2.5, 18)}
-                        />
-                      )}
-                    </TaskFlagView>
-                  </IndiviListView>
-                ))}
-              </ScrollView>
-            </ModalSubView2>
-          </ModalView>
-        </StyledModalContainer>
-      </Modal>
+              <Text1>{break_time}</Text1>
+            </>
+          )}
+        </SubView> */}
+        <SubView2>
+          <SubText2>{nextTitle1}</SubText2>
+          <Text1> {nextTitle2}</Text1>
+          <Text1>{next_TimeText}</Text1>
+        </SubView2>
+      </MainView>
     </>
   )
 }
-
-export default MainDay
 async function sendPushNotification(expoPushToken) {
   const message = {
     to: expoPushToken,
@@ -679,25 +501,4 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
-}
-{
-  /* <DayText>
-          <MainView>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 20 }}
-              source={{ uri: data.me.avatar }}
-            />
-          </MainView>
-
-          <MainNameView>
-            {data.me.existToggle ? (
-              <CircleView style={{ backgroundColor: "#56BB37" }} />
-            ) : (
-              <CircleView style={{ backgroundColor: "black" }} />
-            )}
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "black", marginLeft: 5 }}>
-              {data.me.username}
-            </Text>
-          </MainNameView>
-        </DayText> */
 }

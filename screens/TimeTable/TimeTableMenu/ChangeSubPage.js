@@ -84,7 +84,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
 
   const onSelect = (value) => {
     if (value === null) {
-      Alert.alert("TASK을 선택하세요.")
+      Alert.alert("과목을 선택하세요.")
     } else {
       const findSubIndex = (a) => a.id === value
       const subjectIndex = subjectList.findIndex(findSubIndex)
@@ -97,7 +97,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
 
   const EditSubject = () => {
     if (subjectInput.value === "" || valueid === "") {
-      Alert.alert("TASK을 선택하세요.")
+      Alert.alert("과목을 선택하세요.")
       return
     }
 
@@ -108,7 +108,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
           data: { editSubject },
         } = await changesubjectMutation()
         if (!editSubject) {
-          Alert.alert("TASK을 수정할 수 없습니다.")
+          Alert.alert("과목을 수정할 수 없습니다.")
         }
       } catch (e) {
         const realText = e.message.split("GraphQL error: ")
@@ -145,7 +145,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
               onValueChange={(value) => onSelect(value)}
               items={list}
               placeholder={{
-                label: "TASK 선택...",
+                label: "과목 선택...",
                 value: null,
                 color: "black",
               }}
@@ -180,7 +180,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
 
             <AuthInput
               {...subjectInput}
-              placeholder={"TASK 이름 (예: 국어 or 문서작업)"}
+              placeholder={"과목 이름 (예: 국어 or 문서작업)"}
               keyboardType="email-address"
               returnKeyType="done"
               // onSubmitEditing={handleLogin}
@@ -218,7 +218,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
               color="white"
               onPress={EditSubject}
               bgColor={"#0f4c82"}
-              text="TASK 수정"
+              text="과목 수정"
               loading={modifyLoading}
             />
           </View05>

@@ -33,7 +33,7 @@ export default ({ navigation }) => {
 
   const [requestLoginMutation] = useMutation(REQUEST_LOGIN, {
     variables: { email: emailInput.value, password: confirmInput.value },
-    refetchQueries: () => [{ query: ME }],
+    // refetchQueries: () => [{ query: ME }],
   })
 
   // const logIn = useLogIn()

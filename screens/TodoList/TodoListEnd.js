@@ -172,7 +172,7 @@ export default ({
   })
   // todolistData Task 없음이 위로오게
   todolistData.myTodolist.sort(function (a, b) {
-    const word = "TASK 없음"
+    const word = "과목 없음"
     return a.subject.name === word && b.subject.name !== word
       ? -1
       : a.subject.name !== word && b.subject.name === word
@@ -205,7 +205,7 @@ export default ({
   })
   // todolistData_finish Task 없음이 위로오게
   todolistData_finish.sort(function (a, b) {
-    const word = "TASK 없음"
+    const word = "과목 없음"
     return a.subject.name === word && b.subject.name !== word
       ? -1
       : a.subject.name !== word && b.subject.name === word

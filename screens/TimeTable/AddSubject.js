@@ -76,7 +76,7 @@ export default AddSubject = ({ navigation }) => {
   }
   const AddSubject = async () => {
     if (subjectInput.value === "") {
-      Alert.alert("TASK 이름을 입력하세요.")
+      Alert.alert("과목 이름을 입력하세요.")
       return
     }
     try {
@@ -85,7 +85,7 @@ export default AddSubject = ({ navigation }) => {
         data: { addSubject },
       } = await addsubjectMutation()
       if (!addSubject) {
-        Alert.alert("TASK을 추가할 수 없습니다.")
+        Alert.alert("과목을 추가할 수 없습니다.")
       } else {
         subjectInput.setValue("")
       }
@@ -103,7 +103,7 @@ export default AddSubject = ({ navigation }) => {
         <View1>
           <AuthInput
             {...subjectInput}
-            placeholder="TASK 이름 (예: 국어 or 문서작업)"
+            placeholder="과목 이름 (예: 국어 or 문서작업)"
             keyboardType="email-address"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}
@@ -150,7 +150,7 @@ export default AddSubject = ({ navigation }) => {
               color="white"
               onPress={AddSubject}
               bgColor={"#0f4c82"}
-              text="TASK 추가"
+              text="과목 추가"
               loading={modifyLoading}
             />
           </View11>

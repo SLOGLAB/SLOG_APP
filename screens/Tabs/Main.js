@@ -17,6 +17,7 @@ const MainView1 = styled.View`
   background-color: rgba(255, 255, 255, 1);
   justify-content: center;
   align-items: center;
+  width: 100%;
 `
 
 let scheduleList_selectDay = []
@@ -249,12 +250,12 @@ const Main = ({
         slicedTime = [...scheduleTime_today, ...scheduleTime_nextday]
       }
       const duplIndex = schedule_label.indexOf(
-        scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "TASK 없음"
+        scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "과목 없음"
       )
       // 중복되는 TASK 인덱스 체크
       if (duplIndex === -1) {
         schedule_label.push(
-          scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "TASK 없음"
+          scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.name : "과목 없음"
         )
         schedule_color.push(
           scheduleList_selectDay[j].subject ? scheduleList_selectDay[j].subject.bgColor : "#A1B56C"

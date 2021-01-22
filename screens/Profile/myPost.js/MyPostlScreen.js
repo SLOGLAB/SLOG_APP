@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  KeyboardAvoidingView,
 } from "react-native"
 import styled from "styled-components"
 import { Ionicons } from "@expo/vector-icons"
@@ -26,6 +27,8 @@ import Modal from "react-native-modal"
 import AuthButton from "../../../components/AuthButton"
 import LastWidth from "../../../components/LastWidth"
 import Icon from "../../../components/Icon"
+import MyPost from "./MyPost"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 const Container = styled.View`
   /* margin-bottom: 15px; */
@@ -210,10 +213,13 @@ export default ({ navigation }) => {
     variables: { postId: navigation.getParam("item") },
     refetchQueries: () => [{ query: FEED_ONE_QUERY }],
   })
-  const keys = feedData.seeOneFeed.files.map((file) => file.key)
+  // const keys = feedData.seeOneFeed.files.map((file) => file.key)
 
   const [deletePostMutation] = useMutation(DELETE_POST, {
-    variables: { postId: navigation.getParam("item"), fileKey: keys },
+    variables: {
+      postId: navigation.getParam("item"),
+      fileKey: feedData.seeOneFeed.files.map((file) => file.key),
+    },
     refetchQueries: () => [{ query: ME }],
   })
   const [editPostMutation] = useMutation(EDIT_POST, {
@@ -342,252 +348,283 @@ export default ({ navigation }) => {
         {feedLoading ? (
           <Loader />
         ) : (
-          <Container>
-            <HeaderUserContainer>
-              <Touchable onPress={() => navigation.navigate("UserProfile")}>
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-                  color={"#262626"}
-                  size={40}
-                />
-              </Touchable>
-            </HeaderUserContainer>
-            <Line />
-            <Header>
-              <HeaderView>
-                <Touchable onPress={() => navigation.navigate("UserProfile")}>
-                  <Image
-                    style={{ height: 40, width: 40, borderRadius: 20 }}
-                    source={{ uri: feedData.seeOneFeed.user.avatar }}
-                  />
-                </Touchable>
-                <Touchable onPress={() => navigation.navigate("UserProfile")}>
-                  <HeaderUserContainer>
-                    <Bold>{feedData.seeOneFeed.user.username}</Bold>
-                    <Location>{feedData.seeOneFeed.location}</Location>
-                  </HeaderUserContainer>
-                </Touchable>
-              </HeaderView>
-              <HeaderView>
-                <Touchable onPress={() => setEmailVisible(!isEmailVisible)}>
-                  <IconContainer>
-                    <Ionicons
-                      size={24}
-                      color={styles.blackColor}
-                      name={Platform.OS === "ios" ? "ios-build" : "md-build"}
-                    />
-                  </IconContainer>
-                </Touchable>
-                <Touchable onPress={postDelete}>
-                  <IconContainer>
-                    <Ionicons
-                      size={24}
-                      color={styles.blackColor}
-                      name={
-                        Platform.OS === "ios"
-                          ? "ios-close-circle-outline"
-                          : "md-close-circle-outline"
-                      }
-                    />
-                  </IconContainer>
-                </Touchable>
-              </HeaderView>
-            </Header>
-
-            {/* <SwipeView> */}
-            {/* <Swiper showsPagination={true} showsButtons style={{ height: constants.height / 2.5 }}> */}
-            {feedData.seeOneFeed.files.map((file) => (
-              <Image
-                style={{ height: constants.height / 2, width: constants.width / 1 }}
-                key={file.id}
-                resizeMode={"contain"}
-                source={{ uri: file.url }}
-              />
-            ))}
-            {/* </Swiper> */}
-            {/* </SwipeView> */}
-
-            <IconsContainer>
-              <HeaderView>
-                <Touchable onPress={handleLike}>
-                  <IconContainer>
-                    <Ionicons
-                      size={24}
-                      color={feedData.seeOneFeed.isLiked ? styles.redColor : styles.blackColor}
-                      name={
-                        Platform.OS === "ios"
-                          ? feedData.seeOneFeed.isLiked
-                            ? "ios-heart"
-                            : "ios-heart-empty"
-                          : feedData.seeOneFeed.isLiked
-                          ? "md-heart"
-                          : "md-heart-empty"
-                      }
-                    />
-                  </IconContainer>
-                </Touchable>
-
-                <CenterView>
-                  <Bold>
-                    {feedData.seeOneFeed.likeCount === 1
-                      ? "1 like"
-                      : `${feedData.seeOneFeed.likeCount} likes`}
-                  </Bold>
-                </CenterView>
-              </HeaderView>
-              <HeaderView>
-                <CommentCount>
-                  {timeGap < gapTerm[0]
-                    ? `${Math.floor(timeGap / 60000)}분 전`
-                    : timeGap < gapTerm[1]
-                    ? `${Math.floor(timeGap / 3600000)}시간 전`
-                    : Math.floor(timeGap_cut / 86400000) < 8
-                    ? `${Math.floor(timeGap_cut / 86400000)}일 전`
-                    : createTime.getFullYear() === nowDate.getFullYear()
-                    ? `${moment(feedData.seeOneFeed.createdAt).format("MM월 DD일")}`
-                    : `${moment(feedData.seeOneFeed.createdAt).format("YYYY년 MM월 DD일")}`}
-                </CommentCount>
-              </HeaderView>
-            </IconsContainer>
-            <InfoContainer>
-              <TextView>
-                <TextView2>
-                  <Bold>{feedData.seeOneFeed.caption}</Bold>
-                </TextView2>
-                {visible ? (
-                  <>
-                    {feedData.seeOneFeed.comments.map((comment) => (
-                      <ComentHeader>
-                        <Caption>
-                          <Bold>{comment.user.username}</Bold> {comment.text}
-                        </Caption>
-                        <Touchable onPress={() => onDeleteComment(comment.id)}>
-                          <Ionicons
-                            size={24}
-                            color={styles.blackColor}
-                            name={
-                              Platform.OS === "ios"
-                                ? "ios-close-circle-outline"
-                                : "md-close-circle-outline"
-                            }
-                          />
-                        </Touchable>
-                      </ComentHeader>
-                    ))}
-                    <Touchable
-                      onPress={() => {
-                        setVisible(!visible)
-                      }}
-                    >
-                      <CommentCount>댓글 닫기</CommentCount>
-                    </Touchable>
-                  </>
-                ) : (
-                  <>
-                    {feedData.seeOneFeed.comments.length < 3 ? null : (
-                      <Touchable
-                        onPress={() => {
-                          setVisible(!visible)
-                        }}
-                      >
-                        <CommentCount>
-                          댓글 {feedData.seeOneFeed.comments.length}개 모두 보기
-                        </CommentCount>
-                      </Touchable>
-                    )}
-
-                    {feedData.seeOneFeed.comments.length - 2 < 0 ? null : (
-                      <ComentHeader>
-                        <Caption>
-                          <Bold>
-                            {
-                              feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 2]
-                                .user.username
-                            }
-                          </Bold>{" "}
-                          {
-                            feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 2]
-                              .text
-                          }
-                        </Caption>
-                        <Touchable
-                          onPress={() =>
-                            onDeleteComment(
-                              feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 2]
-                                .id
-                            )
-                          }
-                        >
-                          <Ionicons
-                            size={24}
-                            color={styles.blackColor}
-                            name={
-                              Platform.OS === "ios"
-                                ? "ios-close-circle-outline"
-                                : "md-close-circle-outline"
-                            }
-                          />
-                        </Touchable>
-                      </ComentHeader>
-                    )}
-                    {feedData.seeOneFeed.comments.length - 1 < 0 ? null : (
-                      <ComentHeader>
-                        <Caption>
-                          <Bold>
-                            {
-                              feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 1]
-                                .user.username
-                            }
-                          </Bold>{" "}
-                          {
-                            feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 1]
-                              .text
-                          }
-                        </Caption>
-                        <Touchable
-                          onPress={() =>
-                            onDeleteComment(
-                              feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 1]
-                                .id
-                            )
-                          }
-                        >
-                          <Ionicons
-                            size={24}
-                            color={styles.blackColor}
-                            name={
-                              Platform.OS === "ios"
-                                ? "ios-close-circle-outline"
-                                : "md-close-circle-outline"
-                            }
-                          />
-                        </Touchable>
-                      </ComentHeader>
-                    )}
-                  </>
-                )}
-                <ComentBody>
-                  <AuthInput
-                    paddingArray={[5, 0, 5, 0]}
-                    numberOfLines={1}
-                    {...comment}
-                    placeholder="  댓글 달기..."
-                    returnKeyType="done"
-                    autoCorrect={false}
-                  />
-                  <AuthButton
-                    color="white"
-                    onPress={() => addCommentf()}
-                    text="게시"
-                    paddingArray={Platform.OS === "ios" ? [6.5, 3.5, 6.5, 3.5] : [10, 10, 10, 10]}
-                    widthRatio={LastWidth(1.7, 2.5, 40)}
-                  />
-                </ComentBody>
-              </TextView>
-            </InfoContainer>
-          </Container>
+          <MyPost
+            navigation={navigation}
+            feedData={feedData}
+            setEmailVisible={setEmailVisible}
+            isEmailVisible={isEmailVisible}
+            postDelete={postDelete}
+            handleLike={handleLike}
+            timeGap={timeGap}
+            gapTerm={gapTerm}
+            visible={visible}
+            setVisible={setVisible}
+            comment={comment}
+            addCommentf={addCommentf}
+            location={location}
+            caption={caption}
+            onEdit={onEdit}
+            timeGap_cut={timeGap_cut}
+            createTime={createTime}
+            nowDate={nowDate}
+          />
         )}
-        <Modal
+      </ScrollView>
+    </>
+  )
+}
+// <Container>
+//   <KeyboardAwareScrollView>
+//     <HeaderUserContainer>
+//       <Touchable onPress={() => navigation.navigate("UserProfile")}>
+//         <Icon
+//           name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+//           color={"#262626"}
+//           size={40}
+//         />
+//       </Touchable>
+//     </HeaderUserContainer>
+//     <Line />
+//     <Header>
+//       <HeaderView>
+//         <Touchable onPress={() => navigation.navigate("UserProfile")}>
+//           <Image
+//             style={{ height: 40, width: 40, borderRadius: 20 }}
+//             source={{ uri: feedData.seeOneFeed.user.avatar }}
+//           />
+//         </Touchable>
+//         <Touchable onPress={() => navigation.navigate("UserProfile")}>
+//           <HeaderUserContainer>
+//             <Bold>{feedData.seeOneFeed.user.username}</Bold>
+//             <Location>{feedData.seeOneFeed.location}</Location>
+//           </HeaderUserContainer>
+//         </Touchable>
+//       </HeaderView>
+//       <HeaderView>
+//         <Touchable onPress={() => setEmailVisible(!isEmailVisible)}>
+//           <IconContainer>
+//             <Ionicons
+//               size={24}
+//               color={styles.blackColor}
+//               name={Platform.OS === "ios" ? "ios-build" : "md-build"}
+//             />
+//           </IconContainer>
+//         </Touchable>
+//         <Touchable onPress={postDelete}>
+//           <IconContainer>
+//             <Ionicons
+//               size={24}
+//               color={styles.blackColor}
+//               name={
+//                 Platform.OS === "ios"
+//                   ? "ios-close-circle-outline"
+//                   : "md-close-circle-outline"
+//               }
+//             />
+//           </IconContainer>
+//         </Touchable>
+//       </HeaderView>
+//     </Header>
+
+//     {/* <SwipeView> */}
+//     {/* <Swiper showsPagination={true} showsButtons style={{ height: constants.height / 2.5 }}> */}
+//     {feedData.seeOneFeed.files.map((file) => (
+//       <Image
+//         style={{ height: constants.height / 2, width: constants.width / 1 }}
+//         key={file.id}
+//         resizeMode={"contain"}
+//         source={{ uri: file.url }}
+//       />
+//     ))}
+//     {/* </Swiper> */}
+//     {/* </SwipeView> */}
+
+//     <IconsContainer>
+//       <HeaderView>
+//         <Touchable onPress={handleLike}>
+//           <IconContainer>
+//             <Ionicons
+//               size={24}
+//               color={feedData.seeOneFeed.isLiked ? styles.redColor : styles.blackColor}
+//               name={
+//                 Platform.OS === "ios"
+//                   ? feedData.seeOneFeed.isLiked
+//                     ? "ios-heart"
+//                     : "ios-heart-empty"
+//                   : feedData.seeOneFeed.isLiked
+//                   ? "md-heart"
+//                   : "md-heart-empty"
+//               }
+//             />
+//           </IconContainer>
+//         </Touchable>
+
+//         <CenterView>
+//           <Bold>
+//             {feedData.seeOneFeed.likeCount === 1
+//               ? "1 like"
+//               : `${feedData.seeOneFeed.likeCount} likes`}
+//           </Bold>
+//         </CenterView>
+//       </HeaderView>
+//       <HeaderView>
+//         <CommentCount>
+//           {timeGap < gapTerm[0]
+//             ? `${Math.floor(timeGap / 60000)}분 전`
+//             : timeGap < gapTerm[1]
+//             ? `${Math.floor(timeGap / 3600000)}시간 전`
+//             : Math.floor(timeGap_cut / 86400000) < 8
+//             ? `${Math.floor(timeGap_cut / 86400000)}일 전`
+//             : createTime.getFullYear() === nowDate.getFullYear()
+//             ? `${moment(feedData.seeOneFeed.createdAt).format("MM월 DD일")}`
+//             : `${moment(feedData.seeOneFeed.createdAt).format("YYYY년 MM월 DD일")}`}
+//         </CommentCount>
+//       </HeaderView>
+//     </IconsContainer>
+//     <InfoContainer>
+//       <TextView>
+//         <TextView2>
+//           <Bold>{feedData.seeOneFeed.caption}</Bold>
+//         </TextView2>
+//         {visible ? (
+//           <>
+//             {feedData.seeOneFeed.comments.map((comment) => (
+//               <ComentHeader>
+//                 <Caption>
+//                   <Bold>{comment.user.username}</Bold> {comment.text}
+//                 </Caption>
+//                 <Touchable onPress={() => onDeleteComment(comment.id)}>
+//                   <Ionicons
+//                     size={24}
+//                     color={styles.blackColor}
+//                     name={
+//                       Platform.OS === "ios"
+//                         ? "ios-close-circle-outline"
+//                         : "md-close-circle-outline"
+//                     }
+//                   />
+//                 </Touchable>
+//               </ComentHeader>
+//             ))}
+//             <Touchable
+//               onPress={() => {
+//                 setVisible(!visible)
+//               }}
+//             >
+//               <CommentCount>댓글 닫기</CommentCount>
+//             </Touchable>
+//           </>
+//         ) : (
+//           <>
+//             {feedData.seeOneFeed.comments.length < 3 ? null : (
+//               <Touchable
+//                 onPress={() => {
+//                   setVisible(!visible)
+//                 }}
+//               >
+//                 <CommentCount>
+//                   댓글 {feedData.seeOneFeed.comments.length}개 모두 보기
+//                 </CommentCount>
+//               </Touchable>
+//             )}
+
+//             {feedData.seeOneFeed.comments.length - 2 < 0 ? null : (
+//               <ComentHeader>
+//                 <Caption>
+//                   <Bold>
+//                     {
+//                       feedData.seeOneFeed.comments[
+//                         feedData.seeOneFeed.comments.length - 2
+//                       ].user.username
+//                     }
+//                   </Bold>{" "}
+//                   {
+//                     feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 2]
+//                       .text
+//                   }
+//                 </Caption>
+//                 <Touchable
+//                   onPress={() =>
+//                     onDeleteComment(
+//                       feedData.seeOneFeed.comments[
+//                         feedData.seeOneFeed.comments.length - 2
+//                       ].id
+//                     )
+//                   }
+//                 >
+//                   <Ionicons
+//                     size={24}
+//                     color={styles.blackColor}
+//                     name={
+//                       Platform.OS === "ios"
+//                         ? "ios-close-circle-outline"
+//                         : "md-close-circle-outline"
+//                     }
+//                   />
+//                 </Touchable>
+//               </ComentHeader>
+//             )}
+//             {feedData.seeOneFeed.comments.length - 1 < 0 ? null : (
+//               <ComentHeader>
+//                 <Caption>
+//                   <Bold>
+//                     {
+//                       feedData.seeOneFeed.comments[
+//                         feedData.seeOneFeed.comments.length - 1
+//                       ].user.username
+//                     }
+//                   </Bold>{" "}
+//                   {
+//                     feedData.seeOneFeed.comments[feedData.seeOneFeed.comments.length - 1]
+//                       .text
+//                   }
+//                 </Caption>
+//                 <Touchable
+//                   onPress={() =>
+//                     onDeleteComment(
+//                       feedData.seeOneFeed.comments[
+//                         feedData.seeOneFeed.comments.length - 1
+//                       ].id
+//                     )
+//                   }
+//                 >
+//                   <Ionicons
+//                     size={24}
+//                     color={styles.blackColor}
+//                     name={
+//                       Platform.OS === "ios"
+//                         ? "ios-close-circle-outline"
+//                         : "md-close-circle-outline"
+//                     }
+//                   />
+//                 </Touchable>
+//               </ComentHeader>
+//             )}
+//           </>
+//         )}
+//         <ComentBody>
+//           <AuthInput
+//             paddingArray={[5, 0, 5, 0]}
+//             numberOfLines={1}
+//             {...comment}
+//             placeholder="  댓글 달기..."
+//             returnKeyType="done"
+//             autoCorrect={false}
+//           />
+//           <AuthButton
+//             color="white"
+//             onPress={() => addCommentf()}
+//             text="게시"
+//             paddingArray={Platform.OS === "ios" ? [6.5, 3.5, 6.5, 3.5] : [10, 10, 10, 10]}
+//             widthRatio={LastWidth(1.7, 2.5, 40)}
+//           />
+//         </ComentBody>
+//       </TextView>
+//     </InfoContainer>
+//   </KeyboardAwareScrollView>
+// </Container>
+{
+  /* <Modal
           isVisible={isEmailVisible}
           onBackdropPress={() => setEmailVisible(false)}
           style={{
@@ -642,38 +679,5 @@ export default ({ navigation }) => {
               />
             </InfoContainer>
           </StyledModalContainer>
-        </Modal>
-      </ScrollView>
-    </>
-  )
+        </Modal> */
 }
-
-// DetailScreen.propTypes = {
-//   id: PropTypes.string.isRequired,
-//   user: PropTypes.shape({
-//     id: PropTypes.string.isRequired,
-//     avatar: PropTypes.string,
-//     username: PropTypes.string.isRequired,
-//   }).isRequired,
-//   files: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       url: PropTypes.string.isRequired,
-//     })
-//   ).isRequired,
-//   likeCount: PropTypes.number.isRequired,
-//   isLiked: PropTypes.bool.isRequired,
-//   comments: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       text: PropTypes.string.isRequired,
-//       user: PropTypes.shape({
-//         id: PropTypes.string.isRequired,
-//         username: PropTypes.string.isRequired,
-//       }).isRequired,
-//     })
-//   ).isRequired,
-//   caption: PropTypes.string.isRequired,
-//   location: PropTypes.string,
-//   createdAt: PropTypes.string.isRequired,
-// }

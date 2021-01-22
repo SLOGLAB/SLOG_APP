@@ -72,6 +72,14 @@ export const ME = gql`
 export default AddTimetable = ({ navigation }) => {
   const { loading, data: subjectsName, refetch } = useQuery(SUBJECT_NAME, {})
   const { data: myData, refetch: merefetch } = useQuery(ME)
+  var todaydate = new Date().getDate() //Current Date
+  var todaymonth = new Date().getMonth() + 1 //Current Month
+  var todayyear = new Date().getFullYear() //Current Year
+  var targetMonth = String(todaymonth).length === 1 ? "0" + todaymonth : todaymonth
+  var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
+
+  var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
+  const [selectDate, setSelectDate] = useState(new Date())
 
   const goback = () => {
     navigation.navigate("Timecontrol")
@@ -93,6 +101,8 @@ export default AddTimetable = ({ navigation }) => {
           subjectsName={subjectsName}
           loading={loading}
           goback={goback}
+          //
+          targetToday={targetToday}
         />
       )}
     </MenuView>

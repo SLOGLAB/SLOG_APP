@@ -4,23 +4,22 @@ import { Platform } from "react-native"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 
-import NavGreenIcon from "../components/NavGreenIcon"
-
 import NavIcon from "../components/NavIcon"
-import MenuButton from "../components/MenuButton"
 import { stackStyles } from "./config"
 import MainController from "../screens/Tabs/MainController"
-import D_day from "../screens/D_day"
 import FeedPhotoNavigation from "../navigation/FeedPhotoNavigation"
-import FeedContainer from "../screens/Feed/FeedContainer"
 import TimetableWeek from "../screens/AWeekTime/TimetableWeek"
 import ProfileNavi from "../navigation/ProfileNavi"
 import SwiperBase from "../screens/Stat/SwiperBase"
 // import UserProfile from "../screens/Profile/UserProfile"
 import ToDoButton from "../screens/TodoList/ToDoButton"
-import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import StudyButton from "../screens/Study/StudyButton"
+import FeedContainer from "../screens/Feed/FeedContainer"
+import D_day from "../screens/D_day"
+import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import ObjectButton from "../Object/ObjectButton"
+import NavGreenIcon from "../components/NavGreenIcon"
+import MenuButton from "../components/MenuButton"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
     {
@@ -43,7 +42,7 @@ export default createBottomTabNavigator(
   {
     MainController: {
       screen: stackFactory(MainController, {
-        headerLeft: <StudyButton />,
+        // headerLeft: <StudyButton />,
         headerRight: <ToDoButton />,
         title: "DEEP TIME",
       }),
@@ -77,6 +76,11 @@ export default createBottomTabNavigator(
     },
     TimetableWeek: {
       screen: TimetableWeek,
+      // screen: stackFactory(TimetableWeek, {
+      //   title: "Study Log",
+      //   // headerLeft: <Iam />
+      // }),
+
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon

@@ -183,7 +183,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
     navigation.navigate("QRcode")
   }
   useEffect(() => {
-    // console.log(data.me.posts[0].id, "000000")
+    console.log(data.me.posts, "data.me.posts")
   }, [])
   return (
     <>
@@ -274,7 +274,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               </Stat5>
             </AdView>
           </ProfileHeader>
-          {/* <HandleLogout /> */}
+          <HandleLogout />
 
           <View />
           <PostView>
