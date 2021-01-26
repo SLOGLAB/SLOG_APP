@@ -79,29 +79,11 @@ const usePosenetModel = (): PoseNet | null => {
 };
 const AUTORENDER = false;
 
-const useModel = ()=> {
-  const [model, setModel] = useState<any>(null);
 
-  const initModela = async () => {
-    const models = await mobilenet.load()
-    // const models = await cocoSsd.load({ base: 'mobilenet_v2' });
-    // const models = await cocossd.load() // preparing COCO-SSD model
-    setModel(models)
-  };
-
-  useEffect(() => {
-    initModela();
-    clearInterval(studyInterval)
-
-  }, []);
-
-  return model;
-};
 const TensorCamera = cameraWithTensors(Camera);
 let studyInterval = undefined
 const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,deg,loading,selectDate,nextDate}) => {
   const posenetModel = usePosenetModel();
-  const mobilenetModel =useModel();
   const [pose, setPose] = useState<posenet.Pose | null>(null);
   const rafId = useRef<number | null>(null);
   const camRef = useRef<any>(null);
@@ -111,7 +93,7 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
   const [camsetting,setcamSetting]=useState(true)
 
   
-  setTimeout(function() { setSetting(true) }, 13000);
+  // setTimeout(function() { setSetting(true) }, 13000);
 
   const handleImageTensorReady = async (
     images: IterableIterator<tf.Tensor3D>,
@@ -129,7 +111,7 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
       });
         setPose(pose);
       tf.dispose([imageTensor]); 
-      // console.log(pose.score,"pose")  
+      console.log(pose.score,"pose")  
       // console.log(pose,"all") 
       myInfoRefetch() 
       if(pose.score>0.1){
@@ -142,7 +124,7 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
       if (!AUTORENDER) {
         gl.endFrameEXP();
       }
-      }, 10000);
+      }, 40000);
 }
 
 
@@ -172,9 +154,9 @@ if (!posenetModel) {
     <>
     <View style={styles.peopleLand}>
       <TouchableOpacity onPress={()=>{
-        setSetting(false)
         clearInterval(studyInterval)
-        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+        // setSetting(false)
+        // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
           navigation.navigate("TabNavigation")
       }}>
       <Icon name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"} color={"#000000"} size={40}/>
@@ -209,10 +191,10 @@ if (!posenetModel) {
       <Icon name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"} color={"#000000"} size={40}/>
       </TouchableOpacity> */}
     </View>
-    <View style={[{justifyContent: "center",alignItems: "center"}]}>
+    <View style={[{justifyContent: "center",alignItems: "center",backgroundColor:"#000"}]}>
     <>
         <View style={[styles.cameraContainer,{
-          transform: [{ rotate:"270deg" }]
+          // transform: [{ rotate:"270deg" }]
         }]}> 
           <TensorCamera
             ref={camRef}
@@ -229,11 +211,11 @@ if (!posenetModel) {
             onReady={handleImageTensorReady}
             autorender={false}
           />
-           {/* <View style={[styles.modelResults]}>
+           <View style={[styles.modelResults]}>
           {pose && <Pose pose={pose} />}
-        </View> */}
         </View>
-      {setting?
+        </View>
+      {/* {setting?
         null
         :
         <View style={[styles.cameraAbsolute,{
@@ -243,7 +225,7 @@ if (!posenetModel) {
             <Loader/>
           </View>
         </View> 
-        }
+        } */}
         {/* {camsetting?
         null
         :
@@ -256,13 +238,7 @@ if (!posenetModel) {
         } */}
       </>
       
-      <StudyPresenter   
-        myData={myInfoData.me}
-        loading={loading}
-        selectDate={selectDate}
-        nextDate={nextDate}
-        myInfoRefetch={myInfoRefetch}
-        />
+      
     </View>
      
       </>
@@ -345,8 +321,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width/1.8/2,
-    height: Dimensions.get("window").height/2.2/2,
+    width: Dimensions.get("window").width/1.8/1.2,
+    height: Dimensions.get("window").height/2.2/1.4,
     backgroundColor: "#fff",
   },
   cameraAbsolute: {
@@ -355,7 +331,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width/1.7,
+    width: Dimensions.get("window").width/1.3,
     height: Dimensions.get("window").height/2.1,
     backgroundColor: "#fff",
   },

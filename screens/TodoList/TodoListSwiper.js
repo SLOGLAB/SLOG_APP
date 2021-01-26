@@ -67,7 +67,7 @@ export default class TodoListSwiper extends Component {
                 : { backgroundColor: "#0f4c82" }
             }
           >
-            <TodoListController />
+            <TodoListController todoArray={[8, 8, 8, 8]} />
           </Tab>
           <Tab
             heading="완료"

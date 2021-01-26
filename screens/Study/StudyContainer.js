@@ -10,6 +10,10 @@ import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import StudyPoseLand from "../../Object/StudyPoseLand"
+import StudySSd from "../../Object/StudySSd"
+import StudySSdPose from "../../Object/StudySSdPose"
+import Swiper from "react-native-swiper"
+
 import StudyPresenter from "./StudyPresenter"
 import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
 import TodoListController from "../TodoList/TodoListController"
@@ -92,8 +96,8 @@ const ContainerLandscape = styled.View`
 `
 
 const RowView = styled.View`
-  flex-direction: row;
-  height: ${(constants.height / 14) * 13};
+  /* flex-direction: row; */
+  height: ${(constants.height / 13) * 13};
   /* background-color: rgba(65, 129, 247, 1); */
 `
 const SideView = styled.View`
@@ -101,11 +105,20 @@ const SideView = styled.View`
   flex: 1;
 `
 const SideView1 = styled.View`
+  flex: 1.3;
+  width: ${constants.width / 1};
+  /* background-color: rgba(65, 129, 247, 1); */
+`
+const SideView11 = styled.View`
   flex: 1;
   width: ${constants.width / 1};
-  height: ${constants.height / 2.05};
+  justify-content: center;
+  align-items: center;
 `
-
+const SideView2 = styled.View`
+  width: ${constants.width / 1};
+  flex: 0.1;
+`
 const useScreenDimensions = () => {
   const [screenData, setScreenData] = useState(Dimensions.get("screen"))
 
@@ -183,8 +196,29 @@ export default ({ navigation }) => {
           )}
           <>
             <RowView>
+              {Platform.OS == "ios" ? <SideView2 /> : null}
               <SideView>
-                <StudyPoseLand
+                {/* <StudyPoseLand
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  deg={"270deg"}
+                  // setbool={true}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                /> */}
+                {/* <StudySSd
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  deg={"270deg"}
+                  // setbool={true}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                /> */}
+                <StudySSdPose
                   navigation={navigation}
                   myInfoData={myInfoData}
                   myInfoRefetch={myInfoRefetch}
@@ -199,7 +233,7 @@ export default ({ navigation }) => {
                 <Container>
                   <Tabs>
                     <Tab
-                      heading="계획"
+                      heading="Deep Time"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }
@@ -211,10 +245,17 @@ export default ({ navigation }) => {
                           : { backgroundColor: "#0f4c82" }
                       }
                     >
-                      <TodoListController />
+                      <StudyPresenter
+                        myData={myInfoData.me}
+                        loading={loading}
+                        selectDate={selectDate}
+                        nextDate={nextDate}
+                        myInfoRefetch={myInfoRefetch}
+                      />
+                      {/* <TodoListController /> */}
                     </Tab>
                     <Tab
-                      heading="완료"
+                      heading="Todo List"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }
@@ -226,7 +267,9 @@ export default ({ navigation }) => {
                           : { backgroundColor: "#0f4c82" }
                       }
                     >
-                      <TodoListEndController />
+                      <TodoListController todoArray={[9, 0, 5, 0]} />
+
+                      {/* <TodoListEndController /> */}
                     </Tab>
                   </Tabs>
                 </Container>
@@ -290,3 +333,8 @@ export default ({ navigation }) => {
     </>
   )
 }
+const styles = StyleSheet.create({
+  slide1: {
+    // flex: 1,
+  },
+})

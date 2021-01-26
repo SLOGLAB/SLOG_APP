@@ -26,6 +26,7 @@ import { Calendar } from "react-native-calendars"
 import { CheckBox } from "native-base"
 import AuthButton from "../../../components/AuthButton"
 import { Ionicons } from "@expo/vector-icons"
+const MarginR = styled.View``
 
 const MarginView = styled.View`
   flex: 1;
@@ -567,6 +568,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
             // onSubmitEditing={handleLogin}
             autoCorrect={false}
           />
+          <MarginR style={{ height: constants.height / 50 }} />
           <AuthInput
             {...locationInput}
             // value={name}

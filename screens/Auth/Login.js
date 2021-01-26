@@ -9,6 +9,8 @@ import { useMutation } from "@apollo/react-hooks"
 import { REQUEST_LOGIN } from "./AuthQueries"
 import { useLogIn } from "../../AuthContext"
 import { ME } from "../../screens/Tabs/MainController"
+import constants from "../../constants"
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -19,6 +21,7 @@ const View = styled.View`
 const Touchable = styled.TouchableOpacity``
 
 const LoginLink = styled.View``
+const MarginR = styled.View``
 
 const LoginLinkText = styled.Text`
   color: ${(props) => props.theme.darkGreyColor};
@@ -92,6 +95,8 @@ export default ({ navigation }) => {
           autoCorrect={false}
           secureTextEntry={false}
         />
+        <MarginR style={{ height: constants.height / 90 }} />
+
         <AuthInput
           {...confirmInput}
           placeholder="비밀번호 (예: ABCD1234)"

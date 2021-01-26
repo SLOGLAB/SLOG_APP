@@ -36,7 +36,7 @@ const AuthInput = ({
   autoCorrect = true,
   secureTextEntry,
   widthRatio = 1.7,
-  marginArray = [0, 0, 10, 0],
+  marginArray = [0, 0, 0, 0],
   paddingArray = [10, 10, 10, 10],
   nonWidth = false,
   numberOfLines,

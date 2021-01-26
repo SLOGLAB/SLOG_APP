@@ -90,17 +90,17 @@ export default createBottomTabNavigator(
         ),
       },
     },
-    FeedPhotoNavigation: {
-      screen: stackFactory(FeedPhotoNavigation, {
-        title: "Feed",
-      }),
-      // screen: FeedPhotoNavigation,
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-list" : "md-list"} />
-        ),
-      },
-    },
+    // FeedPhotoNavigation: {
+    //   screen: stackFactory(FeedPhotoNavigation, {
+    //     title: "Feed",
+    //   }),
+    //   // screen: FeedPhotoNavigation,
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-list" : "md-list"} />
+    //     ),
+    //   },
+    // },
 
     ProfileNavi: {
       screen: ProfileNavi,

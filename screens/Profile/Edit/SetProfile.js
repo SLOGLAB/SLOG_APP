@@ -257,6 +257,8 @@ export default ({
                     widthRatio={LastWidth(1.7, 4.5, 40)}
                   />
                 </RowView>
+                <MarginR style={{ height: constants.height / 90 }} />
+
                 <AuthInput
                   paddingArray={[5, 5, 5, 5]}
                   {...username}
@@ -264,6 +266,8 @@ export default ({
                   returnKeyType="send"
                   autoCorrect={false}
                 />
+                <MarginR style={{ height: constants.height / 90 }} />
+
                 <RowView>
                   <AuthInput
                     paddingArray={[5, 5, 5, 5]}
@@ -284,6 +288,8 @@ export default ({
                     widthRatio={LastWidth(1.7, 2.5, 40)}
                   />
                 </RowView>
+                <MarginR style={{ height: constants.height / 90 }} />
+
                 <Modal
                   isVisible={isEmailVisible}
                   onBackdropPress={() => setEmailVisible(false)}
@@ -535,7 +541,7 @@ export default ({
                   <>
                     {/* <SelectView style={{ height: constants.height / 8 }}> */}
                     <AuthInputline
-                      // paddingArray={[0, 0, 70, 5]}
+                      // paddingArray={[0, 0, 90, 5]}
                       numberOfLines={3}
                       {...bio}
                       placeholder="자기소개 (150자 이내)"
@@ -579,6 +585,8 @@ export default ({
                   <Text style={{ color: "red" }}>비밀번호는 6글자 이상이어야 합니다</Text>
                 </ErrorView>
               )}
+              <MarginR style={{ height: constants.height / 50 }} />
+
               <AuthInput
                 paddingArray={[5, 5, 5, 5]}
                 {...password}
@@ -592,6 +600,8 @@ export default ({
                   <Text style={{ color: "red" }}>비밀번호가 일치하지 않습니다</Text>
                 </ErrorView>
               )}
+              <MarginR style={{ height: constants.height / 90 }} />
+
               <AuthInput
                 paddingArray={[5, 5, 5, 5]}
                 {...password2}
@@ -600,6 +610,7 @@ export default ({
                 autoCorrect={false}
                 secureTextEntry={true}
               />
+              <MarginR style={{ height: constants.height / 50 }} />
 
               <AuthButton
                 color="white"

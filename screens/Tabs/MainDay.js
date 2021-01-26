@@ -396,7 +396,8 @@ const MainDay = ({
   useEffect(() => {
     // console.log(nowTitle1, "nowTitle1,")
     // console.log(nowTitle2, "nowTitle2,")
-    // console.log(nowEnd, "nowEnd")
+    // console.log(myData.following, "myData.following")
+    // console.log(myData.withFollowing, "myData.withFollowing")
     // noti()
   }, [])
   return (
@@ -521,7 +522,7 @@ const MainDay = ({
           )}
         </TimeView>
         <MainView>
-          <SubView>
+          {/* <SubView>
             <Text>{break_title}</Text>
             {break_countdown == 0 ? (
               <Text1 />
@@ -532,7 +533,7 @@ const MainDay = ({
               </RedText>
             )}
             <Text1>{break_time}</Text1>
-          </SubView>
+          </SubView> */}
           <SubView2>
             <Text>{nextTitle1}</Text>
             <Text1> {nextTitle2}</Text1>

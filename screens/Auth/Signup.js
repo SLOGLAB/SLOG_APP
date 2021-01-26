@@ -357,6 +357,9 @@ export default ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
+        <CheckWrap>
+          <Title>회원가입</Title>
+        </CheckWrap>
         <RowView>
           <AuthInput
             paddingArray={[5, 5, 5, 5]}
@@ -374,6 +377,8 @@ export default ({ navigation }) => {
             widthRatio={LastWidth(1.7, 4.5, 40)}
           />
         </RowView>
+        <MarginR style={{ height: constants.height / 90 }} />
+
         <AuthInput
           paddingArray={[5, 5, 5, 5]}
           {...usernameInput}
@@ -381,6 +386,8 @@ export default ({ navigation }) => {
           returnKeyType="send"
           autoCorrect={false}
         />
+        <MarginR style={{ height: constants.height / 90 }} />
+
         <RowView>
           <AuthInput
             paddingArray={[5, 5, 5, 5]}
@@ -401,6 +408,8 @@ export default ({ navigation }) => {
             widthRatio={LastWidth(1.7, 2.5, 40)}
           />
         </RowView>
+        <MarginR style={{ height: constants.height / 90 }} />
+
         <Modal
           isVisible={isEmailVisible}
           onBackdropPress={() => setEmailVisible(false)}
@@ -668,6 +677,8 @@ export default ({ navigation }) => {
             autoCorrect={false}
             secureTextEntry={true}
           />
+          <MarginR style={{ height: constants.height / 90 }} />
+
           {password2.errorChk && (
             <ErrorView>
               <Text style={{ color: "red" }}>비밀번호가 일치하지 않습니다</Text>
@@ -681,6 +692,8 @@ export default ({ navigation }) => {
             autoCorrect={false}
             secureTextEntry={true}
           />
+          <MarginR style={{ height: constants.height / 90 }} />
+
           <CheckWrap style={{ width: constants.width / 1.6 }}>
             <CheckBox checked={tos && top && marketing} onPress={() => onChangeAllTerm()} />
             <View style={{ marginLeft: 15 }}>

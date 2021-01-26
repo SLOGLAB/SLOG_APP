@@ -22,7 +22,7 @@ export default withNavigation(({ navigation }) => (
   <Container
     onPress={() => {
       navigation.navigate("StudyContainer")
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
+      // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
       // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
       // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
       // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)

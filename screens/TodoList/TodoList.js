@@ -16,6 +16,8 @@ import AuthButton from "../../components/AuthButton"
 import AuthInput from "../../components/AuthInput"
 import LastWidth from "../../components/LastWidth"
 import Icon from "../../components/Icon"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 const MainView = styled.View`
   background-color: rgba(255, 255, 255, 1);
@@ -27,21 +29,19 @@ const AddToDoView = styled.View`
   flex-direction: row;
   margin-left: 5;
   margin-right: 5;
-  margin-top: 10;
   align-items: center;
   justify-content: center;
 `
 const AddToDoPickerView = styled.View`
-  height: 100%;
+  /* height: 100%; */
   width: 25%;
 `
 const AddToDoNameView = styled.View`
-  height: 100%;
+  /* height: 100%; */
   width: 60%;
   padding-left: 6;
 `
 const AddToDoButtonView = styled.View`
-  height: 100%;
   width: 15%;
   margin-right: 0;
 `
@@ -136,6 +136,7 @@ export default ({
   finishTodolistMutation,
   todolistName,
   subjectList,
+  todoArray,
 }) => {
   const [subjectId, setSubjectId] = useState("")
   const todolistClear = () => {
@@ -327,10 +328,10 @@ export default ({
         </AddToDoPickerView>
         <AddToDoNameView>
           <AuthInput
-            paddingArray={[8.5, 8.5, 8.5, 8.5]}
+            paddingArray={todoArray.todoArray}
             {...todolistName}
             // onChange={() => {}}
-            placeholder="내용(예: 1단원 암기)"
+            placeholder="  내용(예: 1단원 암기)"
             keyboardType="email-address"
             returnKeyType="done"
             autoCorrect={false}
@@ -344,8 +345,8 @@ export default ({
               onTodolistAdd()
               onRefresh()
             }}
-            text="입력"
-            paddingArray={Platform.OS === "ios" ? [10, 10, 10, 10] : [7, 7, 7, 7]}
+            text="추가"
+            paddingArray={Platform.OS === "ios" ? [9, 9, 9, 9] : [7, 7, 7, 7]}
             widthRatio={LastWidth(1.7, 2.5, 18)}
           />
         </AddToDoButtonView>

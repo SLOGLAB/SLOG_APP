@@ -14,7 +14,7 @@ import {
   DELETE_TODOLIST,
   FINISH_TODOLIST,
 } from "../Tabs/QueryBox"
-export default () => {
+export default (todoArray) => {
   const [refreshing, setRefreshing] = useState(false)
   const todolistName = useInput("")
 
@@ -62,6 +62,7 @@ export default () => {
           onRefresh={onRefresh}
           todolistName={todolistName}
           subjectList={subjectData.mySubject}
+          todoArray={todoArray}
         />
       )}
     </>

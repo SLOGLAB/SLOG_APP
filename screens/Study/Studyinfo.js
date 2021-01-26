@@ -24,59 +24,43 @@ import { useMutation } from "@apollo/react-hooks"
 import { EDIT_STUDYSET } from "../Tabs/QueryBox"
 import Constants from "expo-constants"
 import * as Permissions from "expo-permissions"
+import VdayProgress from "../../graphsVictory/VdayProgress"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 const MainTView = styled.View`
-  /* height:90%; */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 `
+
 const ChartView = styled.View`
   border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
   margin-left: 15;
   margin-right: 15;
-  /* height: 48%; */
-`
-const TextView = styled.View`
-  /* height:35%; */
-  margin-top: 10;
-  margin-left: 15;
-  margin-right: 15;
-  background-color: rgba(255, 255, 255, 1);
-  border: 2px;
-  border-radius: 5;
-  border-color: rgba(233, 236, 243, 1);
-  /* height: 30%; */
-`
-const ProgressView = styled.View`
-  align-items: center;
+  width: 95%;
+  height: 10%;
   justify-content: center;
+`
+const MainView = styled.View`
   background-color: rgba(255, 255, 255, 1);
+  /* justify-content: center;
+  align-items: center; */
+  /* flex-direction: row; */
+  width: 95%;
 `
 const TextCenter = styled.View`
   align-items: center;
-  justify-content: center;
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10;
 `
-
 const ChartTextView = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
-  margin-bottom: 5;
-`
-
-const CoText = styled.Text`
-  color: black;
-  font-size: 20;
-  font-weight: normal;
-`
-const SubText = styled.Text`
-  color: black;
-  font-size: 10;
-  /* font-weight: bold; */
 `
 const SubText2 = styled.Text`
   color: black;
@@ -98,24 +82,11 @@ const TargetText = styled.Text`
   font-size: 10;
   font-weight: bold;
 `
-const MainView = styled.View`
-  background-color: rgba(255, 255, 255, 1);
-  justify-content: center;
-  align-items: center;
+
+const FlexBox = styled.View`
   flex-direction: row;
-  width: 85%;
 `
 
-const SubView = styled.View`
-  flex: 1;
-  background-color: rgba(255, 255, 255, 1);
-  justify-content: center;
-  align-items: center;
-  border: 2px;
-  border-radius: 5;
-  border-color: rgba(233, 236, 243, 1);
-  margin-right: 5;
-`
 const TimeView = styled.View`
   /* height:35%; */
   margin-top: 5;
@@ -126,149 +97,22 @@ const TimeView = styled.View`
   border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
-  width: 65%;
+  width: 100%;
 `
 const SubView2 = styled.View`
-  flex: 1;
   background-color: rgba(255, 255, 255, 1);
   justify-content: center;
   align-items: center;
   border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
-  margin-left: 5;
+  width: 100%;
 `
-const Text = styled.Text`
-  font-weight: bold;
-  margin-top: 5;
-`
+
 const Text1 = styled.Text`
   font-size: 10;
 `
-const RedText = styled.Text`
-  color: red;
-  font-size: 10;
-`
-const LeftView = styled.View`
-  justify-content: flex-start;
-  align-items: flex-start;
-  /* background-color: rgba(233, 236, 243, 1); */
-  padding-left: 10;
-`
-const AvatarView = styled.View`
-  height: ${HEIGHT / 9};
-  justify-content: center;
-  align-items: flex-start;
-`
-//
-const IndiviList = styled.View`
-  justify-content: center;
-  align-items: center;
-  margin-left: 18;
-  flex: 1;
-  width: ${WIDTH / 6.5};
-  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
-`
-const IndiviList1 = styled.View`
-  width: ${WIDTH / 25};
-  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
-`
 
-const FollowerName_Text = styled.Text`
-  font-size: 10;
-  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
-`
-const CircleAvartar = styled.View`
-  height: ${HEIGHT / 32};
-  width: ${WIDTH / 15};
-  border: 2px;
-  border-radius: 25;
-`
-const RowView = styled.View`
-  /* flex-direction: row; */
-  height: ${HEIGHT / 15};
-  width: ${WIDTH / 7};
-  border-radius: 30;
-  position: absolute;
-  justify-content: flex-end;
-  align-items: flex-end;
-`
-const StyledModalContainer = styled.View`
-  flex-direction: column;
-  align-items: center;
-  /* 모달창 크기 조절 */
-  flex: 0.65;
-  width: 85%;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 10px;
-`
-const ModalView = styled.View`
-  flex: 1;
-`
-const ModalSubView = styled.View`
-  flex: 0.15;
-  align-items: center;
-  justify-content: center;
-`
-
-const LineView = styled.View`
-  width: ${WIDTH / 1.4};
-  height: 2px;
-  color: #000;
-`
-const IndiviListView = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  height: 50;
-  margin-top: 10;
-  margin-left: 4;
-  margin-right: 4;
-  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
-`
-
-const FollowerView = styled.View`
-  width: 20%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-const FollowerNameView = styled.View`
-  width: 50%;
-  justify-content: flex-start;
-  align-items: flex-start;
-`
-const TaskFlagView = styled.View`
-  width: 30%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-const FollowerName_T = styled.Text`
-  flex: 1;
-  justify-content: flex-start;
-  align-items: flex-start;
-  font-size: 13;
-  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
-`
-const FollowerName_Text1 = styled.Text`
-  flex: 1;
-  justify-content: flex-start;
-  align-items: flex-start;
-  font-size: 13;
-  color: rgba(0, 0, 0, 0.5);
-  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
-`
-const AvartarView = styled.View`
-  flex: 0.75;
-  /* background-color: rgba(196, 196, 196, 1); */
-`
-const AvartarView1 = styled.View`
-  position: absolute;
-  width: 10%;
-  height: 20%;
-  /* background-color: rgba(196, 196, 196, 1); */
-`
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -388,9 +232,10 @@ export default ({
     // noti()
   }, [])
   return (
-    <>
+    <MainTView>
       <ChartView>
         {/* <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} /> */}
+
         <ChartTextView>
           <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
           <ExistText>시간 </ExistText>
@@ -399,15 +244,16 @@ export default ({
           </ExistTimeText>
           <ExistText>분 </ExistText>
           <ExistText>/</ExistText>
-
-          <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
-          <TargetText>시간 </TargetText>
-          <TargetText>
-            {targetminutes - targethour * 60 < 10
-              ? `0${targetminutes - targethour * 60}`
-              : targetminutes - targethour * 60}
-          </TargetText>
-          <TargetText>분 </TargetText>
+          <FlexBox>
+            <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
+            <TargetText>시간 </TargetText>
+            <TargetText>
+              {targetminutes - targethour * 60 < 10
+                ? `0${targetminutes - targethour * 60}`
+                : targetminutes - targethour * 60}
+            </TargetText>
+            <TargetText>분 </TargetText>
+          </FlexBox>
         </ChartTextView>
       </ChartView>
       <MainView>
@@ -444,12 +290,14 @@ export default ({
           )}
         </SubView> */}
         <SubView2>
-          <SubText2>{nextTitle1}</SubText2>
-          <Text1> {nextTitle2}</Text1>
+          <FlexBox>
+            <SubText2>{nextTitle1}</SubText2>
+            <Text1> {nextTitle2}</Text1>
+          </FlexBox>
           <Text1>{next_TimeText}</Text1>
         </SubView2>
       </MainView>
-    </>
+    </MainTView>
   )
 }
 async function sendPushNotification(expoPushToken) {

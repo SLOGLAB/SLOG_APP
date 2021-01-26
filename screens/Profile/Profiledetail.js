@@ -183,7 +183,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
     navigation.navigate("QRcode")
   }
   useEffect(() => {
-    console.log(data.me.posts, "data.me.posts")
+    // console.log(data.me.posts, "data.me.posts")
   }, [])
   return (
     <>
@@ -259,9 +259,9 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
             </AdView2>
             <LineView />
             <AdView>
-              <Stat5>
+              {/* <Stat5>
                 <Bold2>게시물 {data.me.posts.length}</Bold2>
-              </Stat5>
+              </Stat5> */}
               <Stat5>
                 <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
                   <Bold2>팔로워 {data.me.followersCount}</Bold2>
@@ -277,7 +277,8 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
           <HandleLogout />
 
           <View />
-          <PostView>
+          {/* 내 포스트 !!!!!!!!!! */}
+          {/* <PostView>
             {data.me.posts.map((list) => (
               <TouchableOpacity
                 key={list.id}
@@ -299,7 +300,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               </TouchableOpacity>
               //<MainScreen key={list.id} item={list} />
             ))}
-          </PostView>
+          </PostView> */}
         </MainView>
         {/* <Post /> */}
         {/* <ProfileMeta>
