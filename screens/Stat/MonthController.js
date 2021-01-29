@@ -48,8 +48,8 @@ export default () => {
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
 
   ///
-  const [selectPercent, setSelectPercent] = useState(true)
-  const [selectPercent2, setSelectPercent2] = useState(true)
+  const [selectPercent, setSelectPercent] = useState(false)
+  const [selectPercent2, setSelectPercent2] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())

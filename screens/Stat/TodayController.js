@@ -51,8 +51,8 @@ export default () => {
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())
 
-  const [selectPercent, setSelectPercent] = useState(true)
-  const [selectPercent2, setSelectPercent2] = useState(true)
+  const [selectPercent, setSelectPercent] = useState(false)
+  const [selectPercent2, setSelectPercent2] = useState(false)
 
   const oneDayHours_tmp = Array.from(Array(24).keys())
   const oneDayHours = oneDayHours_tmp.map(String)

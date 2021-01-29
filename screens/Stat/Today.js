@@ -162,7 +162,7 @@ const Today = ({
 
   //////myData
   const scheduleList = myData.schedules
-  const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
+  const { real, real_weekEnd } = WeekRange(selectDate)
   const lastMonthDate = new Date(selectDate.getFullYear(), selectDate.getMonth() + 1, 0).getDate()
   // daysOfMonth Area차트의 x축 라벨 변수
   const daysOfMonth_tmp = Array.from(Array(lastMonthDate).keys())
@@ -486,18 +486,18 @@ const Today = ({
           <SubText>과목 Deep Time </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
-            <BoxText>Real</BoxText>
+            <BoxText>학습</BoxText>
             <Box selectColor={"rgba(233, 237, 244, 1)"} />
-            <BoxText>Plan</BoxText>
+            <BoxText>목표</BoxText>
           </ChartView1>
         </CenterView>
         <StackedTodayBar
           data_1={taskArray_schedule}
           data_2={taskArray_scheduleT}
           labels={schedule_label}
-          label_1={"Real"}
-          label_2={"Plan"}
-          title={"과목별 Real 시간"}
+          label_1={"학습"}
+          label_2={"목표"}
+          title={"과목별 학습 시간"}
           title_x={"시간(분)"}
           stepSize_x={60}
         />
@@ -506,7 +506,7 @@ const Today = ({
       <View>
         <CenterView>
           <SubText>
-            {selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
+            {selectPercent ? "과목별 목표 Deep Time 비율" : "과목별 학습 Deep Time 비율"}
           </SubText>
           <BoxView1>
             {schedule_label.map((name, index) => (
@@ -520,12 +520,12 @@ const Today = ({
         <RowView>
           <FlexView2>
             <TouchBox
-              Color={selectPercent ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
+              Color={selectPercent ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
               onPress={() => {
-                setSelectPercent(true)
+                setSelectPercent(false)
               }}
             >
-              <TouchText Color={selectPercent ? "white" : "black"}>Plan</TouchText>
+              <TouchText Color={selectPercent ? "black" : "white"}>학습</TouchText>
             </TouchBox>
           </FlexView2>
           <FlexView>
@@ -533,18 +533,18 @@ const Today = ({
               data={selectPercent ? taskArray_percentT : taskArray_percent}
               dataColor={schedule_color}
               labels={schedule_label}
-              title={selectPercent ? "과목별 Plan Deep Time 비율" : "과목별 Real Deep Time 비율"}
+              title={selectPercent ? "과목별 목표 Deep Time 비율" : "과목별 학습 Deep Time 비율"}
               updateBoolean={selectPercent}
             />
           </FlexView>
           <FlexView2>
             <TouchBox
-              Color={selectPercent ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
+              Color={selectPercent ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
               onPress={() => {
-                setSelectPercent(false)
+                setSelectPercent(true)
               }}
             >
-              <TouchText Color={selectPercent ? "black" : "white"}>Real</TouchText>
+              <TouchText Color={selectPercent ? "white" : "black"}>목표</TouchText>
             </TouchBox>
           </FlexView2>
         </RowView>
@@ -554,8 +554,8 @@ const Today = ({
         <CenterView>
           <SubText>
             {selectPercent2
-              ? `Plan Deep Time ${myState[0]}&${myState[1]} 비율`
-              : `Real Deep Time ${myState[0]}&${myState[1]} 비율`}
+              ? `목표 Deep Time ${myState[0]}&${myState[1]} 비율`
+              : `학습 Deep Time ${myState[0]}&${myState[1]} 비율`}
           </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
@@ -567,23 +567,23 @@ const Today = ({
         <RowView>
           <FlexView2>
             <TouchBox
-              Color={selectPercent2 ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
-              onPress={() => {
-                setSelectPercent2(true)
-              }}
-            >
-              <TouchText Color={selectPercent2 ? "white" : "black"}>Plan</TouchText>
-            </TouchBox>
-          </FlexView2>
-          <FlexView></FlexView>
-          <FlexView2>
-            <TouchBox
               Color={selectPercent2 ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
               onPress={() => {
                 setSelectPercent2(false)
               }}
             >
-              <TouchText Color={selectPercent2 ? "black" : "white"}>Real</TouchText>
+              <TouchText Color={selectPercent2 ? "black" : "white"}>학습</TouchText>
+            </TouchBox>
+          </FlexView2>
+          <FlexView></FlexView>
+          <FlexView2>
+            <TouchBox
+              Color={selectPercent2 ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
+              onPress={() => {
+                setSelectPercent2(true)
+              }}
+            >
+              <TouchText Color={selectPercent2 ? "white" : "black"}>목표</TouchText>
             </TouchBox>
           </FlexView2>
         </RowView>

@@ -55,6 +55,9 @@ const ModalView04 = styled.View`
 `
 const EmptyView1 = styled.View`
   flex: 1;
+  align-items: flex-end;
+  margin-right: 10;
+  margin-top: 10;
 `
 const ModalView = styled.View`
   flex: 1;
@@ -107,6 +110,7 @@ const View1 = styled.View`
   flex: 0.5;
   justify-content: center;
   align-items: center;
+  margin-top: 5;
 `
 const SetdayTopView = styled.View`
   flex: 0.5;
@@ -166,6 +170,12 @@ const ScheduleText = styled.Text`
   font-size: 20;
   font-weight: bold;
 `
+const ModalRow = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
 export const SAVE_SCHEDULE = gql`
   mutation saveSchedule_my($scheduleArray: [ScheduleArray_my!]!) {
     saveSchedule_my(scheduleArray: $scheduleArray)
@@ -937,9 +947,27 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
             }}
           >
             <StyledModalContainer style={{ width: constants.width / 1.1 }}>
-              <View1>
+              <ModalRow>
+                <EmptyView1>
+                  <TouchableOpacity
+                    onPress={() => {
+                      issetModalVisible(false)
+                    }}
+                  >
+                    <Icon
+                      name={
+                        Platform.OS === "ios"
+                          ? "ios-close-circle-outline"
+                          : "md-close-circle-outline"
+                      }
+                      size={23}
+                    />
+                  </TouchableOpacity>
+                </EmptyView1>
+              </ModalRow>
+              <SetdayTopView>
                 <ScheduleText>스케줄 수정</ScheduleText>
-              </View1>
+              </SetdayTopView>
               <ModalView style={{ width: constants.width / 1.7 }}>
                 <RNPickerSelect
                   onValueChange={(value) => {

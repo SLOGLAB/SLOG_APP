@@ -55,21 +55,22 @@ const Day = ({ donutPercent, existTime, nowtarget }) => {
         <ChartText>
           <ChartText1>
             <Text style={{ color: "#000000", fontSize: 15, fontWeight: "bold", marginBottom: 15 }}>
-              Real : {hour < 10 ? `0${hour}` : hour}:
-              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}:
+              학습 시간 : {hour < 10 ? `0${hour}` : hour}:
+              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+              {/* :
               {existTime - minutes * 60 < 10
                 ? `0${existTime - minutes * 60}`
-                : existTime - minutes * 60}
+                : existTime - minutes * 60} */}
             </Text>
             <Text style={{ color: "#000000", fontSize: 15, fontWeight: "bold", marginBottom: 15 }}>
-              Plan : {targethour < 10 ? `0${targethour}` : targethour}:
+              목표 시간 : {targethour < 10 ? `0${targethour}` : targethour}:
               {targetminutes - targethour * 60 < 10
                 ? `0${targetminutes - targethour * 60}`
                 : targetminutes - targethour * 60}
-              :
+              {/* :
               {nowtarget - targetminutes * 60 < 10
                 ? `0${nowtarget - targetminutes * 60}`
-                : nowtarget - targetminutes * 60}
+                : nowtarget - targetminutes * 60} */}
             </Text>
           </ChartText1>
         </ChartText>

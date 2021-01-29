@@ -95,14 +95,20 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
   const [setting,setSetting]=useState(false)
   const [camsetting,setcamSetting]=useState(true)
 
-  // const brightControl = async()=>{
-  //   const { status } = await Brightness.requestPermissionsAsync()
-  //     if (status === "granted") {
-  //       Brightness.setSystemBrightnessAsync(0)
-  //     }
-  // }
-
-  // setTimeout(function() { setSetting(true) }, 13000);
+  async function getAndSetSystemBrightnessAsync() {
+    const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS);
+    if (status === "granted") {
+      await Brightness.setSystemBrightnessAsync(0);
+      const bright = await Brightness.getSystemBrightnessAsync();
+    } else {
+      // Web browsers
+      console.error("System brightness permission not granted");
+    }
+}
+useEffect(() => {
+    // Ask for system brightness permission
+    getAndSetSystemBrightnessAsync();
+}, []);
 
   const handleImageTensorReady = async (
     images: IterableIterator<tf.Tensor3D>,
@@ -122,7 +128,6 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
       tf.dispose([imageTensor]); 
       // console.log(pose.score,"pose")  
       // console.log(pose,"all") 
-      myInfoRefetch() 
 
       if(pose.score>0.1){
         studyArray.push("true")
@@ -134,11 +139,13 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
          existToggleMutation({variables: { email: myInfoData.me.email, existToggle: false },
          })
          studyArray=[]
-       }else{
+         myInfoRefetch() 
 
+       }else{
          existToggleMutation({variables: { email: myInfoData.me.email, existToggle: true },
         })
          studyArray=[]
+         myInfoRefetch() 
        }
       }
       if (!AUTORENDER) {
