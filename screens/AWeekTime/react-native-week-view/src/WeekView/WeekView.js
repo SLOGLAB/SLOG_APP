@@ -399,20 +399,6 @@ export default class WeekView extends Component {
             </View>
           </ScrollView>
         </View>
-        {/* {this.state.refreshing && (
-          <View
-            style={{
-              position: "absolute",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            <Loader size={"large"} />
-          </View>
-        )} */}
       </View>
     )
   }

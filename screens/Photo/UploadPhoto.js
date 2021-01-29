@@ -9,6 +9,7 @@ import constants from "../../constants"
 import { useMutation } from "@apollo/react-hooks"
 import { ME } from "../../screens/Profile/UserProfile"
 import imageResize from "../../components/imageResize"
+import { Platform } from "react-native"
 
 const View = styled.View`
   align-items: center;
@@ -71,13 +72,12 @@ export default ({ navigation }) => {
   // const handleFileInput = (photo) => {
   //   imageResize(photo, "preview-img", 640, setSelectFile)
   // }
+
   const onAvatar = async () => {
     // handleFileInput(photo)
     const formData = new FormData()
-    // formData.append("file", selectFile)
 
-    // formData.append("file", photo)
-    /////////
+    // console.log(photo, "1212")
     const name = photo.filename
     const [, type] = name.split(".")
 
@@ -89,12 +89,13 @@ export default ({ navigation }) => {
 
     try {
       setIsLoading(true)
-      console.log(formData, "formdata")
+      // console.log(formData, "formdata")
       // Alert.alert("프로필 이미지 변경 중...")
       const { data } = await axios.post(
         // process.env.REACT_APP_BACKEND_URI + "/api/upload/avatar",
-        "https://slog-iam-pl-backend.herokuapp.com/api/upload/avatar",
+        "https://slog-deeptime-backend.herokuapp.com/api/upload/avatar",
         // `http://${Platform.OS === "ios" ? "localhost" : "10.0.2.2"}:4000/api/upload/avatar`,
+        // `http://192.168.0.229:19001/api/upload/avatar`,
         formData,
         {
           headers: {
@@ -102,8 +103,6 @@ export default ({ navigation }) => {
           },
         }
       )
-      console.log("data")
-
       const {
         data: { editAvatar },
       } = await editAvatarMuation({

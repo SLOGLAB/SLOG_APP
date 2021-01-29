@@ -38,6 +38,7 @@ const ChartView = styled.View`
   border-color: rgba(233, 236, 243, 1);
   margin-left: 5;
   margin-right: 5;
+  margin-top: 10;
   /* height: 48%; */
 `
 const TextView = styled.View`
@@ -328,20 +329,20 @@ const MainDay = ({
   //   }
   // }, [])
 
-  const pushToken = async () => {
-    await sendPushNotification(expoPushToken)
-  }
-  const noti = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "슬로그 알람!",
-        body: "IAM!",
-      },
-      trigger: {
-        seconds: 1,
-      },
-    })
-  }
+  // const pushToken = async () => {
+  //   await sendPushNotification(expoPushToken)
+  // }
+  // const noti = () => {
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "슬로그 알람!",
+  //       body: "IAM!",
+  //     },
+  //     trigger: {
+  //       seconds: 1,
+  //     },
+  //   })
+  // }
   // 팔로우한 각 유저 데이터에 알맞은 createdAt 넣어주기(내가가 언제 팔로우 했는지)
   for (let i = 0; i < myData.followDates.length; i++) {
     const findUser = (a) => a.id === myData.followDates[i].followId
@@ -469,8 +470,10 @@ const MainDay = ({
         {/* <AvartarView1> */}
         {/* {studyBool ? <Apps studyBool={studyBool} setStudyBool={setStudyBool} /> : null} */}
         {/* </AvartarView1> */}
-        <ChartView>
+        <TextView>
           <StudyButton />
+        </TextView>
+        <ChartView>
           <ProgressView>
             {/* {studyBool ? null : (
               <Button

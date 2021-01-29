@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useLayoutEffect } from "react"
 import * as tf from "@tensorflow/tfjs"
 import {
   Button,
@@ -116,6 +116,7 @@ const PoseCamera = ({
   loading,
   selectDate,
   nextDate,
+  setbool,
 }) => {
   const ssdModel = useSsdModel()
   const posenetModel = usePosenetModel()
@@ -131,7 +132,6 @@ const PoseCamera = ({
   // setTimeout(function () {
   //   setSetting(true)
   // }, 13000)
-
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     studyInterval = setInterval(async () => {
       if (!AUTORENDER && !button) {
@@ -158,7 +158,7 @@ const PoseCamera = ({
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
-    }, 40000)
+    }, 10000)
   }
 
   if (!ssdModel) {
@@ -191,7 +191,7 @@ const PoseCamera = ({
             setSetting(false)
             clearInterval(studyInterval)
             ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
-            navigation.navigate("TabNavigation")
+            navigation.navigate("SwiperBase")
           }}
         >
           <Icon
@@ -294,7 +294,7 @@ const PoseCamera = ({
 </View>  */
 }
 
-export default function StudySSd({
+export default function StudySSdPose({
   loading,
   selectDate,
   nextDate,
@@ -304,6 +304,7 @@ export default function StudySSd({
   myInfoData,
   myInfoRefetch,
   deg,
+  setbool,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -328,6 +329,7 @@ export default function StudySSd({
       loading={loading}
       selectDate={selectDate}
       nextDate={nextDate}
+      setbool={setbool}
     />
   )
 }

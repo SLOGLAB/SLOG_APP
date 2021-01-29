@@ -12,20 +12,21 @@ import Icon from "../components/Icon"
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { gql } from "apollo-boost"
 import { useMutation } from '@apollo/react-hooks';
-import * as ScreenOrientation from "expo-screen-orientation"
-import Loader from "../components/Loader"
-import StudyPresenter from "../screens/Study/StudyPresenter"
-//==
-import constants from "../constants"
-import styled from "styled-components"
-import useInterval from "../hooks/useInterval"
-import moment from 'moment';
+// import * as ScreenOrientation from "expo-screen-orientation"
+// import Loader from "../components/Loader"
+// import StudyPresenter from "../screens/Study/StudyPresenter"
+// //==
+// import constants from "../constants"
+// import styled from "styled-components"
+// import useInterval from "../hooks/useInterval"
+// import moment from 'moment';
 
-import * as cocossd from "@tensorflow-models/coco-ssd"
-import * as FileSystem from "expo-file-system"
+// import * as cocossd from "@tensorflow-models/coco-ssd"
+// import * as FileSystem from "expo-file-system"
 
-import * as ImagePicker from "expo-image-picker"
-import * as jpeg from "jpeg-js"
+// import * as ImagePicker from "expo-image-picker"
+// import * as jpeg from "jpeg-js"
+import * as Brightness from "expo-brightness"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 var image = null
@@ -82,6 +83,8 @@ const AUTORENDER = false;
 
 const TensorCamera = cameraWithTensors(Camera);
 let studyInterval = undefined
+let studyArray = []
+
 const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,deg,loading,selectDate,nextDate}) => {
   const posenetModel = usePosenetModel();
   const [pose, setPose] = useState<posenet.Pose | null>(null);
@@ -92,7 +95,13 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
   const [setting,setSetting]=useState(false)
   const [camsetting,setcamSetting]=useState(true)
 
-  
+  // const brightControl = async()=>{
+  //   const { status } = await Brightness.requestPermissionsAsync()
+  //     if (status === "granted") {
+  //       Brightness.setSystemBrightnessAsync(0)
+  //     }
+  // }
+
   // setTimeout(function() { setSetting(true) }, 13000);
 
   const handleImageTensorReady = async (
@@ -111,20 +120,31 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
       });
         setPose(pose);
       tf.dispose([imageTensor]); 
-      console.log(pose.score,"pose")  
+      // console.log(pose.score,"pose")  
       // console.log(pose,"all") 
       myInfoRefetch() 
+
       if(pose.score>0.1){
-        existToggleMutation({variables: { email: myInfoData.me.email, existToggle: true },
-      })
-     }else{
-      existToggleMutation({variables: { email: myInfoData.me.email, existToggle: false },
-      })
-    }
+        studyArray.push("true")
+      }else{
+      studyArray.push("false")
+      }
+      if(studyArray.length == 4){
+        if(studyArray.findIndex(obj => obj == "true") == -1){
+         existToggleMutation({variables: { email: myInfoData.me.email, existToggle: false },
+         })
+         studyArray=[]
+       }else{
+
+         existToggleMutation({variables: { email: myInfoData.me.email, existToggle: true },
+        })
+         studyArray=[]
+       }
+      }
       if (!AUTORENDER) {
         gl.endFrameEXP();
       }
-      }, 40000);
+      }, 10000);
 }
 
 
@@ -211,9 +231,9 @@ if (!posenetModel) {
             onReady={handleImageTensorReady}
             autorender={false}
           />
-           <View style={[styles.modelResults]}>
+           {/* <View style={[styles.modelResults]}>
           {pose && <Pose pose={pose} />}
-        </View>
+        </View> */}
         </View>
       {/* {setting?
         null

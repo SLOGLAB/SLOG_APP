@@ -25,6 +25,8 @@ import { EDIT_STUDYSET } from "../Tabs/QueryBox"
 import Constants from "expo-constants"
 import * as Permissions from "expo-permissions"
 import VdayProgress from "../../graphsVictory/VdayProgress"
+import VdayBar from "../../graphsVictory/VdayBar"
+import VTodayBar from "../../graphsVictory/VTodayBar"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 const MainTView = styled.View`
@@ -32,8 +34,33 @@ const MainTView = styled.View`
   justify-content: center;
   width: 100%;
   height: 100%;
+  padding-top: 15;
 `
-
+const Text = styled.Text`
+  font-weight: bold;
+  margin-top: 5;
+`
+const SubText = styled.Text`
+  color: black;
+  font-size: 10;
+  /* font-weight: bold; */
+`
+const TextView = styled.View`
+  /* height:35%; */
+  margin-left: 5;
+  margin-right: 5;
+  background-color: rgba(255, 255, 255, 1);
+  border: 0px;
+  border-radius: 5;
+  border-color: rgba(233, 236, 243, 1);
+  /* height: 30%; */
+`
+const LeftView = styled.View`
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* background-color: rgba(233, 236, 243, 1); */
+  padding-left: 10;
+`
 const ChartView = styled.View`
   border: 1px;
   border-radius: 5;
@@ -159,20 +186,20 @@ export default ({
   //   }
   // }, [])
 
-  const pushToken = async () => {
-    await sendPushNotification(expoPushToken)
-  }
-  const noti = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "슬로그 알람!",
-        body: "IAM!",
-      },
-      trigger: {
-        seconds: 1,
-      },
-    })
-  }
+  // const pushToken = async () => {
+  //   await sendPushNotification(expoPushToken)
+  // }
+  // const noti = () => {
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "슬로그 알람!",
+  //       body: "IAM!",
+  //     },
+  //     trigger: {
+  //       seconds: 1,
+  //     },
+  //   })
+  // }
   // 팔로우한 각 유저 데이터에 알맞은 createdAt 넣어주기(내가가 언제 팔로우 했는지)
   for (let i = 0; i < myData.followDates.length; i++) {
     const findUser = (a) => a.id === myData.followDates[i].followId
@@ -232,47 +259,47 @@ export default ({
     // noti()
   }, [])
   return (
-    <MainTView>
-      <ChartView>
-        {/* <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} /> */}
-
-        <ChartTextView>
-          <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
-          <ExistText>시간 </ExistText>
-          <ExistTimeText>
-            {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
-          </ExistTimeText>
-          <ExistText>분 </ExistText>
-          <ExistText>/</ExistText>
-          <FlexBox>
-            <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
-            <TargetText>시간 </TargetText>
-            <TargetText>
-              {targetminutes - targethour * 60 < 10
-                ? `0${targetminutes - targethour * 60}`
-                : targetminutes - targethour * 60}
-            </TargetText>
-            <TargetText>분 </TargetText>
-          </FlexBox>
-        </ChartTextView>
-      </ChartView>
-      <MainView>
-        <TimeView>
-          <TextCenter>
-            <SubText2>{nowTitle1}</SubText2>
-            <Text1>{nowTitle2}</Text1>
-          </TextCenter>
-          {nowScheduleTime == 0 ? (
-            <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
-          ) : (
-            <Barcharts
-              nowScheduleTime={nowScheduleTime}
-              nowScheduleTimeT={nowScheduleTimeT}
-              nowScheduleColor={nowScheduleColor}
-            />
-          )}
-        </TimeView>
-        {/* <SubView>
+    <ScrollView>
+      <MainTView>
+        <ChartView>
+          {/* <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} /> */}
+          <ChartTextView>
+            <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
+            <ExistText>시간 </ExistText>
+            <ExistTimeText>
+              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+            </ExistTimeText>
+            <ExistText>분 </ExistText>
+            <ExistText>/</ExistText>
+            <FlexBox>
+              <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
+              <TargetText>시간 </TargetText>
+              <TargetText>
+                {targetminutes - targethour * 60 < 10
+                  ? `0${targetminutes - targethour * 60}`
+                  : targetminutes - targethour * 60}
+              </TargetText>
+              <TargetText>분 </TargetText>
+            </FlexBox>
+          </ChartTextView>
+        </ChartView>
+        <MainView>
+          <TimeView>
+            <TextCenter>
+              <SubText2>{nowTitle1}</SubText2>
+              <Text1>{nowTitle2}</Text1>
+            </TextCenter>
+            {nowScheduleTime == 0 ? (
+              <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
+            ) : (
+              <Barcharts
+                nowScheduleTime={nowScheduleTime}
+                nowScheduleTimeT={nowScheduleTimeT}
+                nowScheduleColor={nowScheduleColor}
+              />
+            )}
+          </TimeView>
+          {/* <SubView>
           <SubText2>{break_title}</SubText2>
           {break_countdown == 0 ? (
             <>
@@ -289,15 +316,28 @@ export default ({
             </>
           )}
         </SubView> */}
-        <SubView2>
-          <FlexBox>
-            <SubText2>{nextTitle1}</SubText2>
-            <Text1> {nextTitle2}</Text1>
-          </FlexBox>
-          <Text1>{next_TimeText}</Text1>
-        </SubView2>
-      </MainView>
-    </MainTView>
+          <SubView2>
+            <FlexBox>
+              <SubText2>{nextTitle1}</SubText2>
+              <Text1> {nextTitle2}</Text1>
+            </FlexBox>
+            <Text1>{next_TimeText}</Text1>
+          </SubView2>
+        </MainView>
+        <TextView>
+          {/* <LeftView>
+            <SubText>24시 성취율(%)</SubText>
+            </LeftView> */}
+          <VTodayBar
+            taskArray={taskArray}
+            // ylength={Math.max.apply(null, taskArray)}
+            ylength={60}
+            title={"시간별 Real 시간"}
+            title_y={"Real 시간(분)"}
+          />
+        </TextView>
+      </MainTView>
+    </ScrollView>
   )
 }
 async function sendPushNotification(expoPushToken) {

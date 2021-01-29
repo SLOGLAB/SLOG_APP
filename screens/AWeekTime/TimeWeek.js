@@ -40,18 +40,18 @@ const EmptyView10 = styled.View`
   width: ${constants.width / 1.4};
 `
 const EmptyView5 = styled.View`
-  flex: 0.07;
+  flex: 0.08;
   align-items: flex-end;
   justify-content: center;
   margin-left: 5;
-  margin-top: 10;
+  margin-top: 5;
   width: ${constants.width / 1.3};
 `
 const ModalView04 = styled.View`
-  flex: 0.4;
+  flex: 0.5;
   /* justify-content: center;
   align-items: center; */
-  width: ${constants.width / 1.25};
+  width: ${constants.width / 1.2};
 `
 const EmptyView1 = styled.View`
   flex: 1;
@@ -90,7 +90,7 @@ const StyledModalContainer = styled.View`
   flex-direction: column;
   align-items: center;
   /* 모달창 크기 조절 */
-  flex: 0.7;
+  flex: 0.8;
   width: 300;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
@@ -104,7 +104,9 @@ const StyledModalSetContainer = styled.View`
   border-radius: 10px;
 `
 const View1 = styled.View`
-  flex: 0.3;
+  flex: 0.5;
+  justify-content: center;
+  align-items: center;
 `
 const SetdayTopView = styled.View`
   flex: 0.5;
@@ -127,7 +129,16 @@ const View21 = styled.View`
 const RowView = styled.View`
   /* background-color: rgba(89, 189, 232, 1); */
   flex-direction: row;
-  width: ${constants.width / 1.7};
+  width: ${constants.width / 1.3};
+  justify-content: center;
+  align-items: center;
+  height: 5%;
+  margin-left: ${constants.width / 10};
+`
+const RowMidView = styled.View`
+  /* background-color: rgba(89, 189, 232, 1); */
+  flex-direction: row;
+  width: ${constants.width / 1.3};
   justify-content: center;
   align-items: center;
   height: 5%;
@@ -146,6 +157,13 @@ const RowText = styled.Text`
 `
 const CopyText = styled.Text`
   font-size: 17;
+  font-weight: bold;
+`
+const LineView = styled.View`
+  height: 10;
+`
+const ScheduleText = styled.Text`
+  font-size: 20;
   font-weight: bold;
 `
 export const SAVE_SCHEDULE = gql`
@@ -597,7 +615,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
         <SafeAreaView style={styles.container}>
           <View
             style={{
-              flex: 0.05,
+              flex: 0.08,
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "row",
@@ -674,34 +692,26 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               <Timetablecontrol />
             </View>
           </View>
-          <View
-            style={{
-              flex: 1,
-              // alignItems: "center",
-              // justifyContent: "center",
-              // flexDirection: "row",
-              // position: "relative",
+
+          <WeekView
+            events={events_data}
+            selectedDate={selectDate[0]}
+            numberOfDays={7}
+            onEventPress={onEventPress}
+            headerStyle={styles.headerStyle}
+            formatDateHeader="D(dd)"
+            hoursInDisplay={12}
+            startHour={new Date().getHours()}
+            onSwipeNext={(date) => {
+              selectDate[0].setTime(date.getTime())
+              setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
             }}
-          >
-            <WeekView
-              events={events_data}
-              selectedDate={selectDate[0]}
-              numberOfDays={7}
-              onEventPress={onEventPress}
-              headerStyle={styles.headerStyle}
-              formatDateHeader="D(dd)"
-              hoursInDisplay={12}
-              startHour={new Date().getHours()}
-              onSwipeNext={(date) => {
-                selectDate[0].setTime(date.getTime())
-                setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
-              }}
-              onSwipePrev={(date) => {
-                selectDate[0].setTime(date.getTime())
-                setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
-              }}
-            />
-          </View>
+            onSwipePrev={(date) => {
+              selectDate[0].setTime(date.getTime())
+              setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
+            }}
+          />
+
           <Modal
             isVisible={modalCopyVisible}
             onBackdropPress={() => setModalCopyVisible(false)}
@@ -722,7 +732,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     name={
                       Platform.OS === "ios" ? "ios-close-circle-outline" : "md-close-circle-outline"
                     }
-                    size={30}
+                    size={23}
                   />
                 </TouchableOpacity>
               </EmptyView5>
@@ -915,7 +925,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               </ModalView04>
             </StyledModalSetContainer>
           </Modal>
-          {/* //////////////////////////////////////////////////////////////////////////////////////// */}
+          {/* ///////////////////////////////////////////////////////////// */}
           <Modal
             isVisible={isModalVisible}
             onBackdropPress={() => issetModalVisible(false)}
@@ -926,8 +936,10 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               minHeight: Math.round(Dimensions.get("window").height),
             }}
           >
-            <StyledModalContainer style={{ width: constants.width / 1.3 }}>
-              <View1 />
+            <StyledModalContainer style={{ width: constants.width / 1.1 }}>
+              <View1>
+                <ScheduleText>스케줄 수정</ScheduleText>
+              </View1>
               <ModalView style={{ width: constants.width / 1.7 }}>
                 <RNPickerSelect
                   onValueChange={(value) => {
@@ -977,6 +989,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                 // onSubmitEditing={handleLogin}
                 autoCorrect={false}
               />
+              <LineView />
               <AuthInput
                 {...locationInput}
                 placeholder={"위치"}
@@ -1039,9 +1052,9 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                       />
                     </View12>
                   </RowView>
-                  <RowView>
+                  <RowMidView>
                     <RowText>|</RowText>
-                  </RowView>
+                  </RowMidView>
                   <RowView>
                     <View3 />
                     <View12>

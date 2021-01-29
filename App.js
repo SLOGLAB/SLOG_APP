@@ -35,7 +35,7 @@ export default function App() {
       //     display: FontDisplay.SWAP,
       //   },
       // });
-      await Asset.loadAsync([require("./assets/DeepTime.png")])
+      await Asset.loadAsync([require("./assets/Group80.png")])
 
       const cache = new InMemoryCache()
 

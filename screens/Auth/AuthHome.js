@@ -7,7 +7,7 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${(props) => props.theme.classicBlue};
+  background-color: rgba(255, 255, 255, 1);
 `
 
 const Image = styled.Image`
@@ -20,19 +20,26 @@ const Touchable = styled.TouchableOpacity``
 const LoginLink = styled.View``
 
 const LoginLinkText = styled.Text`
-  color: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 1);
   margin-top: 20px;
   font-weight: 600;
+`
+const Logo = styled.View`
+  width: ${constants.width / 1};
 `
 
 export default ({ navigation }) => {
   return (
     <View>
-      <Image resizeMode={"contain"} source={require("../../assets/DeepSmall1.png")} />
+      <Image
+        resizeMode={"contain"}
+        source={require("../../assets/SplashDeep.png")}
+        style={{ height: 100, width: 250 }}
+      />
       <AuthButton
-        bgColor={"#ffffff"}
+        bgColor={"#0F4B82"}
         text={"로그인"}
-        color="black"
+        color="white"
         onPress={() => navigation.navigate("Login")}
       />
       <Touchable onPress={() => navigation.navigate("Signup")}>

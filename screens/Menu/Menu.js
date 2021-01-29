@@ -18,30 +18,30 @@ export default function Menu() {
   const notificationListener = useRef()
   const responseListener = useRef()
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification)
-    })
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      // console.log(response)
-    })
-    // const localNotification = {
-    //   title: "done",
-    //   body: "done!",
-    // }
-    // const schedulingOptions = {
-    //   time: new Date().getTime(),
-    // }
-    return () => {
-      // Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
-      Notifications.removeNotificationSubscription(notificationListener)
-      Notifications.removeNotificationSubscription(responseListener)
-    }
-  }, [])
+  //   // This listener is fired whenever a notification is received while the app is foregrounded
+  //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+  //     setNotification(notification)
+  //   })
+  //   // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+  //     // console.log(response)
+  //   })
+  //   // const localNotification = {
+  //   //   title: "done",
+  //   //   body: "done!",
+  //   // }
+  //   // const schedulingOptions = {
+  //   //   time: new Date().getTime(),
+  //   // }
+  //   return () => {
+  //     // Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+  //     Notifications.removeNotificationSubscription(notificationListener)
+  //     Notifications.removeNotificationSubscription(responseListener)
+  //   }
+  // }, [])
   //   const schedulingOptions = {
   //     time: (new Date()).getTime() + Number(e.nativeEvent.text)
   // }

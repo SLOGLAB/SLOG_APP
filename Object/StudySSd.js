@@ -124,7 +124,7 @@ const PoseCamera = ({
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
-    }, 10000)
+    }, 40000)
   }
 
   if (!ssdModel) {

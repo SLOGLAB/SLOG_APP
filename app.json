@@ -1,14 +1,17 @@
 {
   "expo": {
     "name": "DeepTime",
-    "slug": "DeepTime",
+    "slug": "DeepTime-app",
+    "platforms": ["ios", "android"],
+    "privacy": "public",
     "version": "1.0.0",
+    "sdkVersion": "38.0.0",
     "orientation": "portrait",
-    "icon": "./assets/DeepTimeIcon.png",
+    "icon": "./assets/DeepTimeApp.png",
     "splash": {
-      "image": "./assets/DeepTimeSplash.png",
+      "image": "./assets/Group80.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0f4c82"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,18 +20,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "icon": "./assets/DeepTimeNoti.png"
+      "bundleIdentifier": "com.slog.deeptime",
+      "buildNumber": "1.0.0",
+      "supportsTablet": true
     },
     "android": {
-      "package": "net.danielwind.pictionary",
-      "icon": "./assets/DeepTimeNoti.png"
-    },
-    "notification": {
-      "icon": "./assets/DeepTimeNoti.png",
-      "color": "#002C56",
-      "iosDisplayInForeground": true,
-      "androidMode": "default"
+      "package": "com.slog.deeptime",
+      "versionCode": 1
     }
   }
 }

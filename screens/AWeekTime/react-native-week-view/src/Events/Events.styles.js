@@ -1,13 +1,14 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from "react-native"
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const GREY_COLOR = '#E9EDF0';
-export const CONTENT_OFFSET = 16;
+const { width: SCREEN_WIDTH } = Dimensions.get("window")
+const GREY_COLOR = "#E9EDF0"
+export const CONTENT_OFFSET = 16
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 16,
+    paddingBottom: 150,
     width: SCREEN_WIDTH - 60,
   },
   timeRow: {
@@ -16,25 +17,25 @@ const styles = StyleSheet.create({
   timeLabelLine: {
     height: 1,
     backgroundColor: GREY_COLOR,
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     left: 0,
   },
   event: {
     flex: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderColor: GREY_COLOR,
     borderLeftWidth: 1,
   },
   events: {
-    position: 'absolute',
-    flexDirection: 'row',
+    position: "absolute",
+    flexDirection: "row",
     left: 0,
     right: 0,
     bottom: 0,
     top: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
-});
+})
 
-export default styles;
+export default styles

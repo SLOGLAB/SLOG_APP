@@ -211,8 +211,6 @@ export default ({ navigation }) => {
 
 //   const [isModelReady, setisModelReady] = useState(false)
 //   const [image, setimage] = useState(null)
-//   const [image2, setimage2] = useState(null)
-//   const [image3, setimage3] = useState(null)
 
 //   const selectImage = async () => {
 //     try {
@@ -225,40 +223,6 @@ export default ({ navigation }) => {
 //       if (!response.cancelled) {
 //         const source = { uri: response.uri }
 //         setimage(source)
-//         // detectObjects()
-//       }
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-//   const selectImage2 = async () => {
-//     try {
-//       let response = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.All,
-//         allowsEditing: true,
-//         aspect: [4, 3],
-//       })
-
-//       if (!response.cancelled) {
-//         const source = { uri: response.uri }
-//         setimage2(source)
-//         // detectObjects()
-//       }
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-//   const selectImage3 = async () => {
-//     try {
-//       let response = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.All,
-//         allowsEditing: true,
-//         aspect: [4, 3],
-//       })
-
-//       if (!response.cancelled) {
-//         const source = { uri: response.uri }
-//         setimage3(source)
 //         // detectObjects()
 //       }
 //     } catch (error) {

@@ -18,7 +18,10 @@ import StudyPresenter from "./StudyPresenter"
 import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
 import TodoListController from "../TodoList/TodoListController"
 import TodoListEndController from "../TodoList/TodoListEndController"
-// const screen = Dimensions.get('screen');
+import { withNavigationFocus } from "react-navigation"
+
+import * as Brightness from "expo-brightness"
+
 export const ME = gql`
   {
     me {
@@ -138,7 +141,8 @@ const useScreenDimensions = () => {
   }
 }
 
-export default ({ navigation }) => {
+// export default
+const StudyContainer = ({ navigation }) => {
   const screenData = useScreenDimensions()
   const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
   var todaydate = new Date().getDate() //Current Date
@@ -156,16 +160,14 @@ export default ({ navigation }) => {
   const todolistName = useInput("")
   const scheduleTitle = useInput("")
   const [studyBool, setStudyBool] = useState(false)
-  const [newTodoView, setNewTodoView] = useState(false)
 
-  const [refreshing, setRefreshing] = useState(false)
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())
 
-  const [selectPercent, setSelectPercent] = useState(true)
-
   const oneDayHours_tmp = Array.from(Array(24).keys())
   const oneDayHours = oneDayHours_tmp.map(String)
+
+  // const bool = navigation.getParam("bool")
 
   const isFirstRun = useRef(true)
   useEffect(() => {
@@ -177,8 +179,19 @@ export default ({ navigation }) => {
     nextDate.setTime(selectDate.getTime())
     nextDate.setDate(nextDate.getDate() + 1)
   }, [selectDate])
+  const [newTodoView, setNewTodoView] = useState(false)
+
   useEffect(() => {
     myInfoRefetch()
+    // setNewTodoView(navigation.isFocused())
+  }, [])
+  useEffect(() => {
+    ;(async () => {
+      const { status } = await Brightness.requestPermissionsAsync()
+      if (status === "granted") {
+        Brightness.setSystemBrightnessAsync(0)
+      }
+    })()
   }, [])
   return (
     // <View style={[styles.container, screenData.isLandscape && styles.containerLandscape]}>
@@ -198,7 +211,7 @@ export default ({ navigation }) => {
             <RowView>
               {Platform.OS == "ios" ? <SideView2 /> : null}
               <SideView>
-                {/* <StudyPoseLand
+                <StudyPoseLand
                   navigation={navigation}
                   myInfoData={myInfoData}
                   myInfoRefetch={myInfoRefetch}
@@ -207,7 +220,7 @@ export default ({ navigation }) => {
                   loading={loading}
                   selectDate={selectDate}
                   nextDate={nextDate}
-                /> */}
+                />
                 {/* <StudySSd
                   navigation={navigation}
                   myInfoData={myInfoData}
@@ -218,16 +231,16 @@ export default ({ navigation }) => {
                   selectDate={selectDate}
                   nextDate={nextDate}
                 /> */}
-                <StudySSdPose
+                {/* <StudySSdPose
                   navigation={navigation}
                   myInfoData={myInfoData}
                   myInfoRefetch={myInfoRefetch}
                   deg={"270deg"}
-                  // setbool={true}
+                  setbool={newTodoView}
                   loading={loading}
                   selectDate={selectDate}
                   nextDate={nextDate}
-                />
+                /> */}
               </SideView>
               <SideView1>
                 <Container>
@@ -338,3 +351,5 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
 })
+
+export default withNavigationFocus(StudyContainer)

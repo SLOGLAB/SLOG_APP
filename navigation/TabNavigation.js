@@ -1,5 +1,5 @@
 import React from "react"
-import { Platform } from "react-native"
+import { Platform, View, Image } from "react-native"
 // import { createBottomTabNavigator, createStackNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
@@ -20,6 +20,8 @@ import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import ObjectButton from "../Object/ObjectButton"
 import NavGreenIcon from "../components/NavGreenIcon"
 import MenuButton from "../components/MenuButton"
+import StudyContainer from "../screens/Study/StudyContainer"
+
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
     {
@@ -74,6 +76,42 @@ export default createBottomTabNavigator(
         ),
       },
     },
+    // StudyContainer: {
+    //   // screen: stackFactory(StudyContainer, {
+    //   //   title: "Feed",
+    //   // }),
+    //   screen: StudyContainer,
+    //   navigationOptions: ({ navigation }) => ({
+    //     tabBarOnPress: () => {
+    //       navigation.navigate("StudyContainer")
+    //     },
+    //     tabBarVisible: false,
+    //     tabBarIcon: ({ tintColor }) => (
+    //       <View
+    //         style={{
+    //           position: "absolute",
+    //           bottom: 20, // space from bottombar
+    //           height: 58,
+    //           width: 58,
+    //           borderRadius: 58,
+    //           backgroundColor: "#5a95ff",
+    //           justifyContent: "center",
+    //           alignItems: "center",
+    //         }}
+    //       >
+    //         <Image
+    //           source={require("../assets/Group79.svg")}
+    //           style={{
+    //             width: 40,
+    //             height: 40,
+    //             tintColor: "#f1f6f9",
+    //             alignContent: "center",
+    //           }}
+    //         />
+    //       </View>
+    //     ),
+    //   }),
+    // },
     TimetableWeek: {
       screen: TimetableWeek,
       // screen: stackFactory(TimetableWeek, {
@@ -90,6 +128,7 @@ export default createBottomTabNavigator(
         ),
       },
     },
+
     // FeedPhotoNavigation: {
     //   screen: stackFactory(FeedPhotoNavigation, {
     //     title: "Feed",

@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { withNavigation } from "react-navigation"
 import Icon from "../../components/Icon"
 import * as ScreenOrientation from "expo-screen-orientation"
-// import Group59 from "../../assets/Group59"
+// import Group79 from "../../assets/Group79"
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
   flex-direction: row;
@@ -28,11 +28,12 @@ export default withNavigation(({ navigation }) => (
       // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
     }}
   >
-    <Icon
+    {/* <Icon
       name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"}
       size={30}
       color={"#0F4C82"}
-    />
+    /> */}
+    <Image source={require("../../assets/Group1.png")} style={{ height: 25, width: 25 }} />
     <ButtonText>Play</ButtonText>
   </Container>
 ))

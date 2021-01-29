@@ -39,7 +39,12 @@ const LoaderWrapper = styled.View`
   justify-content: center;
   align-items: center;
 `
-
+const ScheView = styled.View`
+  height: 100%;
+`
+const ScheView2 = styled.View`
+  height: 10%;
+`
 export default TimetableWeek = () => {
   var timetableRef
 
