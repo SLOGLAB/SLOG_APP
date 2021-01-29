@@ -238,9 +238,9 @@ if (!posenetModel) {
             onReady={handleImageTensorReady}
             autorender={false}
           />
-           {/* <View style={[styles.modelResults]}>
+           <View style={[styles.modelResults]}>
           {pose && <Pose pose={pose} />}
-        </View> */}
+        </View>
         </View>
       {/* {setting?
         null
