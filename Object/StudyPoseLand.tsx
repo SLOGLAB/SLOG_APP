@@ -98,7 +98,7 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
   async function getAndSetSystemBrightnessAsync() {
     const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS);
     if (status === "granted") {
-      await Brightness.setSystemBrightnessAsync(0);
+      await Brightness.setSystemBrightnessAsync(0.1);
       const bright = await Brightness.getSystemBrightnessAsync();
     } else {
       // Web browsers
@@ -238,9 +238,9 @@ if (!posenetModel) {
             onReady={handleImageTensorReady}
             autorender={false}
           />
-           {/* <View style={[styles.modelResults]}>
+           <View style={[styles.modelResults]}>
           {pose && <Pose pose={pose} />}
-        </View> */}
+        </View>
         </View>
       {/* {setting?
         null
