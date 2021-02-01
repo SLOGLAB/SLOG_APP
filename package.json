@@ -74,7 +74,6 @@
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-calendars": "1.264.0",
-    "react-native-dark-mode-switch": "0.0.0-alpha.1",
     "react-native-datepicker": "1.7.2",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.6.0",
