@@ -12,6 +12,7 @@ import Icon from "../components/Icon"
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { gql } from "apollo-boost"
 import { useMutation } from '@apollo/react-hooks';
+
 // import * as ScreenOrientation from "expo-screen-orientation"
 // import Loader from "../components/Loader"
 // import StudyPresenter from "../screens/Study/StudyPresenter"
@@ -27,6 +28,7 @@ import { useMutation } from '@apollo/react-hooks';
 // import * as ImagePicker from "expo-image-picker"
 // import * as jpeg from "jpeg-js"
 import * as Brightness from "expo-brightness"
+
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 var image = null
@@ -84,7 +86,6 @@ const AUTORENDER = false;
 const TensorCamera = cameraWithTensors(Camera);
 let studyInterval = undefined
 let studyArray = []
-
 const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,deg,loading,selectDate,nextDate}) => {
   const posenetModel = usePosenetModel();
   const [pose, setPose] = useState<posenet.Pose | null>(null);
@@ -93,22 +94,35 @@ const PoseCamera = ({studyBool,setStudyBool,navigation,myInfoData,myInfoRefetch,
   const [button, setButton] = useState(false)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE);
   const [setting,setSetting]=useState(false)
-  const [camsetting,setcamSetting]=useState(true)
+  const [brightnessButton,setbrightnessButton]=useState(true)
 
-  async function getAndSetSystemBrightnessAsync() {
-    const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS);
-    if (status === "granted") {
-      await Brightness.setSystemBrightnessAsync(0);
-      const bright = await Brightness.getSystemBrightnessAsync();
-    } else {
-      // Web browsers
-      console.error("System brightness permission not granted");
-    }
+  const getAndSetSystemBrightnessAsync = async()=> {
+      const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS);
+      // bright = await Brightness.getSystemBrightnessAsync();
+      if (status === "granted") {
+        setbrightnessButton(!brightnessButton)
+        if(brightnessButton){
+          for(let i=200;i>-1;i--){
+            await Brightness.setBrightnessAsync(i/1000);
+          }
+        }else{
+          await Brightness.setBrightnessAsync(0.7);
+        }
+      } else {
+        // Web browsers
+        console.error("System brightness permission not granted");
+      }
 }
-useEffect(() => {
-    // Ask for system brightness permission
-    getAndSetSystemBrightnessAsync();
-}, []);
+// useEffect(() => {
+//     // Ask for system brightness permission
+//     console.log(brightnessButton,"brightnessButton")
+//   if(brightnessButton)
+//   {
+//     console.log(brightnessButton,"brightnessButton true")
+//     getAndSetSystemBrightnessAsync();
+//   }
+
+// }, [brightnessButton]);
 
   const handleImageTensorReady = async (
     images: IterableIterator<tf.Tensor3D>,
@@ -140,7 +154,6 @@ useEffect(() => {
          })
          studyArray=[]
          myInfoRefetch() 
-
        }else{
          existToggleMutation({variables: { email: myInfoData.me.email, existToggle: true },
         })
@@ -213,12 +226,28 @@ if (!posenetModel) {
       ))} 
     </ScrollView>
     {/* <TouchableOpacity onPress={()=>{
-        setcamSetting(!camsetting)
+        getAndSetSystemBrightnessAsync()
+        // setbrightnessButton(!brightnessButton)
       }}>
-      <Icon name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"} color={"#000000"} size={40}/>
+      <Icon name={Platform.OS === "ios" ? "ios-moon" : "md-moon"} color={"#000000"} size={40}/>
       </TouchableOpacity> */}
     </View>
     <View style={[{justifyContent: "center",alignItems: "center",backgroundColor:"#000"}]}>
+
+<View style={styles.moon}>
+     <View style={styles.round}>     
+     <TouchableOpacity onPress={()=>{
+        getAndSetSystemBrightnessAsync()
+        // setbrightnessButton(!brightnessButton)
+      }}>
+           {brightnessButton?
+            <Icon name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"} color={"#fff"} size={40}/>
+             :        
+             <Icon name={Platform.OS === "ios" ? "ios-moon" : "md-moon"} color={"#fff"} size={40}/>
+           }
+           </TouchableOpacity>
+     </View>
+</View>
     <>
         <View style={[styles.cameraContainer,{
           // transform: [{ rotate:"270deg" }]
@@ -349,7 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("window").width/1.8/1.2,
-    height: Dimensions.get("window").height/2.2/1.4,
+    height: Dimensions.get("window").height/2.2/1.3,
     backgroundColor: "#fff",
   },
   cameraAbsolute: {
@@ -419,5 +448,22 @@ const styles = StyleSheet.create({
   },
   textstyle:{
    fontSize:10,
+  },
+  moon:{
+    position: "absolute",
+    width:Dimensions.get('window').width/1.1,
+    height: "80%",
+    justifyContent:"flex-start",
+    alignItems: "flex-end",
+    // backgroundColor:"#0F4B82",
+  },
+  round:{
+    width:50,
+    height:50,
+    borderWidth:2,
+    borderRadius:40,
+    borderColor:"#fff",
+    justifyContent:"center",
+    alignItems:"center"
   }
 });

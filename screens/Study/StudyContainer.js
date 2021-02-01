@@ -20,8 +20,6 @@ import TodoListController from "../TodoList/TodoListController"
 import TodoListEndController from "../TodoList/TodoListEndController"
 import { withNavigationFocus } from "react-navigation"
 
-import * as Brightness from "expo-brightness"
-
 export const ME = gql`
   {
     me {
@@ -185,14 +183,7 @@ const StudyContainer = ({ navigation }) => {
     myInfoRefetch()
     // setNewTodoView(navigation.isFocused())
   }, [])
-  useEffect(() => {
-    ;(async () => {
-      const { status } = await Brightness.requestPermissionsAsync()
-      if (status === "granted") {
-        Brightness.setSystemBrightnessAsync(0)
-      }
-    })()
-  }, [])
+
   return (
     // <View style={[styles.container, screenData.isLandscape && styles.containerLandscape]}>
     //   <View style={[styles.box, { width: screenData.width / 2 }]} />
