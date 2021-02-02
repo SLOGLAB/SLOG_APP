@@ -19,6 +19,7 @@ import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
 import TodoListController from "../TodoList/TodoListController"
 import TodoListEndController from "../TodoList/TodoListEndController"
 import { withNavigationFocus } from "react-navigation"
+import { useKeepAwake } from "expo-keep-awake"
 
 export const ME = gql`
   {
@@ -150,7 +151,7 @@ const StudyContainer = ({ navigation }) => {
   var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
-
+  useKeepAwake()
   ///
   const minValue_10 = (value) => value >= 10
   const refreshTerm = useInput(10, minValue_10)
@@ -177,7 +178,7 @@ const StudyContainer = ({ navigation }) => {
     nextDate.setTime(selectDate.getTime())
     nextDate.setDate(nextDate.getDate() + 1)
   }, [selectDate])
-  const [newTodoView, setNewTodoView] = useState(false)
+  // const [newTodoView, setNewTodoView] = useState(false)
 
   useEffect(() => {
     myInfoRefetch()

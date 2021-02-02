@@ -16,7 +16,6 @@ const ButtonText = styled.Text`
 `
 
 export default withNavigation(({ navigation }) => (
-  //Apps ExObject
   <Container onPress={() => navigation.navigate("Apps")}>
     <NavBlackIcon name={Platform.OS === "ios" ? "ios-camera" : "md-camera"} size={20} />
     <ButtonText>Object</ButtonText>

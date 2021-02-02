@@ -16,7 +16,6 @@ import StudyContainer from "../screens/Study/StudyContainer"
 import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import Apps from "../Object/Apps"
-import ExObject from "../Object/ExObject"
 
 const MainNavigation = createStackNavigator(
   {
@@ -29,7 +28,6 @@ const MainNavigation = createStackNavigator(
     StudyContainer,
     Timecontrol,
     Apps,
-    ExObject,
   },
   {
     defaultNavigationOptions: {
