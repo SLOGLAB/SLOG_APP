@@ -158,17 +158,18 @@ const View3 = styled.View`
 `
 const RowText = styled.Text`
   font-size: 15;
+  font-family: "GmarketMedium";
 `
 const CopyText = styled.Text`
   font-size: 17;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const LineView = styled.View`
   height: 10;
 `
 const ScheduleText = styled.Text`
   font-size: 20;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ModalRow = styled.View`
   flex-direction: row;
@@ -756,6 +757,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                       <Text
                         style={{
                           fontSize: 15,
+                          fontFamily: "GmarketMedium",
                         }}
                       >
                         {moment(copyStartDay).format("YYYY-MM-DD")}(
@@ -774,6 +776,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                       <Text
                         style={{
                           fontSize: 15,
+                          fontFamily: "GmarketMedium",
                         }}
                       >
                         {moment(copySetDay).format("YYYY-MM-DD")}(
@@ -851,7 +854,11 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                         setCalModalVisible(!CalmodalVisible)
                       }}
                     >
-                      <Text>
+                      <Text
+                        style={{
+                          fontFamily: "GmarketMedium",
+                        }}
+                      >
                         {thism[0]}.{thisd[0]}(일)~{thism[6]}.{thisd[6]}(토)
                       </Text>
                     </TouchableOpacity>
@@ -890,7 +897,11 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                         setCalModalWeekVisible(!CalmodalWeekVisible)
                       }}
                     >
-                      <Text>
+                      <Text
+                        style={{
+                          fontFamily: "GmarketMedium",
+                        }}
+                      >
                         {thisSetm[0]}.{thisSetd[0]}(일)~
                         {thisSetm[6]}.{thisSetd[6]}(토)
                       </Text>
@@ -1012,7 +1023,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               <AuthInput
                 {...titleInput}
                 placeholder={"To Do List"}
-                keyboardType="email-address"
+                keyboardType="default"
                 returnKeyType="done"
                 // onSubmitEditing={handleLogin}
                 autoCorrect={false}
@@ -1021,7 +1032,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               <AuthInput
                 {...locationInput}
                 placeholder={"위치"}
-                keyboardType="email-address"
+                keyboardType="default"
                 returnKeyType="done"
                 // onSubmitEditing={}
                 autoCorrect={false}
@@ -1037,6 +1048,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                           style={{
                             fontSize: 15,
                             color: startTime >= endTime ? "red" : "black",
+                            fontFamily: "GmarketMedium",
                           }}
                         >
                           {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
@@ -1087,7 +1099,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     <View3 />
                     <View12>
                       <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
-                        <Text style={{ fontSize: 15 }}>
+                        <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>
                           {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
                           )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </Text>
@@ -1138,6 +1150,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                           style={{
                             fontSize: 18,
                             color: startTime >= endTime ? "red" : "black",
+                            fontFamily: "GmarketMedium",
                           }}
                         >
                           {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
@@ -1172,6 +1185,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                           style={{
                             fontSize: 18,
                             color: startTime >= endTime ? "red" : "black",
+                            fontFamily: "GmarketMedium",
                           }}
                         >
                           {startTimeText}
@@ -1182,7 +1196,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                   <View21>
                     <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
                       <View2>
-                        <Text style={{ fontSize: 18 }}>
+                        <Text style={{ fontSize: 18, fontFamily: "GmarketMedium" }}>
                           {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
                           )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </Text>
@@ -1211,7 +1225,9 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     </Modal>
                     <TouchableOpacity onPress={showModeEnd}>
                       <View2>
-                        <Text style={{ fontSize: 18 }}>{endTimeText}</Text>
+                        <Text style={{ fontSize: 18, fontFamily: "GmarketMedium" }}>
+                          {endTimeText}
+                        </Text>
                       </View2>
                     </TouchableOpacity>
                   </View21>
@@ -1354,6 +1370,7 @@ const styles = StyleSheet.create({
   },
   label: {
     margin: 8,
+    fontFamily: "GmarketMedium",
   },
 })
 const pickerSelectStyles = StyleSheet.create({

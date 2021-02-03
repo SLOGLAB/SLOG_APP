@@ -91,28 +91,28 @@ const CoText = styled.Text`
 `
 const SubText = styled.Text`
   color: black;
+  font-family: "GmarketMedium";
   font-size: 10;
-  /* font-weight: bold; */
 `
 const SubText2 = styled.Text`
   color: black;
   font-size: 15;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ExistTimeText = styled.Text`
   color: rgba(34, 76, 126, 1);
   font-size: 20;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ExistText = styled.Text`
   color: grey;
   font-size: 20;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const TargetText = styled.Text`
   color: grey;
   font-size: 15;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const MainView = styled.View`
   background-color: rgba(255, 255, 255, 1);
@@ -144,10 +144,13 @@ const SubView2 = styled.View`
   margin-right: 5;
 `
 const Text = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
   margin-top: 5;
+  /* font-family: "Bemin"; */
 `
-const Text1 = styled.Text``
+const Text1 = styled.Text`
+  font-family: "GmarketMedium";
+`
 const RedText = styled.Text`
   color: red;
 `
@@ -172,12 +175,14 @@ const IndiviList = styled.View`
   /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
 `
 const IndiviList1 = styled.View`
-  width: ${WIDTH / 25};
+  align-items: center;
+
   /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
 `
 
 const FollowerName_Text = styled.Text`
   font-size: 10;
+  font-family: "GmarketMedium";
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const CircleAvartar = styled.View`
@@ -200,12 +205,13 @@ const StyledModalContainer = styled.View`
   align-items: center;
   /* 모달창 크기 조절 */
   flex: 0.65;
-  width: 85%;
+  width: 100%;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
 const ModalView = styled.View`
   flex: 1;
+  justify-content: center;
 `
 const ModalSubView = styled.View`
   flex: 0.15;
@@ -214,7 +220,7 @@ const ModalSubView = styled.View`
 `
 const ModalSubView2 = styled.View`
   flex: 0.8;
-  width: ${WIDTH / 1.4};
+  width: ${WIDTH / 1.15};
 `
 const LineView = styled.View`
   width: ${WIDTH / 1.4};
@@ -254,6 +260,8 @@ const FollowerName_T = styled.Text`
   justify-content: flex-start;
   align-items: flex-start;
   font-size: 13;
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const FollowerName_Text1 = styled.Text`
@@ -262,6 +270,8 @@ const FollowerName_Text1 = styled.Text`
   align-items: flex-start;
   font-size: 13;
   color: rgba(0, 0, 0, 0.5);
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const AvartarView = styled.View`
@@ -625,6 +635,17 @@ const MainDay = ({
                   </IndiviListView>
                 ))}
               </ScrollView>
+              <IndiviList1>
+                <AuthButton
+                  onPress={() => {
+                    setModalVisible(false)
+                  }}
+                  text="닫기"
+                  color="white"
+                  bgColor={"#7BA9EB"}
+                  widthRatio={LastWidth(1, 2, 18)}
+                />
+              </IndiviList1>
             </ModalSubView2>
           </ModalView>
         </StyledModalContainer>

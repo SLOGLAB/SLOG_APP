@@ -15,7 +15,7 @@ import StudySSdPose from "../../Object/StudySSdPose"
 import Swiper from "react-native-swiper"
 
 import StudyPresenter from "./StudyPresenter"
-import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
+import { Container, Header, TabHeading, Tab, Tabs, Text } from "native-base"
 import TodoListController from "../TodoList/TodoListController"
 import TodoListEndController from "../TodoList/TodoListEndController"
 import { withNavigationFocus } from "react-navigation"
@@ -238,7 +238,14 @@ const StudyContainer = ({ navigation }) => {
                 <Container>
                   <Tabs>
                     <Tab
-                      heading="Deep Time"
+                      heading={
+                        <TabHeading>
+                          <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>
+                            Deep Time
+                          </Text>
+                        </TabHeading>
+                      }
+                      // heading="Deep Time"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }
@@ -260,7 +267,14 @@ const StudyContainer = ({ navigation }) => {
                       {/* <TodoListController /> */}
                     </Tab>
                     <Tab
-                      heading="Todo List"
+                      heading={
+                        <TabHeading>
+                          <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>
+                            Todo List
+                          </Text>
+                        </TabHeading>
+                      }
+                      // heading="Todo List"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }

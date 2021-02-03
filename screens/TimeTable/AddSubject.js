@@ -104,7 +104,7 @@ export default AddSubject = ({ navigation }) => {
           <AuthInput
             {...subjectInput}
             placeholder="과목 이름 (예: 국어 or 문서작업)"
-            keyboardType="email-address"
+            keyboardType="default"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}
             autoCorrect={false}

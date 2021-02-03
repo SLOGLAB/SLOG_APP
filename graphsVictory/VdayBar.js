@@ -32,98 +32,68 @@ const VdayBar = ({ taskArray }) => {
   useEffect(() => {
     // console.log(taskArray, "과목Array")
   }, [])
+  function replaceRobotoWithSystemFont(obj) {
+    const keys = Object.keys(obj)
+    keys.forEach(function (key) {
+      const value = obj[key]
+      if (key === "fontFamily") {
+        obj[key] = obj[key].replace("'Roboto',", "'System',")
+      }
+      if (typeof value === "object") {
+        replaceRobotoWithSystemFont(obj[key])
+      }
+    })
+    return obj
+  }
 
+  const themeWithSystemFont = replaceRobotoWithSystemFont({ ...VictoryTheme.material })
   return (
     <>
-      {Platform.OS === "ios" ? (
-        <VictoryChart
-          domain={{ x: [0, 24], y: [0, 100] }}
-          height={170}
-          // width={400}
-          // padding={{ top: 25, bottom: 30, left: 10, right: 30 }}
-        >
-          <VictoryAxis tickValues={[0, 3, 6, 9, 12, 15, 18, 21, 24]} />
-          <VictoryBar
-            barWidth={3}
-            style={{
-              data: { fill: "#c43a31" },
-            }}
-            // labels={({ datum }) => ` ${datum.y}`}
-            barRatio={1}
-            data={[
-              { x: 0, y: hour0 },
-              { x: 1, y: hour1 },
-              { x: 2, y: hour2 },
-              { x: 3, y: hour3 },
-              { x: 4, y: hour4 },
-              { x: 5, y: hour5 },
-              { x: 6, y: hour6 },
-              { x: 7, y: hour7 },
-              { x: 8, y: hour8 },
-              { x: 9, y: hour9 },
-              { x: 10, y: hour10 },
-              { x: 11, y: hour11 },
-              { x: 12, y: hour12 },
-              { x: 13, y: hour13 },
-              { x: 14, y: hour14 },
-              { x: 15, y: hour15 },
-              { x: 16, y: hour16 },
-              { x: 17, y: hour17 },
-              { x: 18, y: hour18 },
-              { x: 19, y: hour19 },
-              { x: 20, y: hour20 },
-              { x: 21, y: hour21 },
-              { x: 22, y: hour22 },
-              { x: 23, y: hour23 },
-              { x: 24, y: hour24 },
-            ]}
-          />
-        </VictoryChart>
-      ) : (
-        <VictoryChart
-          domain={{ x: [0, 24], y: [0, 100] }}
-          theme={VictoryTheme.material}
-          height={170}
-          //   padding={{ top: 25, bottom: 30, left: 10, right: 30 }}
-        >
-          <VictoryAxis tickValues={[0, 3, 6, 9, 12, 15, 18, 21, 24]} />
-          <VictoryBar
-            barWidth={5}
-            style={{
-              data: { fill: "#c43a31" },
-            }}
-            // labels={({ datum }) => ` ${datum.y}`}
-            barRatio={1}
-            data={[
-              { x: 0, y: hour0 },
-              { x: 1, y: hour1 },
-              { x: 2, y: hour2 },
-              { x: 3, y: hour3 },
-              { x: 4, y: hour4 },
-              { x: 5, y: hour5 },
-              { x: 6, y: hour6 },
-              { x: 7, y: hour7 },
-              { x: 8, y: hour8 },
-              { x: 9, y: hour9 },
-              { x: 10, y: hour10 },
-              { x: 11, y: hour11 },
-              { x: 12, y: hour12 },
-              { x: 13, y: hour13 },
-              { x: 14, y: hour14 },
-              { x: 15, y: hour15 },
-              { x: 16, y: hour16 },
-              { x: 17, y: hour17 },
-              { x: 18, y: hour18 },
-              { x: 19, y: hour19 },
-              { x: 20, y: hour20 },
-              { x: 21, y: hour21 },
-              { x: 22, y: hour22 },
-              { x: 23, y: hour23 },
-              { x: 24, y: hour24 },
-            ]}
-          />
-        </VictoryChart>
-      )}
+      <VictoryChart
+        domain={{ x: [0, 24], y: [0, 100] }}
+        height={170}
+        theme={themeWithSystemFont}
+
+        // width={400}
+        // padding={{ top: 25, bottom: 30, left: 10, right: 30 }}
+      >
+        <VictoryAxis tickValues={[0, 3, 6, 9, 12, 15, 18, 21, 24]} />
+        <VictoryBar
+          barWidth={3}
+          style={{
+            data: { fill: "#c43a31" },
+          }}
+          // labels={({ datum }) => ` ${datum.y}`}
+          barRatio={1}
+          data={[
+            { x: 0, y: hour0 },
+            { x: 1, y: hour1 },
+            { x: 2, y: hour2 },
+            { x: 3, y: hour3 },
+            { x: 4, y: hour4 },
+            { x: 5, y: hour5 },
+            { x: 6, y: hour6 },
+            { x: 7, y: hour7 },
+            { x: 8, y: hour8 },
+            { x: 9, y: hour9 },
+            { x: 10, y: hour10 },
+            { x: 11, y: hour11 },
+            { x: 12, y: hour12 },
+            { x: 13, y: hour13 },
+            { x: 14, y: hour14 },
+            { x: 15, y: hour15 },
+            { x: 16, y: hour16 },
+            { x: 17, y: hour17 },
+            { x: 18, y: hour18 },
+            { x: 19, y: hour19 },
+            { x: 20, y: hour20 },
+            { x: 21, y: hour21 },
+            { x: 22, y: hour22 },
+            { x: 23, y: hour23 },
+            { x: 24, y: hour24 },
+          ]}
+        />
+      </VictoryChart>
     </>
   )
 }

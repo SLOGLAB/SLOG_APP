@@ -26,7 +26,7 @@ const MarginR = styled.View``
 const LoginLinkText = styled.Text`
   color: ${(props) => props.theme.darkGreyColor};
   margin-top: 20px;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
 
 export default ({ navigation }) => {
@@ -88,7 +88,7 @@ export default ({ navigation }) => {
       <View>
         <AuthInput
           {...emailInput}
-          placeholder="Email (예: iam@google.com)"
+          placeholder="Email (예: DeepTime@google.com)"
           keyboardType="email-address"
           returnKeyType="send"
           onSubmitEditing={handleLogin}

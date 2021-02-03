@@ -25,7 +25,7 @@ const Button = styled.TouchableOpacity`
 
 const Text = styled.Text`
   color: white;
-  font-weight: 600;
+  font-family: "GmarketMedium";
 `
 
 export default ({ navigation }) => {
@@ -146,7 +146,8 @@ export default ({ navigation }) => {
 
 // const Text = styled.Text`
 //   color: white;
-//   font-weight: 600;
+//     font-family: "GmarketBold";
+
 // `
 // const ChoosePhoto = styled.TouchableOpacity`
 //   width: ${constants.width / 1.5};

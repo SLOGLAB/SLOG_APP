@@ -10,14 +10,14 @@ const Container = styled.View`
   background-color: white;
   width: ${constants.width / 9};
   padding: 10px;
-  border: 1px solid ${props => props.theme.darkGreyColor};
+  border: 1px solid ${(props) => props.theme.darkGreyColor};
   border-radius: 4px;
 `
 
 const Text = styled.Text`
   color: black;
   text-align: center;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
 
 const WeekButton = ({ text, onPress, loading = false, bgColor }) => (
@@ -31,7 +31,7 @@ const WeekButton = ({ text, onPress, loading = false, bgColor }) => (
 WeekButton.propTypes = {
   loading: PropTypes.bool,
   text: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired
+  onPress: PropTypes.func.isRequired,
 }
 
 export default WeekButton

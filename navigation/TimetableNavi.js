@@ -33,6 +33,9 @@ export default createStackNavigator({
       headerStyle: {
         ...stackStyles,
       },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
+      },
       headerTintColor: "#000000",
     },
   },
@@ -43,6 +46,9 @@ export default createStackNavigator({
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
+      },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
       },
       headerTintColor: "#000000",
     },
@@ -55,6 +61,9 @@ export default createStackNavigator({
       headerStyle: {
         ...stackStyles,
       },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
+      },
       headerTintColor: "#000000",
     },
   },
@@ -65,6 +74,9 @@ export default createStackNavigator({
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
+      },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
       },
       headerTintColor: "#000000",
     },
@@ -77,6 +89,9 @@ export default createStackNavigator({
       headerStyle: {
         ...stackStyles,
       },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
+      },
       headerTintColor: "#000000",
     },
   },
@@ -87,6 +102,9 @@ export default createStackNavigator({
       // headerLeft: <TimetablecontrolBack />,
       headerStyle: {
         ...stackStyles,
+      },
+      headerTitleStyle: {
+        fontFamily: "GmarketBold",
       },
       headerTintColor: "#000000",
     },

@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Platform, StatusBar, Dimensions } from "react-native"
-import { Container, Header, Content, Tab, Tabs, Text } from "native-base"
+import { Container, Header, TabHeading, Tab, Tabs, Text } from "native-base"
 import TodoListController from "./TodoListController"
 import TodoListEndController from "./TodoListEndController"
 import styled from "styled-components"
@@ -21,12 +21,14 @@ const SubView1 = styled.View`
 `
 const MainText = styled.Text`
   font-size: 17;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   color: #0f4c82;
 `
 const MainText2 = styled.Text`
   font-size: 17;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   color: #ffffff;
 `
 export default class TodoListSwiper extends Component {
@@ -55,7 +57,12 @@ export default class TodoListSwiper extends Component {
         </Header>
         <Tabs>
           <Tab
-            heading="계획"
+            heading={
+              <TabHeading>
+                <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>계획</Text>
+              </TabHeading>
+            }
+            // heading="계획"
             tabStyle={
               Platform.OS === "ios"
                 ? { backgroundColor: "#ffffff" }
@@ -70,7 +77,11 @@ export default class TodoListSwiper extends Component {
             <TodoListController todoArray={[8, 8, 8, 8]} />
           </Tab>
           <Tab
-            heading="완료"
+            heading={
+              <TabHeading>
+                <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>완료</Text>
+              </TabHeading>
+            }
             tabStyle={
               Platform.OS === "ios"
                 ? { backgroundColor: "#ffffff" }

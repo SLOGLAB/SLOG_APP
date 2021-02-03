@@ -41,7 +41,7 @@ const Button = styled.TouchableOpacity`
 
 const Text = styled.Text`
   color: white;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
 // const UPLOAD = gql`
 //   mutation editAvatar($location: String!, $key: String!) {
@@ -269,7 +269,8 @@ export default ({ navigation }) => {
 
 // const Text = styled.Text`
 //   color: white;
-//   font-weight: 600;
+//     font-family: "GmarketBold";
+
 // `
 // // const UPLOAD = gql`
 // //   mutation editAvatar($location: String!, $key: String!) {

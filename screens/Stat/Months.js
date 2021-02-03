@@ -33,6 +33,7 @@ const DayView = styled.View`
 
 const Text = styled.Text`
   font-size: 15;
+  font-family: "GmarketMedium";
 `
 const MonthView = styled.View`
   justify-content: center;
@@ -59,7 +60,8 @@ const ChartText = styled.Text`
 const MainText = styled.Text`
   color: black;
   font-size: 25;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   padding-left: 10;
 `
 const SubText = styled.Text`
@@ -67,6 +69,7 @@ const SubText = styled.Text`
   font-size: 15;
   padding-left: 10;
   margin-top: 10;
+  font-family: "GmarketMedium";
 `
 const BoxView1 = styled.View`
   flex-direction: row;
@@ -105,6 +108,7 @@ const TouchBox = styled.TouchableOpacity`
 `
 const TouchText = styled.Text`
   color: ${(props) => props.Color};
+  font-family: "GmarketMedium";
 `
 const Line = styled.View`
   background-color: rgba(233, 237, 244, 1);
@@ -121,6 +125,7 @@ const BoxText = styled.Text`
   color: black;
   font-size: 10;
   margin-left: 5;
+  font-family: "GmarketLight";
 `
 const CenterView = styled.View`
   justify-content: center;

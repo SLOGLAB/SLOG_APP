@@ -44,7 +44,7 @@ const WeekView = styled.View`
 `
 const ModalText = styled.Text`
   font-size: 25;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ModalTimeText = styled.Text`
   font-size: 15;

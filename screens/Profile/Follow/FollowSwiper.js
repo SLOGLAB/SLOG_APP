@@ -1,6 +1,6 @@
 import React from "react"
 import { Platform } from "react-native"
-import { Container, Header, Tab, Tabs } from "native-base"
+import { Container, Header, Tab, Tabs, TabHeading, Text } from "native-base"
 import FollowerController from "./FollowerController"
 import FollowingController from "./FollowingController"
 import { StatusBar } from "react-native"
@@ -23,12 +23,14 @@ const SubView1 = styled.View`
 `
 const MainText = styled.Text`
   font-size: 17;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   color: #0f4c82;
 `
 const MainText2 = styled.Text`
   font-size: 17;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   color: #ffffff;
 `
 
@@ -61,7 +63,12 @@ export default ({ navigation }) => {
       </Header>
       <Tabs>
         <Tab
-          heading="팔로워"
+          heading={
+            <TabHeading>
+              <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>팔로워</Text>
+            </TabHeading>
+          }
+          // heading="팔로워"
           tabStyle={
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
           }
@@ -72,7 +79,12 @@ export default ({ navigation }) => {
           <FollowerController />
         </Tab>
         <Tab
-          heading="팔로잉"
+          heading={
+            <TabHeading>
+              <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>팔로잉</Text>
+            </TabHeading>
+          }
+          // heading="팔로잉"
           tabStyle={
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
           }

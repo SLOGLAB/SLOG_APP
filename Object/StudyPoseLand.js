@@ -272,28 +272,29 @@ const PoseCamera = ({
       </View>
       <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
         <View style={styles.moon}>
-          <View style={styles.round}>
-            <TouchableOpacity
-              onPress={() => {
-                getAndSetSystemBrightnessAsync()
-                // setbrightnessButton(!brightnessButton)
-              }}
-            >
-              {brightnessButton ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
-                  color={"#fff"}
-                  size={40}
-                />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
-                  color={"#fff"}
-                  size={40}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              getAndSetSystemBrightnessAsync()
+              // setbrightnessButton(!brightnessButton)
+            }}
+            style={styles.round}
+          >
+            {/* <View style={styles.round}> */}
+            {brightnessButton ? (
+              <Icon
+                name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
+                color={"#fff"}
+                size={40}
+              />
+            ) : (
+              <Icon
+                name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
+                color={"#fff"}
+                size={40}
+              />
+            )}
+            {/* </View> */}
+          </TouchableOpacity>
           <View style={styles.posebutton}>
             <TouchableOpacity
               onPress={() => {

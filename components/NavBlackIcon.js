@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import styles from "../styles"
 import { Platform } from "react-native"
 
-const NavBlackIcon = ({ focused = true, name, color = "#262626", size = 25 }) => (
+const NavBlackIcon = ({ focused = true, name, color = "#262626", size = 40 }) => (
   <Ionicons name={name} color={focused ? color : styles.darkGreyColor} size={size} />
 )
 

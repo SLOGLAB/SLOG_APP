@@ -1,17 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import styled from "styled-components"
-import { TouchableWithoutFeedback, Alert, Keyboard, Picker, TouchableHighlight } from "react-native"
-import { gql } from "apollo-boost"
+import { TouchableWithoutFeedback, Keyboard } from "react-native"
 
-import { useMutation, useQuery } from "@apollo/react-hooks"
 import AButton from "../../components/AButton"
 import AuthButton from "../../components/AuthButton"
 
-const CHECK = gql`
-  mutation checkAttendance($email: String!) {
-    checkAttendance(email: $email)
-  }
-`
 const MenuView = styled.View`
   flex: 1;
   justify-content: center;
@@ -28,24 +21,7 @@ const SubView = styled.View`
   margin-top: 15;
   flex-direction: row;
 `
-const DayView = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`
 
-const Text = styled.Text`
-  color: black;
-`
-const ME = gql`
-  {
-    me {
-      id
-      email
-      phoneNumber
-    }
-  }
-`
 export default Timecontrol = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -6,9 +6,9 @@ import { Ionicons } from "@expo/vector-icons"
 import HandleLogout from "../Auth/HandleLogout"
 import Modal from "react-native-modal"
 import AuthInput from "../../components/AuthInput"
-import NavBlackIcon from "../../components/NavBlackIcon"
+import Icon from "../../components/Icon"
 import Post from "../../components/Post"
-import { Container, Header, Content, Button, Icon, Text, Row } from "native-base"
+import { Container, Header, Content, Button, Text, Row } from "native-base"
 import constants from "../../constants"
 const ProfileHeader2 = styled.View`
   width: ${constants.width / 1.7};
@@ -20,11 +20,11 @@ const ProfileHeader2 = styled.View`
 // `
 const Bold2 = styled.Text`
   font-size: 18;
-  font-weight: 500;
+  font-family: "GmarketBold";
 `
 const Bold3 = styled.Text`
   font-size: 15;
-  font-weight: 500;
+  font-family: "GmarketMedium";
 `
 const SeatView = styled.View`
   flex: 1;
@@ -105,19 +105,22 @@ const Stat5 = styled.View`
 `
 const Bold = styled.Text`
   font-size: 20;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
-// font-weight: 600;
+//   font-family: "GmarketBold";
+
 const StatName = styled.Text`
   font-size: 15;
-  font-weight: 600;
+  font-family: "GmarketMedium";
+
   color: ${styles.darkGreyColor};
   margin-left: 8;
   margin-right: 8;
 `
 const StatName2 = styled.Text`
   font-size: 10;
-  font-weight: 600;
+  font-family: "GmarketBold";
+
   color: ${styles.darkGreyColor};
   margin-left: 1;
 `
@@ -224,7 +227,11 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                   <QrView>
                     <Bold>{data.me.username} </Bold>
                     <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-                      <NavBlackIcon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} />
+                      <Icon
+                        name={Platform.OS === "ios" ? "ios-settings" : "md-settings"}
+                        size={25}
+                        color={"#262626"}
+                      />
                     </TouchableOpacity>
                   </QrView>
                 </ProfileMeta>
@@ -421,7 +428,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                   {...raspberrySerial}
                   // value={name}
                   placeholder={"시리얼 넘버(예:a0001-a01-a0001)"}
-                  keyboardType="email-address"
+                  keyboardType="default"
                   returnKeyType="send"
                   // onSubmitEditing={handleLogin}
                   autoCorrect={false}

@@ -106,6 +106,8 @@ const TaskName_todo = styled.Text`
   padding-right: 5px;
   margin-left: 3px;
   font-size: 10;
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 
@@ -116,6 +118,8 @@ const TodoNameDiv = styled.Text`
   width: 220px;
   font-size: 13;
   padding: 0 10px;
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const FlexView = styled.View`
@@ -332,7 +336,7 @@ export default ({
             {...todolistName}
             // onChange={() => {}}
             placeholder="  내용(예: 1단원 암기)"
-            keyboardType="email-address"
+            keyboardType="default"
             returnKeyType="done"
             autoCorrect={false}
             widthRatio={1.8}

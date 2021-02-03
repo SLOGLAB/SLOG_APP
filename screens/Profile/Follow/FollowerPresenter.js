@@ -76,6 +76,8 @@ const FollowerName_Text = styled.Text`
   justify-content: flex-start;
   align-items: flex-start;
   font-size: 15;
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const FollowerName_Text1 = styled.Text`
@@ -84,6 +86,8 @@ const FollowerName_Text1 = styled.Text`
   align-items: flex-start;
   font-size: 15;
   color: rgba(0, 0, 0, 0.5);
+  font-family: "GmarketMedium";
+
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 

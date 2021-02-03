@@ -181,7 +181,7 @@ export default ChangeSubPage = ({ subjectList, goback, subjectInput, colors }) =
             <AuthInput
               {...subjectInput}
               placeholder={"과목 이름 (예: 국어 or 문서작업)"}
-              keyboardType="email-address"
+              keyboardType="default"
               returnKeyType="done"
               // onSubmitEditing={handleLogin}
               autoCorrect={false}

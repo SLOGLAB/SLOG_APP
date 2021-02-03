@@ -14,6 +14,7 @@ const ButtonText = styled.Text`
   font-size: 15;
   margin-left: 5;
   margin-bottom: 3;
+  font-family: "GmarketMedium";
 `
 
 export default withNavigation(({ navigation }) => (

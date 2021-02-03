@@ -8,7 +8,7 @@ import {
   VictoryAxis,
   VictoryStack,
   VictoryLabel,
-  Bar,
+  VictoryTheme,
 } from "victory-native"
 
 const StackedWMBar = ({ data_1, data_2, labels, label_1, label_2, title, title_x, stepSize_x }) => {
@@ -50,9 +50,25 @@ const StackedWMBar = ({ data_1, data_2, labels, label_1, label_2, title, title_x
   //   console.log(data_2, "data2")
   //   console.log(labels[0].length)
   // }, [])
+  function replaceRobotoWithSystemFont(obj) {
+    const keys = Object.keys(obj)
+    keys.forEach(function (key) {
+      const value = obj[key]
+      if (key === "fontFamily") {
+        obj[key] = obj[key].replace("'Roboto',", "'System',")
+      }
+      if (typeof value === "object") {
+        replaceRobotoWithSystemFont(obj[key])
+      }
+    })
+    return obj
+  }
+
+  const themeWithSystemFont = replaceRobotoWithSystemFont({ ...VictoryTheme.material })
+
   return (
     <VictoryChart
-      // theme={VictoryTheme.material}
+      theme={themeWithSystemFont}
       domain={{
         x: [0, labels.length + 1],
         y: [0, data_2.length === 0 ? 1 : Math.max.apply(null, data_2)],

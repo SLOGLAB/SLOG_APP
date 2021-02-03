@@ -85,19 +85,22 @@ const StyledModalContainer = styled.View`
 const TitleText = styled.Text`
   flex: 0.5;
   font-size: 25;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const Title = styled.Text`
   font-size: 18;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   margin-bottom: 15;
 `
 const Sub1 = styled.Text`
   font-size: 13;
+  font-family: "GmarketMedium";
 `
 const Sub = styled.Text`
   font-size: 13;
   margin-bottom: 25;
+  font-family: "GmarketMedium";
 `
 const SelectView = styled.View``
 
@@ -425,7 +428,7 @@ export default ({ navigation }) => {
             <RowView>
               <AuthInput
                 {...emailInput}
-                placeholder="(예: iam@google.com)"
+                placeholder="(예: DeepTime@google.com)"
                 keyboardType="email-address"
                 returnKeyType="send"
                 autoCorrect={false}

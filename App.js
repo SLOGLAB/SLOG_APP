@@ -27,6 +27,9 @@ export default function App() {
         Roboto: require("native-base/Fonts/Roboto.ttf"),
         Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
         ...Ionicons.font,
+        GmarketBold: require("./assets/fonts/GmarketSansTTFBold.ttf"),
+        GmarketLight: require("./assets/fonts/GmarketSansTTFLight.ttf"),
+        GmarketMedium: require("./assets/fonts/GmarketSansTTFMedium.ttf"),
       })
       // await loadAsync({
       //   roboto: {

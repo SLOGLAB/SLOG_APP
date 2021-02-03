@@ -37,13 +37,15 @@ const MainTView = styled.View`
   padding-top: 15;
 `
 const Text = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   margin-top: 5;
 `
 const SubText = styled.Text`
   color: black;
   font-size: 10;
-  /* font-weight: bold; */
+  /*   font-family: "GmarketBold";
+ */
 `
 const TextView = styled.View`
   /* height:35%; */
@@ -92,22 +94,22 @@ const ChartTextView = styled.View`
 const SubText2 = styled.Text`
   color: black;
   font-size: 10;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ExistTimeText = styled.Text`
   color: rgba(34, 76, 126, 1);
   font-size: 20;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const ExistText = styled.Text`
   color: grey;
   font-size: 20;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const TargetText = styled.Text`
   color: grey;
   font-size: 10;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 
 const FlexBox = styled.View`

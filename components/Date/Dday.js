@@ -4,7 +4,8 @@ import styled from "styled-components"
 import { ScrollView, TouchableOpacity, Alert, AsyncStorage } from "react-native"
 
 const DdayText = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   margin-left: 10;
   margin-top: 10;
   font-size: 15;

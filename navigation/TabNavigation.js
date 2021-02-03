@@ -46,7 +46,10 @@ export default createBottomTabNavigator(
       screen: stackFactory(MainController, {
         // headerLeft: <StudyButton />,
         headerRight: <ToDoButton />,
-        title: "DEEP TIME",
+        title: "DEEPTIME",
+        headerTitleStyle: {
+          fontFamily: "GmarketBold",
+        },
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
@@ -68,6 +71,9 @@ export default createBottomTabNavigator(
     SwiperBase: {
       screen: stackFactory(SwiperBase, {
         title: "Study Log",
+        headerTitleStyle: {
+          fontFamily: "GmarketBold",
+        },
         // headerLeft: <Iam />
       }),
       navigationOptions: {

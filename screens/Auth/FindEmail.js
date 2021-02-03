@@ -22,7 +22,7 @@ const LoginLink = styled.View``
 const LoginLinkText = styled.Text`
   color: ${(props) => props.theme.darkGreyColor};
   margin-top: 20px;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
 
 export default ({ navigation }) => {

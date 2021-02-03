@@ -35,7 +35,8 @@ const NameView = styled.View`
   margin-top: 20;
 `
 const DdayText = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   margin-left: 10;
   margin-top: 10;
   font-size: 15;

@@ -66,10 +66,11 @@ const HeaderUserContainer = styled.View`
   justify-content: center;
 `
 const Bold = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const Bold2 = styled.Text`
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   font-size: 20;
 `
 const Location = styled.Text`

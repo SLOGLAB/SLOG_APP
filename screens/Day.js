@@ -4,6 +4,7 @@ import Progress from "../graphs/Progress"
 
 const Text = styled.Text`
   align-items: center;
+  font-family: "GmarketMedium";
 `
 const View = styled.View`
   flex: 1;
@@ -54,7 +55,15 @@ const Day = ({ donutPercent, existTime, nowtarget }) => {
         </ChartText>
         <ChartText>
           <ChartText1>
-            <Text style={{ color: "#000000", fontSize: 15, fontWeight: "bold", marginBottom: 15 }}>
+            <Text
+              style={{
+                color: "#000000",
+                fontSize: 15,
+                fontWeight: "bold",
+                marginBottom: 15,
+                fontFamily: "GmarketBold",
+              }}
+            >
               학습 시간 : {hour < 10 ? `0${hour}` : hour}:
               {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
               {/* :
@@ -62,7 +71,15 @@ const Day = ({ donutPercent, existTime, nowtarget }) => {
                 ? `0${existTime - minutes * 60}`
                 : existTime - minutes * 60} */}
             </Text>
-            <Text style={{ color: "#000000", fontSize: 15, fontWeight: "bold", marginBottom: 15 }}>
+            <Text
+              style={{
+                color: "#000000",
+                fontSize: 15,
+                fontWeight: "bold",
+                marginBottom: 15,
+                fontFamily: "GmarketBold",
+              }}
+            >
               목표 시간 : {targethour < 10 ? `0${targethour}` : targethour}:
               {targetminutes - targethour * 60 < 10
                 ? `0${targetminutes - targethour * 60}`

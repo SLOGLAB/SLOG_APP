@@ -22,7 +22,7 @@ const LoginLink = styled.View``
 const LoginLinkText = styled.Text`
   color: rgba(0, 0, 0, 1);
   margin-top: 20px;
-  font-weight: 600;
+  font-family: "GmarketBold";
 `
 const Logo = styled.View`
   width: ${constants.width / 1};

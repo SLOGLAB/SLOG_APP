@@ -171,7 +171,9 @@ const UserProfile = ({ navigation }) => {
 
   return (
     <ScrollView
-      style={{ backgroundColor: "rgba(233, 237, 244, 1)" }}
+      style={{
+        backgroundColor: "rgba(233, 237, 244, 1)",
+      }}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}

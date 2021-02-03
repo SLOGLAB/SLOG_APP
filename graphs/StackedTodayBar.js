@@ -45,8 +45,25 @@ const StackedTodayBar = ({ data_1, data_2, labels }) => {
       },
     ]
   }
+  function replaceRobotoWithSystemFont(obj) {
+    const keys = Object.keys(obj)
+    keys.forEach(function (key) {
+      const value = obj[key]
+      if (key === "fontFamily") {
+        obj[key] = obj[key].replace("'Roboto',", "'System',")
+      }
+      if (typeof value === "object") {
+        replaceRobotoWithSystemFont(obj[key])
+      }
+    })
+    return obj
+  }
+
+  const themeWithSystemFont = replaceRobotoWithSystemFont({ ...VictoryTheme.material })
+
   return (
     <VictoryChart
+      theme={themeWithSystemFont}
       domain={{
         x: [0, labels.length + 1],
         y: [0, data_2.length === 0 ? 1 : Math.max.apply(null, data_2)],

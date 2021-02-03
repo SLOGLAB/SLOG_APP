@@ -6,21 +6,9 @@ import { useQuery } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 
-const TopView = styled.View`
-  flex: 4;
-`
-const BottomView = styled.View`
-  flex: 4;
-`
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`
 const MenuView = styled.View`
   flex: 1;
 `
-const Text = styled.Text``
 
 export default ChangeSubject = ({ navigation }) => {
   const [colors] = useState([

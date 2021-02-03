@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Platform } from "react-native"
-import { Container, Header, Content, Tab, Tabs } from "native-base"
+import { Container, TabHeading, Text, Tab, Tabs } from "native-base"
 import TodayController from "./TodayController"
 import WeekController from "./WeekController"
 import MonthController from "./MonthController"
@@ -18,7 +18,12 @@ export default class SwiperBase extends Component {
         {/* <Header hasTabs /> */}
         <Tabs>
           <Tab
-            heading="Today"
+            heading={
+              <TabHeading>
+                <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Today</Text>
+              </TabHeading>
+            }
+            // heading="Today"
             tabStyle={
               Platform.OS === "ios"
                 ? { backgroundColor: "#ffffff" }
@@ -33,7 +38,12 @@ export default class SwiperBase extends Component {
             <TodayController />
           </Tab>
           <Tab
-            heading="Week"
+            heading={
+              <TabHeading>
+                <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Week</Text>
+              </TabHeading>
+            }
+            // heading="Week"
             tabStyle={
               Platform.OS === "ios"
                 ? { backgroundColor: "#ffffff" }
@@ -48,7 +58,12 @@ export default class SwiperBase extends Component {
             <WeekController />
           </Tab>
           <Tab
-            heading="Month"
+            heading={
+              <TabHeading>
+                <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Month</Text>
+              </TabHeading>
+            }
+            // heading="Month"
             tabStyle={
               Platform.OS === "ios"
                 ? { backgroundColor: "#ffffff" }

@@ -16,6 +16,7 @@ const ButtonText = styled.Text`
   margin-left: 5;
   margin-bottom: 3;
   color: rgba(15, 76, 130, 1);
+  font-family: "GmarketMedium";
 `
 
 export default withNavigation(({ navigation }) => (

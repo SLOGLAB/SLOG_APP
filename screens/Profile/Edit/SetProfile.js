@@ -5,7 +5,7 @@ import {
   Keyboard,
   Dimensions,
   Text,
-  Linking,
+  TouchableOpacity,
   StyleSheet,
   Alert,
   Platform,
@@ -15,7 +15,7 @@ import {
 import constants from "../../../constants"
 import AuthButton from "../../../components/AuthButton"
 import AuthInput from "../../../components/AuthInput"
-
+import Icon from "../../../components/Icon"
 import AuthInputline from "../../../components/AuthInputline"
 import Modal from "react-native-modal"
 import RNPickerSelect from "react-native-picker-select"
@@ -23,6 +23,7 @@ import { CheckBox, Row } from "native-base"
 import LastWidth from "../../../components/LastWidth"
 // import Textarea from "../../../components/Textarea"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import BackButton from "../../../components/BackButton"
 
 const View = styled.View`
   justify-content: center;
@@ -86,19 +87,22 @@ const StyledModalContainer = styled.View`
 const TitleText = styled.Text`
   flex: 0.5;
   font-size: 25;
-  font-weight: bold;
+  font-family: "GmarketBold";
 `
 const Title = styled.Text`
   font-size: 18;
-  font-weight: bold;
+  font-family: "GmarketBold";
+
   margin-bottom: 15;
 `
 const Sub1 = styled.Text`
   font-size: 13;
+  font-family: "GmarketMedium";
 `
 const Sub = styled.Text`
   font-size: 13;
   margin-bottom: 25;
+  font-family: "GmarketMedium";
 `
 const SelectView = styled.View``
 
@@ -125,12 +129,14 @@ const TouchBox = styled.TouchableOpacity`
 `
 const TouchText = styled.Text`
   color: ${(props) => props.Color};
+  font-family: "GmarketMedium";
 `
 // const BioArea = styled(Textarea)`
 //   width: 100%;
 //   height: 100px;
 //   margin-bottom: 10px;
 // `
+
 export default ({
   navigation,
   data,
@@ -305,7 +311,7 @@ export default ({
                     <RowView>
                       <AuthInput
                         {...email}
-                        placeholder="(예: iam@google.com)"
+                        placeholder="(예: DeepTime@google.com)"
                         keyboardType="email-address"
                         returnKeyType="send"
                         autoCorrect={false}

@@ -563,7 +563,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
             {...titleInput}
             // value={name}
             placeholder={"To Do List"}
-            keyboardType="email-address"
+            keyboardType="default"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}
             autoCorrect={false}
@@ -573,7 +573,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
             {...locationInput}
             // value={name}
             placeholder={"위치"}
-            keyboardType="email-address"
+            keyboardType="default"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}
             autoCorrect={false}

@@ -19,7 +19,7 @@ const Container = styled.View`
 const Text = styled.Text`
   color: ${(props) => props.color};
   text-align: center;
-  font-weight: 600;
+  font-family: "GmarketMedium";
 `
 
 const AuthButton = ({

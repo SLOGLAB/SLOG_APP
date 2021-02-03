@@ -15,44 +15,40 @@ const VmonthBar = ({ taskArray_month, ylength }) => {
       y: value / 60,
     }
   })
-  // useEffect(() => {
-  //   console.log(dataArray)
-  // }, [])
+  function replaceRobotoWithSystemFont(obj) {
+    const keys = Object.keys(obj)
+    keys.forEach(function (key) {
+      const value = obj[key]
+      if (key === "fontFamily") {
+        obj[key] = obj[key].replace("'Roboto',", "'System',")
+      }
+      if (typeof value === "object") {
+        replaceRobotoWithSystemFont(obj[key])
+      }
+    })
+    return obj
+  }
+
+  const themeWithSystemFont = replaceRobotoWithSystemFont({ ...VictoryTheme.material })
   return (
     <>
-    {Platform.OS === "ios" ?<VictoryChart
-      domain={{ x: [0, dataArray.length + 1], y: [0, ylength] }}
-      height={150}
-      padding={{ top: 25, bottom: 30, left: 45, right: 30 }}
-
-    >
-      <VictoryBar
-        barWidth={5}
-        style={{
-          data: { fill: "#c43a31" },
-        }}
-        barRatio={1}
-        data={dataArray}
-        // labels={({ datum }) => datum.y}
-      />
-    </VictoryChart>:<VictoryChart
-      domain={{ x: [0, dataArray.length + 1], y: [0, ylength] }}
-      height={150}
-      padding={{ top: 25, bottom: 30, left: 45, right: 30 }}
-      theme={VictoryTheme.material}
-
-    >
-      <VictoryBar
-        barWidth={5}
-        style={{
-          data: { fill: "#c43a31" },
-        }}
-        barRatio={1}
-        data={dataArray}
-        // labels={({ datum }) => datum.y}
-      />
-    </VictoryChart>}</>
-    
+      <VictoryChart
+        domain={{ x: [0, dataArray.length + 1], y: [0, ylength] }}
+        height={150}
+        padding={{ top: 25, bottom: 30, left: 45, right: 30 }}
+        theme={themeWithSystemFont}
+      >
+        <VictoryBar
+          barWidth={5}
+          style={{
+            data: { fill: "#c43a31" },
+          }}
+          barRatio={1}
+          data={dataArray}
+          // labels={({ datum }) => datum.y}
+        />
+      </VictoryChart>
+    </>
   )
 }
 export default VmonthBar
