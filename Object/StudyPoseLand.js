@@ -108,7 +108,7 @@ const PoseCamera = ({
   const camRef = useRef(null)
   const [button, setButton] = useState(false)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
-  const [setting, setSetting] = useState(false)
+  const [setting, setSetting] = useState(true)
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [poseonoff, setPoseonoff] = useState(true)
   const getAndSetSystemBrightnessAsync = async () => {
@@ -117,11 +117,11 @@ const PoseCamera = ({
     if (status === "granted") {
       setbrightnessButton(!brightnessButton)
       if (brightnessButton) {
-        for (let i = 200; i > -1; i--) {
+        for (let i = 150; i > -1; i--) {
           await Brightness.setBrightnessAsync(i / 1000)
         }
       } else {
-        await Brightness.setBrightnessAsync(0.7)
+        await Brightness.setBrightnessAsync(0.5)
       }
     } else {
       // Web browsers
@@ -150,23 +150,25 @@ const PoseCamera = ({
       })
       setPose(pose)
       tf.dispose([imageTensor])
-      // console.log(pose.score,"pose")
+      // console.log(pose.score, "pose")
       // console.log(pose,"all")
-
       if (pose.score > 0.1) {
         studyArray.push("true")
+        setSetting(true)
       } else {
         studyArray.push("false")
+        setSetting(false)
       }
       if (studyArray.length == 4) {
+        myInfoRefetch()
         if (studyArray.findIndex((obj) => obj == "true") == -1) {
           existToggleMutation({ variables: { email: myInfoData.me.email, existToggle: false } })
           studyArray = []
-          myInfoRefetch()
+          // myInfoRefetch()
         } else {
           existToggleMutation({ variables: { email: myInfoData.me.email, existToggle: true } })
           studyArray = []
-          myInfoRefetch()
+          // myInfoRefetch()
         }
       }
       if (!AUTORENDER) {
@@ -228,9 +230,8 @@ const PoseCamera = ({
                 marginTop: 0,
                 marginBottom: 0,
                 borderWidth: 3.5,
-                borderColor: myInfoData.me.existToggle
-                  ? "rgba(65, 129, 247, 1)"
-                  : "rgba(133, 133, 133, 1)",
+                // borderColor: myInfoData.me.existToggle
+                borderColor: setting ? "rgba(65, 129, 247, 1)" : "rgba(133, 133, 133, 1)",
               }}
               source={{ uri: myInfoData.me.avatar }}
             />

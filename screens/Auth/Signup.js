@@ -406,7 +406,7 @@ export default ({ navigation }) => {
           <AuthButton
             color="white"
             onPress={() => setEmailVisible(true)}
-            text="입력"
+            text="인증"
             paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
             widthRatio={LastWidth(1.7, 2.5, 40)}
           />
@@ -479,7 +479,7 @@ export default ({ navigation }) => {
             onPress={() => {
               setPhoneVisible(true)
             }}
-            text="입력"
+            text="인증"
             paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
             widthRatio={LastWidth(1.7, 2.5, 40)}
           />

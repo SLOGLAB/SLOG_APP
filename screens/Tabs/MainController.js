@@ -13,7 +13,7 @@ import useInput from "../../hooks/useInput"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 
-import { MY_TODOLIST, MY_SUBJECT, GO_WITH, EDIT_STUDYSET } from "../Tabs/QueryBox"
+import { GO_WITH } from "../Tabs/QueryBox"
 
 export const ME = gql`
   {
@@ -109,8 +109,6 @@ export default ({ navigation }) => {
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())
 
-  const [selectPercent, setSelectPercent] = useState(true)
-
   const oneDayHours_tmp = Array.from(Array(24).keys())
   const oneDayHours = oneDayHours_tmp.map(String)
 
@@ -125,12 +123,6 @@ export default ({ navigation }) => {
     nextDate.setDate(nextDate.getDate() + 1)
   }, [selectDate])
 
-  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
-    MY_TODOLIST
-  )
-  const { data: subjectData, loading: subjectLoading, refetch: subjectRefetch } = useQuery(
-    MY_SUBJECT
-  )
   const [goWithMutation] = useMutation(GO_WITH, {
     refetchQueries: () => [{ query: ME }],
   })
@@ -139,14 +131,13 @@ export default ({ navigation }) => {
     try {
       setRefreshing(true)
       await myInfoRefetch()
-      await todolistRefetch()
-      await subjectRefetch()
     } catch (e) {
       console.log(e)
     } finally {
       setRefreshing(false)
     }
   }
+
   useEffect(() => {
     onRefresh()
   }, [])
