@@ -14,7 +14,10 @@ import {
   DELETE_TODOLIST,
   FINISH_TODOLIST,
 } from "../Tabs/QueryBox"
-export default (todoArray) => {
+export default (
+  todoArray
+  // , subjectData, subjectRefetch, todolistData, todolistRefetch
+) => {
   const [refreshing, setRefreshing] = useState(false)
   const todolistName = useInput("")
 
@@ -25,7 +28,6 @@ export default (todoArray) => {
     data: subjectData,
     loading: subjectLoading,
     refetch: subjectRefetch,
-    networkStatus: subjectnetwork,
   } = useQuery(MY_SUBJECT, { notifyOnNetworkStatusChange: true })
   const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
     MY_TODOLIST
@@ -47,7 +49,7 @@ export default (todoArray) => {
   }, [])
   return (
     <>
-      {todolistLoading && subjectLoading ? (
+      {todolistLoading || subjectLoading ? (
         <Loader />
       ) : (
         <TodoList
@@ -67,4 +69,27 @@ export default (todoArray) => {
       )}
     </>
   )
+}
+
+{
+  /* <>
+      {todolistLoading && subjectLoading ? (
+        <Loader />
+      ) : (
+        <TodoList
+          subjectData={subjectData}
+          subjectRefetch={subjectRefetch}
+          todolistData={todolistData}
+          todolistRefetch={todolistRefetch}
+          addTodolistMutation={addTodolistMutation}
+          deleteTodolistMutation={deleteTodolistMutation}
+          finishTodolistMutation={finishTodolistMutation}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          todolistName={todolistName}
+          subjectList={subjectData.mySubject}
+          todoArray={todoArray}
+        />
+      )}
+    </> */
 }

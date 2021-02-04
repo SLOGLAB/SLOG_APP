@@ -6,7 +6,7 @@ import Icon from "../../components/Icon"
 import * as ScreenOrientation from "expo-screen-orientation"
 // import Group79 from "../../assets/Group79"
 const Container = styled.TouchableOpacity`
-  padding-right: 20px;
+  /* padding-right: 20px; */
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,9 @@ const ButtonText = styled.Text`
   margin-left: 5;
   margin-bottom: 3;
   color: rgba(15, 76, 130, 1);
+  /* color: rgba(255, 255, 255, 1); */
   font-family: "GmarketMedium";
+  margin-top: 8;
 `
 
 export default withNavigation(({ navigation }) => (
@@ -35,6 +37,6 @@ export default withNavigation(({ navigation }) => (
       color={"#0F4C82"}
     /> */}
     <Image source={require("../../assets/Group1.png")} style={{ height: 25, width: 25 }} />
-    <ButtonText>Play</ButtonText>
+    <ButtonText>PLAY</ButtonText>
   </Container>
 ))

@@ -159,30 +159,6 @@ export default ({
     return el != undefined
   })
 
-  //
-
-  //   todolistData 오름차순 정렬
-  todolistData.myTodolist.sort(function (a, b) {
-    return a.subject.name < b.subject.name
-      ? -1
-      : a.subject.name > b.subject.name
-      ? 1
-      : // : a.name < b.name
-        // ? -1
-        // : a.name > b.name
-        // ? 1
-        0
-  })
-  // todolistData Task 없음이 위로오게
-  todolistData.myTodolist.sort(function (a, b) {
-    const word = "과목 없음"
-    return a.subject.name === word && b.subject.name !== word
-      ? -1
-      : a.subject.name !== word && b.subject.name === word
-      ? 1
-      : 0
-  })
-
   //todolist 완료된거랑 아닌거 구분
   let todolistData_new = []
   let todolistData_finish = []
@@ -193,7 +169,20 @@ export default ({
       todolistData_new.push(todolist)
     }
   })
-
+  //
+  //   todolistData 오름차순 정렬
+  todolistData.myTodolist.sort(function (a, b) {
+    return a.subject.name < b.subject.name ? -1 : a.subject.name > b.subject.name ? 1 : 0
+  })
+  // todolistData Task 없음이 위로오게
+  todolistData.myTodolist.sort(function (a, b) {
+    const word = "과목 없음"
+    return a.subject.name === word && b.subject.name !== word
+      ? -1
+      : a.subject.name !== word && b.subject.name === word
+      ? 1
+      : 0
+  })
   const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}...` : text)
 
   const onTodolistAdd = async () => {

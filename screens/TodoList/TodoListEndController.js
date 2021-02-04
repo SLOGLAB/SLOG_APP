@@ -25,7 +25,6 @@ export default () => {
     data: subjectData,
     loading: subjectLoading,
     refetch: subjectRefetch,
-    networkStatus: subjectnetwork,
   } = useQuery(MY_SUBJECT, { notifyOnNetworkStatusChange: true })
   const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
     MY_TODOLIST
@@ -47,7 +46,7 @@ export default () => {
   }, [])
   return (
     <>
-      {todolistLoading && subjectLoading ? (
+      {todolistLoading || subjectLoading ? (
         <Loader />
       ) : (
         <TodoListEnd

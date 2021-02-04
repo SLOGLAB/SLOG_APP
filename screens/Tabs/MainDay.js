@@ -47,6 +47,7 @@ const TextView = styled.View`
   margin-left: 5;
   margin-right: 5;
   background-color: rgba(255, 255, 255, 1);
+  /* background-color: rgba(15, 76, 130, 1); */
   border: 2px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
@@ -427,9 +428,9 @@ const MainDay = ({
                       borderRadius: 30,
                       marginTop: 0,
                       marginBottom: 0,
-                      borderWidth: 3.5,
+                      borderWidth: 4.5,
                       borderColor: myData.existToggle
-                        ? "rgba(65, 129, 247, 1)"
+                        ? "rgba(107, 152, 247, 1)"
                         : "rgba(133, 133, 133, 1)",
                     }}
                     source={{ uri: myData.avatar }}
@@ -460,10 +461,10 @@ const MainDay = ({
                       borderRadius: 30,
                       marginTop: 0,
                       marginBottom: 0,
-                      borderWidth: 3.5,
+                      borderWidth: 4.5,
 
                       borderColor: list.existToggle
-                        ? "rgba(65, 129, 247, 1)"
+                        ? "rgba(107, 152, 247, 1)"
                         : "rgba(133, 133, 133, 1)",
                     }}
                     source={{ uri: list.avatar }}
@@ -483,6 +484,7 @@ const MainDay = ({
         <TextView>
           <StudyButton />
         </TextView>
+
         <ChartView>
           <ProgressView>
             {/* {studyBool ? null : (
@@ -561,7 +563,6 @@ const MainDay = ({
           <VdayBar taskArray={taskArray} />
         </TextView>
       </MainTView>
-
       <Modal
         isVisible={modalVisible}
         onBackdropPress={() => setModalVisible(false)}

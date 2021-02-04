@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import AuthButton from "../../components/AuthButton"
 import { useLogOut } from "../../AuthContext"
-import { AsyncStorage } from "react-native"
+import AsyncStorage from "@react-native-community/async-storage"
 
 export default () => {
   const logOut = useLogOut()
@@ -11,6 +11,7 @@ export default () => {
   const handleLogout = async () => {
     try {
       setLoading(false)
+      await AsyncStorage.clear()
       logOut()
     } catch (e) {
       console.log(e)

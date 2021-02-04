@@ -137,7 +137,15 @@ const PoseCamera = ({
   //     getAndSetSystemBrightnessAsync();
   //   }
   // }, [brightnessButton]);
-
+  //blinking 1초마다 10동안
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSetting((setting) => !setting)
+    }, 1000)
+    setTimeout(function () {
+      clearInterval(interval)
+    }, 10000)
+  }, [])
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     studyInterval = setInterval(async () => {
       if (!AUTORENDER && !button) {
@@ -224,14 +232,14 @@ const PoseCamera = ({
           <View style={styles.indiviList}>
             <Image
               style={{
-                height: HEIGHT / 18,
-                width: HEIGHT / 18,
+                height: HEIGHT / 16,
+                width: HEIGHT / 16,
                 borderRadius: 25,
                 marginTop: 0,
                 marginBottom: 0,
-                borderWidth: 3.5,
+                borderWidth: 5,
                 // borderColor: myInfoData.me.existToggle
-                borderColor: setting ? "rgba(65, 129, 247, 1)" : "rgba(133, 133, 133, 1)",
+                borderColor: setting ? "rgba(107, 152, 247, 1)" : "rgba(133, 133, 133, 1)",
               }}
               source={{ uri: myInfoData.me.avatar }}
             />
@@ -246,14 +254,14 @@ const PoseCamera = ({
             <View style={styles.indiviList} key={list.id}>
               <Image
                 style={{
-                  height: HEIGHT / 18,
-                  width: HEIGHT / 18,
+                  height: HEIGHT / 16,
+                  width: HEIGHT / 16,
                   borderRadius: 25,
                   marginTop: 0,
                   marginBottom: 0,
-                  borderWidth: 3.5,
+                  borderWidth: 5,
                   borderColor: list.existToggle
-                    ? "rgba(65, 129, 247, 1)"
+                    ? "rgba(107, 152, 247, 1)"
                     : "rgba(133, 133, 133, 1)",
                 }}
                 source={{ uri: list.avatar }}

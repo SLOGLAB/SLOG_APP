@@ -5,6 +5,7 @@ import TodoListController from "./TodoListController"
 import TodoListEndController from "./TodoListEndController"
 import styled from "styled-components"
 import BackButton from "../../components/BackButton"
+
 const MainView = styled.View`
   flex-direction: row;
   align-items: center;
