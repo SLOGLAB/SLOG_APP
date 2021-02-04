@@ -36,7 +36,7 @@ export default withNavigation(({ navigation }) => (
       size={30}
       color={"#0F4C82"}
     /> */}
-    <Image source={require("../../assets/Group1.png")} style={{ height: 25, width: 25 }} />
+    <Image source={require("../../assets/Group1.png")} style={{ height: 30, width: 30 }} />
     <ButtonText>PLAY</ButtonText>
   </Container>
 ))

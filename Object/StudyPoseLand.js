@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("window").width / 1.8 / 1.2,
-    height: Dimensions.get("window").height / 2.2 / 1.3,
+    height: Dimensions.get("window").height / 2.2 / 1.2,
     backgroundColor: "#fff",
   },
   cameraAbsolute: {

@@ -113,7 +113,7 @@ const ExistText = styled.Text`
 const TargetText = styled.Text`
   color: grey;
   font-size: 15;
-  font-family: "GmarketBold";
+  font-family: "GmarketMedium";
 `
 const MainView = styled.View`
   background-color: rgba(255, 255, 255, 1);
