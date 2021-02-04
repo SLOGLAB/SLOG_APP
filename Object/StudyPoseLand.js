@@ -91,6 +91,8 @@ const AUTORENDER = false
 const TensorCamera = cameraWithTensors(Camera)
 let studyInterval = undefined
 let studyArray = []
+let heigt = 812 / HEIGHT
+
 const PoseCamera = ({
   studyBool,
   setStudyBool,
@@ -477,8 +479,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width / 1.8 / 1.2,
-    height: Dimensions.get("window").height / 2.2 / 1.2,
+    width: Dimensions.get("window").width / 2.16 / heigt,
+    height: Dimensions.get("window").height / 2.64,
     backgroundColor: "#fff",
   },
   cameraAbsolute: {
