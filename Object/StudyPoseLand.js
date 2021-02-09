@@ -261,7 +261,7 @@ const PoseCamera = ({
             />
             <Text style={styles.textstyle}>
               {myInfoData.me.username.length > 6
-                ? myInfoData.me.username.substr(0, 5) + "..."
+                ? myInfoData.me.username.substr(0, 5) + ".."
                 : myInfoData.me.username}
             </Text>
           </View>
@@ -299,7 +299,7 @@ const PoseCamera = ({
                 source={{ uri: list.avatar }}
               />
               <Text style={styles.textstyle}>
-                {list.username.length > 6 ? list.username.substr(0, 5) + "..." : list.username}
+                {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
               </Text>
             </View>
           ))}
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "flex-start",
     justifyContent: "flex-end",
-    height: Dimensions.get("window").height / 9.5,
+    height: Dimensions.get("window").height / 9.0,
     width: Dimensions.get("window").width / 1,
     paddingLeft: 10,
     paddingTop: 10,
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 6.5,
   },
   textstyle: {
-    fontSize: 10,
+    fontSize: 9,
     fontFamily: "GmarketMedium",
   },
   textTimestyle: {

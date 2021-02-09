@@ -181,7 +181,7 @@ const IndiviList1 = styled.View`
 `
 
 const FollowerName_Text = styled.Text`
-  font-size: 10;
+  font-size: 9;
   font-family: "GmarketMedium";
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
@@ -455,7 +455,7 @@ const MainDay = ({
                 </RowView>
                 <FollowerName_Text>
                   {myData.username.length > 6
-                    ? myData.username.substr(0, 5) + "..."
+                    ? myData.username.substr(0, 5) + ".."
                     : myData.username}
                 </FollowerName_Text>
               </IndiviList>
@@ -496,7 +496,7 @@ const MainDay = ({
                   />
                 </AvartarView>
                 <FollowerName_Text>
-                  {list.username.length > 6 ? list.username.substr(0, 5) + "..." : list.username}
+                  {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
                 </FollowerName_Text>
               </IndiviList>
             ))}
