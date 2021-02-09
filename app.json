@@ -26,7 +26,8 @@
     },
     "android": {
       "package": "com.slog.deeptime",
-      "versionCode": 3
+      "versionCode": 3,
+     "permissions": []
     }
   }
 }

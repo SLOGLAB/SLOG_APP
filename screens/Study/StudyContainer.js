@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { View, Dimensions, StyleSheet, Platform, StatusBar } from "react-native"
 import styled from "styled-components"
-import Apps from "../../Object/Apps"
 import Constants from "expo-constants"
 import constants from "../../constants"
 import BackButton from "../../components/BackButton"
@@ -12,6 +11,7 @@ import useInput from "../../hooks/useInput"
 import StudyPoseLand from "../../Object/StudyPoseLand"
 import StudySSd from "../../Object/StudySSd"
 import StudySSdPose from "../../Object/StudySSdPose"
+import StudyPoseContainer from "./StudyPoseContainer"
 import Swiper from "react-native-swiper"
 
 import StudyPresenter from "./StudyPresenter"
@@ -80,6 +80,9 @@ export const ME = gql`
         avatar
         username
         existToggle
+        todayTime {
+          existTime
+        }
       }
       following {
         id
@@ -182,7 +185,6 @@ const StudyContainer = ({ navigation }) => {
 
   useEffect(() => {
     myInfoRefetch()
-    // setNewTodoView(navigation.isFocused())
   }, [])
 
   return (
@@ -203,7 +205,7 @@ const StudyContainer = ({ navigation }) => {
             <RowView>
               {Platform.OS == "ios" ? <SideView2 /> : null}
               <SideView>
-                <StudyPoseLand
+                <StudyPoseContainer
                   navigation={navigation}
                   myInfoData={myInfoData}
                   myInfoRefetch={myInfoRefetch}
@@ -213,6 +215,16 @@ const StudyContainer = ({ navigation }) => {
                   selectDate={selectDate}
                   nextDate={nextDate}
                 />
+                {/* <StudyPoseLand
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  deg={"270deg"}
+                  // setbool={true}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                /> */}
                 {/* <StudySSd
                   navigation={navigation}
                   myInfoData={myInfoData}
@@ -245,7 +257,6 @@ const StudyContainer = ({ navigation }) => {
                           </Text>
                         </TabHeading>
                       }
-                      // heading="Deep Time"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }
@@ -264,7 +275,6 @@ const StudyContainer = ({ navigation }) => {
                         nextDate={nextDate}
                         myInfoRefetch={myInfoRefetch}
                       />
-                      {/* <TodoListController /> */}
                     </Tab>
                     <Tab
                       heading={
@@ -274,7 +284,6 @@ const StudyContainer = ({ navigation }) => {
                           </Text>
                         </TabHeading>
                       }
-                      // heading="Todo List"
                       tabStyle={
                         Platform.OS === "ios"
                           ? { backgroundColor: "#ffffff" }
@@ -287,8 +296,6 @@ const StudyContainer = ({ navigation }) => {
                       }
                     >
                       <TodoListController todoArray={[9, 0, 5, 0]} />
-
-                      {/* <TodoListEndController /> */}
                     </Tab>
                   </Tabs>
                 </Container>

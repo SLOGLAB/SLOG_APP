@@ -186,9 +186,9 @@ export default ({ navigation }) => {
   //     setIsLoading(false)
   //   }
   // }
-  // useEffect(() => {
-  //   console.log(photo)
-  // }, [])
+  useEffect(() => {
+    console.log(photo)
+  }, [])
   return (
     <View>
       <Container>

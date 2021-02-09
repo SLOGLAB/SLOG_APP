@@ -44,7 +44,7 @@ export default createBottomTabNavigator(
   {
     MainController: {
       screen: stackFactory(MainController, {
-        // headerLeft: <StudyButton />,
+        // headerLeft: "DEEPTIME",
         headerRight: <ToDoButton />,
         title: "DEEPTIME",
         headerTitleStyle: {

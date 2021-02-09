@@ -24,6 +24,11 @@ export const ME = gql`
       followingCount
       followersCount
       isFollowing
+      times {
+        existTime
+        time_24
+        createdAt
+      }
       followDates {
         id
         followId

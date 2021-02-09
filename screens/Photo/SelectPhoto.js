@@ -146,8 +146,7 @@ export default ({ navigation }) => {
 
 // const Text = styled.Text`
 //   color: white;
-//     font-family: "GmarketBold";
-
+//   font-family: "GmarketBold";
 // `
 // const ChoosePhoto = styled.TouchableOpacity`
 //   width: ${constants.width / 1.5};

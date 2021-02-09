@@ -16,12 +16,12 @@ import * as posenet from "@tensorflow-models/posenet"
 import { cameraWithTensors, fetch } from "@tensorflow/tfjs-react-native"
 import { Camera } from "expo-camera"
 import { inputTensorHeight, inputTensorWidth, Pose } from "./Pose"
-import { PoseNet } from "@tensorflow-models/posenet"
-import { ExpoWebGLRenderingContext } from "expo-gl"
 import Icon from "../components/Icon"
-import * as mobilenet from "@tensorflow-models/mobilenet"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
+import * as mobilenet from "@tensorflow-models/mobilenet"
+import { PoseNet } from "@tensorflow-models/posenet"
+import { ExpoWebGLRenderingContext } from "expo-gl"
 // import * as ScreenOrientation from "expo-screen-orientation"
 // import Loader from "../components/Loader"
 // import StudyPresenter from "../screens/Study/StudyPresenter"
@@ -103,6 +103,7 @@ const PoseCamera = ({
   loading,
   selectDate,
   nextDate,
+  nexistTime,
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
@@ -154,6 +155,9 @@ const PoseCamera = ({
         updatePreview()
       }
       const imageTensor = images.next().value
+      // const hi = tf.image.rotateWithOffset(imageTensor, 1.57)
+      // console.log(hi)
+
       const flipHorizontal = Platform.OS === "ios" ? false : true
       const pose = await posenetModel.estimateSinglePose(imageTensor, {
         flipHorizontal,
@@ -232,14 +236,24 @@ const PoseCamera = ({
           horizontal={true}
         >
           <View style={styles.indiviList}>
+            <Text style={styles.textTimestyle}>
+              {Math.floor(nexistTime / 3600) < 10
+                ? `0${Math.floor(nexistTime / 3600)}`
+                : Math.floor(nexistTime / 3600)}
+              :
+              {Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60 < 10
+                ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
+                : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
+            </Text>
+
             <Image
               style={{
-                height: HEIGHT / 16,
-                width: HEIGHT / 16,
+                height: HEIGHT / 17,
+                width: HEIGHT / 17,
                 borderRadius: 25,
                 marginTop: 0,
                 marginBottom: 0,
-                borderWidth: 5,
+                borderWidth: 4,
                 // borderColor: myInfoData.me.existToggle
                 borderColor: setting ? "rgba(107, 152, 247, 1)" : "rgba(133, 133, 133, 1)",
               }}
@@ -254,14 +268,30 @@ const PoseCamera = ({
 
           {myInfoData.me.withFollowing.map((list) => (
             <View style={styles.indiviList} key={list.id}>
+              <Text style={styles.textTimestyle}>
+                {Math.floor(list.todayTime.existTime / 3600) < 10
+                  ? `0${Math.floor(list.todayTime.existTime / 3600)}`
+                  : Math.floor(list.todayTime.existTime / 3600)}
+                :
+                {Math.floor(list.todayTime.existTime / 60) -
+                  Math.floor(list.todayTime.existTime / 3600) * 60 <
+                10
+                  ? `0${
+                      Math.floor(list.todayTime.existTime / 60) -
+                      Math.floor(list.todayTime.existTime / 3600) * 60
+                    }`
+                  : Math.floor(list.todayTime.existTime / 60) -
+                    Math.floor(list.todayTime.existTime / 3600) * 60}
+              </Text>
+
               <Image
                 style={{
-                  height: HEIGHT / 16,
-                  width: HEIGHT / 16,
+                  height: HEIGHT / 17,
+                  width: HEIGHT / 17,
                   borderRadius: 25,
                   marginTop: 0,
                   marginBottom: 0,
-                  borderWidth: 5,
+                  borderWidth: 4,
                   borderColor: list.existToggle
                     ? "rgba(107, 152, 247, 1)"
                     : "rgba(133, 133, 133, 1)",
@@ -359,6 +389,7 @@ const PoseCamera = ({
               resizeDepth={3}
               onReady={handleImageTensorReady}
               autorender={false}
+              // rotation={270} // or -90 for landscape right
             />
             {poseonoff ? (
               <View style={[styles.modelResults]}>{pose && <Pose pose={pose} />}</View>
@@ -406,6 +437,7 @@ export default function StudyPoseLand({
   myInfoData,
   myInfoRefetch,
   deg,
+  nexistTime,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -430,6 +462,7 @@ export default function StudyPoseLand({
       loading={loading}
       selectDate={selectDate}
       nextDate={nextDate}
+      nexistTime={nexistTime}
     />
   )
 }
@@ -466,7 +499,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "flex-start",
     justifyContent: "flex-end",
-    height: Dimensions.get("window").height / 10,
+    height: Dimensions.get("window").height / 9.5,
     width: Dimensions.get("window").width / 1,
     paddingLeft: 10,
     paddingTop: 10,
@@ -522,15 +555,16 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderColor: "black",
     borderRadius: 0,
+    // transform: [{ rotate: "90deg" }],
   },
   modelResults: {
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    // width: 600 / 3,
-    // height: 800 / 3,
+    // width: "100%",
+    // height: "100%",
+    width: Dimensions.get("window").width / 2.16 / heigt / 0.8,
+    height: Dimensions.get("window").height / 2.64,
     zIndex: 20,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "grey",
     borderRadius: 0,
   },
@@ -549,6 +583,12 @@ const styles = StyleSheet.create({
   },
   textstyle: {
     fontSize: 10,
+    fontFamily: "GmarketMedium",
+  },
+  textTimestyle: {
+    fontSize: 12,
+    color: "#0F4C82",
+    fontFamily: "GmarketMedium",
   },
   moon: {
     position: "absolute",

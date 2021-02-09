@@ -73,6 +73,9 @@ export const ME = gql`
         avatar
         username
         existToggle
+        todayTime {
+          existTime
+        }
       }
       following {
         id

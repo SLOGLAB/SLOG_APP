@@ -16,7 +16,6 @@ import Icon from "../../components/Icon"
 import Modal from "react-native-modal"
 import AuthButton from "../../components/AuthButton"
 import LastWidth from "../../components/LastWidth"
-import Apps from "../../Object/Apps"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import { EDIT_STUDYSET } from "../Tabs/QueryBox"
@@ -162,7 +161,7 @@ const LeftView = styled.View`
   padding-left: 10;
 `
 const AvatarView = styled.View`
-  height: ${HEIGHT / 9};
+  height: ${HEIGHT / 8};
   justify-content: center;
   align-items: flex-start;
 `
@@ -194,7 +193,7 @@ const CircleAvartar = styled.View`
 `
 const RowView = styled.View`
   /* flex-direction: row; */
-  height: ${HEIGHT / 15};
+  height: ${HEIGHT / 12.5};
   width: ${WIDTH / 7};
   border-radius: 30;
   position: absolute;
@@ -274,6 +273,16 @@ const FollowerName_Text1 = styled.Text`
   font-family: "GmarketMedium";
 
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const TextTimestyle = styled.Text`
+  font-size: 12;
+  color: rgba(15, 76, 130, 1);
+  font-family: "GmarketMedium";
+
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const RowViewTime = styled.View`
+  flex-direction: row;
 `
 const AvartarView = styled.View`
   flex: 0.75;
@@ -405,13 +414,7 @@ const MainDay = ({
   //     noti()
   //   }
   // }, 60000)
-  useEffect(() => {
-    // console.log(nowTitle1, "nowTitle1,")
-    // console.log(nowTitle2, "nowTitle2,")
-    // console.log(myData.following, "myData.following")
-    // console.log(myData.withFollowing, "myData.withFollowing")
-    // noti()
-  }, [])
+  useEffect(() => {}, [])
   return (
     <>
       <MainTView>
@@ -420,6 +423,13 @@ const MainDay = ({
             {/* <IndiviList1 /> */}
             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
               <IndiviList>
+                <RowViewTime>
+                  <TextTimestyle>{hour < 10 ? `0${hour}` : hour}</TextTimestyle>
+                  <TextTimestyle>: </TextTimestyle>
+                  <TextTimestyle>
+                    {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+                  </TextTimestyle>
+                </RowViewTime>
                 <AvartarView>
                   <Image
                     style={{
@@ -439,7 +449,7 @@ const MainDay = ({
                 <RowView>
                   <Icon
                     name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
-                    color={"rgba(34, 76, 126, 1)"}
+                    color={"rgba(15, 76, 130, 1)"}
                     size={20}
                   />
                 </RowView>
@@ -453,6 +463,21 @@ const MainDay = ({
 
             {myData.withFollowing.map((list) => (
               <IndiviList key={list.id}>
+                <TextTimestyle>
+                  {Math.floor(list.todayTime.existTime / 3600) < 10
+                    ? `0${Math.floor(list.todayTime.existTime / 3600)}`
+                    : Math.floor(list.todayTime.existTime / 3600)}
+                  :
+                  {Math.floor(list.todayTime.existTime / 60) -
+                    Math.floor(list.todayTime.existTime / 3600) * 60 <
+                  10
+                    ? `0${
+                        Math.floor(list.todayTime.existTime / 60) -
+                        Math.floor(list.todayTime.existTime / 3600) * 60
+                      }`
+                    : Math.floor(list.todayTime.existTime / 60) -
+                      Math.floor(list.todayTime.existTime / 3600) * 60}
+                </TextTimestyle>
                 <AvartarView>
                   <Image
                     style={{

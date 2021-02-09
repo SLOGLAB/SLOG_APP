@@ -107,6 +107,12 @@ const Bold = styled.Text`
   font-size: 20;
   font-family: "GmarketBold";
 `
+const TotalTimeBold = styled.Text`
+  font-size: 25;
+  font-family: "GmarketBold";
+  color: #0f4c82;
+  margin-top: 5;
+`
 //   font-family: "GmarketBold";
 
 const StatName = styled.Text`
@@ -118,11 +124,8 @@ const StatName = styled.Text`
   margin-right: 8;
 `
 const StatName2 = styled.Text`
-  font-size: 10;
+  font-size: 15;
   font-family: "GmarketBold";
-
-  color: ${styles.darkGreyColor};
-  margin-left: 1;
 `
 
 const ProfileMeta = styled.View`
@@ -185,6 +188,14 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
     isSetModalVisible(!isModalVisible)
     navigation.navigate("QRcode")
   }
+  let existTime_sec = 0
+  data.me.times.forEach((time) => {
+    existTime_sec += time.existTime
+  })
+  let existTime_min = existTime_sec / 60
+  const total_hour = String(Math.floor(existTime_min / 60))
+  existTime_min = existTime_min - total_hour * 60
+  const total_min = String(Math.floor(existTime_min))
   useEffect(() => {
     // console.log(data.me.posts, "data.me.posts")
   }, [])
@@ -261,6 +272,12 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                 </AdView>
               </Box>
             </ProfileBox>
+            <LineView />
+            <StatName2>총 학습 시간</StatName2>
+            <TotalTimeBold>
+              {total_hour.length === 1 ? "0" + total_hour : total_hour} :{" "}
+              {total_min.length === 1 ? "0" + total_min : total_min}
+            </TotalTimeBold>
             <LineView />
             <AdView2>
               <Bold3>{data.me.bio}</Bold3>
