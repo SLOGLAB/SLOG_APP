@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "sdkVersion": "38.0.0",
     "orientation": "portrait",
-    "icon": "./assets/DEEPTIME_LOGO_whiteBackground.png",
+    "icon": "./assets/DEEPTIME_LOGO.png",
     "splash": {
       "image": "./assets/Group80.png",
       "resizeMode": "contain",
@@ -28,7 +28,7 @@
       "package": "com.slog.deeptime",
       "versionCode": 9,
       "permissions":[
-        "CAMERA","SYSTEM_BRIGHTNESS","CAMERA_ROLL","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
+      "CAMERA","SYSTEM_BRIGHTNESS","CAMERA_ROLL","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
       "ACCESS_NETWORK_STATE",
       "ACCESS_WIFI_STATE",
       "FOREGROUND_SERVICE",
