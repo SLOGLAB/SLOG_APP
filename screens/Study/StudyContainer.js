@@ -154,7 +154,7 @@ const StudyContainer = ({ navigation }) => {
   var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
-  useKeepAwake()
+  useKeepAwake() //화면 안꺼지게 expo
   ///
   const minValue_10 = (value) => value >= 10
   const refreshTerm = useInput(10, minValue_10)

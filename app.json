@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "sdkVersion": "38.0.0",
     "orientation": "portrait",
-    "icon": "./assets/DeepTimeApp.png",
+    "icon": "./assets/DEEPTIME_LOGO_whiteBackground.png",
     "splash": {
       "image": "./assets/Group80.png",
       "resizeMode": "contain",
@@ -21,13 +21,37 @@
     ],
     "ios": {
       "bundleIdentifier": "com.slog.deeptime",
-      "buildNumber": "1.0.7",
+      "buildNumber": "1.0.8",
       "supportsTablet": true
     },
     "android": {
       "package": "com.slog.deeptime",
-      "versionCode": 8,
-      "permissions":["CAMERA","SYSTEM_BRIGHTNESS","CAMERA_ROLL","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY"]
+      "versionCode": 9,
+      "permissions":[
+        "CAMERA","SYSTEM_BRIGHTNESS","CAMERA_ROLL","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
+      "ACCESS_NETWORK_STATE",
+      "ACCESS_WIFI_STATE",
+      "FOREGROUND_SERVICE",
+      "INTERNET",
+      "MODIFY_AUDIO_SETTINGS",
+      "READ_APP_BADGE",
+      "RECEIVE_BOOT_COMPLETED",
+      "STORAGE",
+      "SYSTEM_ALERT_WINDOW",
+      "WAKE_LOCK", 
+      "com.google.android.c2dm.permission.RECEIVE", 
+      "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE", 
+      "com.huawei.android.launcher.permission.CHANGE_BADGE",
+      "com.huawei.android.launcher.permission.READ_SETTINGS",
+      "com.huawei.android.launcher.permission.WRITE_SETTINGS", 
+      "com.oppo.launcher.permission.READ_SETTINGS", 
+      "com.oppo.launcher.permission.WRITE_SETTINGS", 
+      "com.slog.deeptime.permission.C2D_MESSAGE", 
+      "com.sonymobile.home.permission.PROVIDER_INSERT_BADGE",
+      "host.exp.exponent.permission.C2D_MESSAGE",
+      "me.everything.badger.permission.BADGE_COUNT_READ",
+      "me.everything.badger.permission.BADGE_COUNT_WRITE"
+      ]
     }
   }
 }
