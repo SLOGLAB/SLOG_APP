@@ -237,13 +237,13 @@ const PoseCamera = ({
         >
           <View style={styles.indiviList}>
             <Text style={styles.textTimestyle}>
-              {/* {Math.floor(nexistTime / 3600) < 10
+              {Math.floor(nexistTime / 3600) < 10
                 ? `0${Math.floor(nexistTime / 3600)}`
                 : Math.floor(nexistTime / 3600)}
               :
               {Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60 < 10
                 ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
-                : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60} */}
+                : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
             </Text>
 
             <Image
