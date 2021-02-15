@@ -51,6 +51,7 @@ const TextView = styled.View`
   /* height:35%; */
   margin-left: 5;
   margin-right: 5;
+  padding-top: 10;
   background-color: rgba(255, 255, 255, 1);
   border: 0px;
   border-radius: 5;
@@ -149,7 +150,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 })
-
+let taskArray_pre = []
 export default ({
   nexistTime,
   nowtarget,
@@ -172,6 +173,7 @@ export default ({
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
+  taskArray_pre = new Array(24).fill(0)
 
   // useEffect(() => {
   //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
@@ -332,8 +334,9 @@ export default ({
             </LeftView> */}
           <VTodayBar
             taskArray={taskArray}
+            taskArray_pre={taskArray_pre}
             // ylength={Math.max.apply(null, taskArray)}
-            ylength={60}
+            ylength={69.99}
             title={"시간별 Real 시간"}
             title_y={"Real 시간(분)"}
           />

@@ -126,6 +126,8 @@ const TouchText = styled.Text`
   font-family: "GmarketMedium";
 `
 let taskArray = []
+let taskArray_pre = []
+
 let taskArray_schedule = []
 let taskArray_scheduleT = []
 let taskArray_percent = []
@@ -164,6 +166,8 @@ const Today = ({
 }) => {
   const [selectDay, setselectDay] = useState(targetToday)
   const myState = myData.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
+  const lastDate = new Date(selectDate)
+  lastDate.setDate(lastDate.getDate() - 7)
 
   //////myData
   const scheduleList = myData.schedules
@@ -196,12 +200,20 @@ const Today = ({
     // console.log(scheduleList_selectDay);
     // 초기화
     taskArray = new Array(24).fill(0)
+    taskArray_pre = new Array(24).fill(0)
+
     donutData = []
     donutData_1 = 0
     donutData_2 = 0
     donutPercent = 0
     rgbBox = []
     // 오늘 생선된 시간이 있는 인덱스 구하기
+    let indexOflast = myData.times.findIndex(
+      (i) =>
+        new Date(i.createdAt).getFullYear() == lastDate.getFullYear() &&
+        new Date(i.createdAt).getMonth() == lastDate.getMonth() &&
+        new Date(i.createdAt).getDate() == lastDate.getDate()
+    )
     let indexOfToday = myData.times.findIndex(
       (i) =>
         new Date(i.createdAt).getFullYear() == selectDate.getFullYear() &&
@@ -215,6 +227,13 @@ const Today = ({
         new Date(i.createdAt).getDate() == nextDate.getDate()
     )
     // today Time 없을 경우 값이 0인 Time 추가해주기
+    if (indexOflast === -1) {
+      myData.times.push({
+        existTime: 0,
+        time_24: new Array(288).fill(0),
+      })
+      indexOflast = myData.times.length - 1
+    }
     if (indexOfToday === -1) {
       myData.times.push({
         existTime: 0,
@@ -230,6 +249,7 @@ const Today = ({
       indexOfNextday = myData.times.length - 1
     }
 
+    const lastTime = myData.times[indexOflast]
     const todayTime = myData.times[indexOfToday]
     const nextdayTime = myData.times[indexOfNextday]
 
@@ -237,6 +257,9 @@ const Today = ({
     const arrayBox = SplitArray(todayTime.time_24, 12)
     let resultArray = arrayBox.map((a) => SumArray(a))
     taskArray = twoArraySum(taskArray, resultArray)
+    const arrayBox_pre = SplitArray(lastTime.time_24, 12)
+    let resultArray_pre = arrayBox_pre.map((a) => SumArray(a))
+    taskArray_pre = twoArraySum(taskArray_pre, resultArray_pre)
     // 스케줄 별 그래프 계산
     let resultArray_schedule = [] // exist 타임 용
     let resultArray_scheduleT = [] // 타겟타임용
@@ -308,6 +331,9 @@ const Today = ({
     taskArray.forEach(function (item, index) {
       taskArray[index] = item / 60
     })
+    taskArray_pre.forEach(function (item, index) {
+      taskArray_pre[index] = item / 60
+    })
     // 스케줄 그래프 계산
     if (taskArray_schedule !== []) {
       taskArray_schedule.forEach(function (item, index) {
@@ -343,7 +369,6 @@ const Today = ({
     }
     // 도넛차트 계산
     let slicedTimeBox = []
-    // console.log(todayTime.time_24);
     let slicedTimes = ObjectCopy(todayTime.time_24)
     while (true) {
       const index_tmp = slicedTimes.findIndex((i) => i > 0)
@@ -476,11 +501,18 @@ const Today = ({
         <CenterView>
           {/* <Icon name={Platform.OS === "ios" ? "ios-time" : "md-time"} color={"black"} size={15} /> */}
           <SubText>시간대별 Deep Time </SubText>
+          <ChartView1>
+            <Box selectColor={"rgba(123, 169, 234, 1)"} />
+            <BoxText>오늘</BoxText>
+            <Box selectColor={"rgba(199, 233, 248, 1)"} />
+            <BoxText>일주일 전</BoxText>
+          </ChartView1>
         </CenterView>
         <VTodayBar
           taskArray={taskArray}
+          taskArray_pre={taskArray_pre}
           // ylength={Math.max.apply(null, taskArray)}
-          ylength={60}
+          ylength={69.9}
           title={"시간별 Real 시간"}
           title_y={"Real 시간(분)"}
         />

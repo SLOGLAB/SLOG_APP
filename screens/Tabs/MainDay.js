@@ -294,13 +294,13 @@ const AvartarView1 = styled.View`
   height: 20%;
   /* background-color: rgba(196, 196, 196, 1); */
 `
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-})
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// })
 // let a = undefined
 
 const MainDay = ({
@@ -425,7 +425,7 @@ const MainDay = ({
               <IndiviList>
                 <RowViewTime>
                   <TextTimestyle>{hour < 10 ? `0${hour}` : hour}</TextTimestyle>
-                  <TextTimestyle>: </TextTimestyle>
+                  <TextTimestyle>:</TextTimestyle>
                   <TextTimestyle>
                     {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
                   </TextTimestyle>

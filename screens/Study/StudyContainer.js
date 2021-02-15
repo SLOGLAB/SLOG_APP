@@ -205,17 +205,7 @@ const StudyContainer = ({ navigation }) => {
             <RowView>
               {Platform.OS == "ios" ? <SideView2 /> : null}
               <SideView>
-                <StudyPoseContainer
-                  navigation={navigation}
-                  myInfoData={myInfoData}
-                  myInfoRefetch={myInfoRefetch}
-                  deg={"270deg"}
-                  // setbool={true}
-                  loading={loading}
-                  selectDate={selectDate}
-                  nextDate={nextDate}
-                />
-                {/* <StudyPoseLand
+                {/* <StudyPoseContainer
                   navigation={navigation}
                   myInfoData={myInfoData}
                   myInfoRefetch={myInfoRefetch}
@@ -225,6 +215,16 @@ const StudyContainer = ({ navigation }) => {
                   selectDate={selectDate}
                   nextDate={nextDate}
                 /> */}
+                <StudyPoseLand
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  deg={"270deg"}
+                  // setbool={true}
+                  loading={loading}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                />
                 {/* <StudySSd
                   navigation={navigation}
                   myInfoData={myInfoData}
