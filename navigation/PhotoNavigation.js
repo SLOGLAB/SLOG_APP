@@ -30,15 +30,16 @@ const PhotoTabs = createBottomTabNavigator(
     tabBarOptions: {
       indicatorStyle: {
         backgroundColor: styles.blackColor,
-        marginBottom: 20,
+        marginBottom: 10,
       },
       labelStyle: {
         color: styles.blackColor,
-        fontWeight: "600",
+        fontWeight: "bold",
       },
       style: {
-        paddingBottom: 20,
+        paddingBottom: 10,
         ...stackStyles,
+        // height: 20,
       },
     },
   }
@@ -53,6 +54,7 @@ export default createStackNavigator(
         headerLeft: <ProfileBack />,
 
         headerBackTitle: null,
+        // tabBarVisible: false,
       },
     },
     Upload: {

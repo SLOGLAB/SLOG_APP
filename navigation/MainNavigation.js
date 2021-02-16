@@ -9,12 +9,12 @@ import MenuNavigation from "./MenuNavigation"
 import TimetableNavi from "./TimetableNavi"
 // import ProfileNavi from "./ProfileNavi"
 import { stackStyles } from "./config"
-import PhotoNavigation from "./PhotoNavigation"
 import SwiperBase from "../screens/Stat/SwiperBase"
 import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
 import StudyContainer from "../screens/Study/StudyContainer"
 import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
+import PhotoNavigation from "./PhotoNavigation"
 
 const MainNavigation = createStackNavigator(
   {
@@ -22,9 +22,10 @@ const MainNavigation = createStackNavigator(
     SwiperBase,
     MenuNavigation,
     TimetableNavi,
-    PhotoNavigation,
     TodoListSwiper,
     StudyContainer,
+    PhotoNavigation,
+
     Timecontrol,
   },
   {

@@ -5,16 +5,17 @@ import StudySSd from "../../Object/StudySSd"
 import StudySSdPose from "../../Object/StudySSdPose"
 
 let existTime_donut = 0
-// export default
+
 const StudyPoseContainer = ({
   loading,
   selectDate,
   nextDate,
-  studyBool,
-  setStudyBool,
   navigation,
   myInfoData,
   myInfoRefetch,
+  Bright,
+  studyBool,
+  setStudyBool,
   deg,
 }) => {
   const todayGraph_calculate = () => {
@@ -41,15 +42,14 @@ const StudyPoseContainer = ({
   }
   return (
     <StudyPoseLand
+      loading={loading}
       navigation={navigation}
       myInfoData={myInfoData}
       myInfoRefetch={myInfoRefetch}
-      deg={"270deg"}
-      // setbool={true}
-      loading={loading}
       selectDate={selectDate}
       nextDate={nextDate}
       nexistTime={existTime_donut}
+      Bright={Bright}
     />
   )
 }

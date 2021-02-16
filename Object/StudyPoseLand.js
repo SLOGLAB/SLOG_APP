@@ -94,16 +94,16 @@ let studyArray = []
 let heigt = 812 / HEIGHT
 
 const PoseCamera = ({
-  studyBool,
-  setStudyBool,
   navigation,
   myInfoData,
   myInfoRefetch,
-  deg,
+  nexistTime,
+  Bright,
+  studyBool,
+  setStudyBool,
   loading,
   selectDate,
   nextDate,
-  nexistTime,
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
@@ -114,17 +114,19 @@ const PoseCamera = ({
   const [setting, setSetting] = useState(true)
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [poseonoff, setPoseonoff] = useState(true)
+
+  let OSbright = Platform.OS == "ios" ? 150 : 1
+
   const getAndSetSystemBrightnessAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS)
-    // bright = await Brightness.getSystemBrightnessAsync();
     if (status === "granted") {
       setbrightnessButton(!brightnessButton)
       if (brightnessButton) {
-        for (let i = 150; i > -1; i--) {
+        for (let i = OSbright; i > -1; i--) {
           await Brightness.setBrightnessAsync(i / 1000)
         }
       } else {
-        await Brightness.setBrightnessAsync(0.5)
+        await Brightness.setBrightnessAsync(Bright)
       }
     } else {
       // Web browsers
@@ -198,7 +200,6 @@ const PoseCamera = ({
       </View>
     )
   }
-
   // TODO File issue to be able get this from expo.
   // Caller will still need to account for orientation/phone rotation changes
   let textureDims
@@ -220,6 +221,7 @@ const PoseCamera = ({
         <TouchableOpacity
           onPress={() => {
             clearInterval(studyInterval)
+            Brightness.setBrightnessAsync(Bright)
             // setSetting(false)
             // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
             navigation.navigate("TabNavigation")
@@ -371,17 +373,15 @@ const PoseCamera = ({
             style={[
               styles.cameraContainer,
               {
-                // transform: [{ rotate:"270deg" }]
+                transform: [{ rotate: "0deg" }],
               },
             ]}
           >
             <TensorCamera
               ref={camRef}
-              style={[styles.camera]}
+              style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
               type={Camera.Constants.Type.front}
               zoom={0}
-              // cameraTextureHeight={Dimensions.get("window").height/4}
-              // cameraTextureWidth={Dimensions.get("window").width/1}
               cameraTextureHeight={textureDims.height}
               cameraTextureWidth={textureDims.width}
               resizeHeight={200}
@@ -389,7 +389,7 @@ const PoseCamera = ({
               resizeDepth={3}
               onReady={handleImageTensorReady}
               autorender={false}
-              // rotation={270} // or -90 for landscape right
+              // rotation={90} // or -90 for landscape right
             />
             {poseonoff ? (
               <View style={[styles.modelResults]}>{pose && <Pose pose={pose} />}</View>
@@ -436,8 +436,8 @@ export default function StudyPoseLand({
   navigation,
   myInfoData,
   myInfoRefetch,
-  deg,
   nexistTime,
+  Bright,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -458,11 +458,11 @@ export default function StudyPoseLand({
       navigation={navigation}
       myInfoData={myInfoData}
       myInfoRefetch={myInfoRefetch}
-      deg={deg}
       loading={loading}
       selectDate={selectDate}
       nextDate={nextDate}
       nexistTime={nexistTime}
+      Bright={Bright}
     />
   )
 }
@@ -555,7 +555,6 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderColor: "black",
     borderRadius: 0,
-    // transform: [{ rotate: "90deg" }],
   },
   modelResults: {
     position: "absolute",

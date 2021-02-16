@@ -23,6 +23,9 @@ export const ME = gql`
       bio
       loginPosition
       termsOfMarketing
+      pubOfFeed
+      pubOfStatistic
+      pubOfSchedule
       organization {
         id
         name

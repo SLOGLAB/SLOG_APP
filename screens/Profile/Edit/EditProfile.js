@@ -122,7 +122,6 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
       key: emailKey.value,
     },
   })
-
   const onEditAccount = async (e) => {
     e.preventDefault()
     if (data.me.loginPosition === "student") {
@@ -146,6 +145,9 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
             address1: myAddress1.value,
             address2: myAddress2.value,
             termsOfMarketing: marketing,
+            pubOfFeed: data.me.pubOfFeed,
+            pubOfStatistic: data.me.pubOfStatistic,
+            pubOfSchedule: data.me.pubOfSchedule,
           },
           refetchQueries: () => [{ query: ME }],
         })
@@ -183,6 +185,9 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
             address2: myAddress2.value,
             detailAddress: detailAddress.value,
             termsOfMarketing: marketing,
+            pubOfFeed: data.me.pubOfFeed,
+            pubOfStatistic: data.me.pubOfStatistic,
+            pubOfSchedule: data.me.pubOfSchedule,
           },
           refetchQueries: () => [{ query: ME }],
         })

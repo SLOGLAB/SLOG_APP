@@ -6,6 +6,7 @@ import styled from "styled-components"
 import Loader from "../../components/Loader"
 import constants from "../../constants"
 import styles from "../../styles"
+import { Platform } from "react-native"
 
 const View = styled.View`
   flex: 1;
@@ -36,9 +37,10 @@ export default ({ navigation }) => {
   const changeSelected = (photo) => {
     setSelected(photo)
   }
+  let OSPhoto = Platform.OS == "ios" ? 500 : 300
   const getPhotos = async () => {
     try {
-      const { assets } = await MediaLibrary.getAssetsAsync()
+      const { assets } = await MediaLibrary.getAssetsAsync({ first: OSPhoto })
       const [firstPhoto] = assets
       setSelected(firstPhoto)
       setAllPhotos(assets)

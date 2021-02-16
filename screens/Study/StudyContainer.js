@@ -8,10 +8,11 @@ import { gql } from "apollo-boost"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
+
+import StudyPoseContainer from "./StudyPoseContainer"
 import StudyPoseLand from "../../Object/StudyPoseLand"
 import StudySSd from "../../Object/StudySSd"
 import StudySSdPose from "../../Object/StudySSdPose"
-import StudyPoseContainer from "./StudyPoseContainer"
 import Swiper from "react-native-swiper"
 
 import StudyPresenter from "./StudyPresenter"
@@ -143,8 +144,9 @@ const useScreenDimensions = () => {
   }
 }
 
-// export default
 const StudyContainer = ({ navigation }) => {
+  const Bright = navigation.getParam("Bright")
+
   const screenData = useScreenDimensions()
   const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
   var todaydate = new Date().getDate() //Current Date
@@ -169,8 +171,6 @@ const StudyContainer = ({ navigation }) => {
   const oneDayHours_tmp = Array.from(Array(24).keys())
   const oneDayHours = oneDayHours_tmp.map(String)
 
-  // const bool = navigation.getParam("bool")
-
   const isFirstRun = useRef(true)
   useEffect(() => {
     if (isFirstRun.current) {
@@ -181,7 +181,6 @@ const StudyContainer = ({ navigation }) => {
     nextDate.setTime(selectDate.getTime())
     nextDate.setDate(nextDate.getDate() + 1)
   }, [selectDate])
-  // const [newTodoView, setNewTodoView] = useState(false)
 
   useEffect(() => {
     myInfoRefetch()
@@ -214,6 +213,7 @@ const StudyContainer = ({ navigation }) => {
                   loading={loading}
                   selectDate={selectDate}
                   nextDate={nextDate}
+                  Bright={Bright}
                 />
                 {/* <StudyPoseLand
                   navigation={navigation}

@@ -27,6 +27,8 @@ import Constants from "expo-constants"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 import moment, { Moment } from "moment"
 import StudyButton from "../../screens/Study/StudyButton"
+import * as Brightness from "expo-brightness"
+
 const MainTView = styled.View`
   /* height:90%; */
   width: 100%;
@@ -294,6 +296,21 @@ const AvartarView1 = styled.View`
   height: 20%;
   /* background-color: rgba(196, 196, 196, 1); */
 `
+const Container = styled.TouchableOpacity`
+  /* padding-right: 20px; */
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+const ButtonText = styled.Text`
+  font-size: 30;
+  margin-left: 5;
+  margin-bottom: 3;
+  color: rgba(15, 76, 130, 1);
+  /* color: rgba(255, 255, 255, 1); */
+  font-family: "GmarketMedium";
+  margin-top: 8;
+`
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({
 //     shouldShowAlert: true,
@@ -327,6 +344,7 @@ const MainDay = ({
   setModalVisible,
   refreshing,
   setRefreshing,
+  navigation,
   nowEnd,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
@@ -414,7 +432,17 @@ const MainDay = ({
   //     noti()
   //   }
   // }, 60000)
-  useEffect(() => {}, [])
+  let brightness
+  const getAndSetSystemBrightnessAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS)
+    if (status === "granted") {
+      brightness = await Brightness.getSystemBrightnessAsync()
+    }
+    navigation.navigate("StudyContainer", { Bright: brightness })
+  }
+  // useEffect(() => {
+  //   getAndSetSystemBrightnessAsync()
+  // }, [])
   return (
     <>
       <MainTView>
@@ -507,7 +535,25 @@ const MainDay = ({
         {/* {studyBool ? <Apps studyBool={studyBool} setStudyBool={setStudyBool} /> : null} */}
         {/* </AvartarView1> */}
         <TextView>
-          <StudyButton />
+          {/* <StudyButton /> */}
+          <Container
+            onPress={() => {
+              getAndSetSystemBrightnessAsync()
+              // navigation.navigate("StudyContainer", { Bright: brightness })
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+            }}
+          >
+            {/* <Icon
+      name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"}
+      size={30}
+      color={"#0F4C82"}
+    /> */}
+            <Image source={require("../../assets/Group1.png")} style={{ height: 30, width: 30 }} />
+            <ButtonText>PLAY</ButtonText>
+          </Container>
         </TextView>
 
         <ChartView>

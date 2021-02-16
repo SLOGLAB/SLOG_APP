@@ -169,6 +169,7 @@ export default ({ navigation }) => {
             myInfoRefetch={myInfoRefetch}
             refreshing={refreshing}
             setRefreshing={setRefreshing}
+            navigation={navigation}
             // targetToday={targetToday}
             // setSelectDate={setSelectDate}
             // oneDayHours={oneDayHours}

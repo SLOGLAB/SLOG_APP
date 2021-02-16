@@ -84,7 +84,7 @@ export default ({ navigation }) => {
               justifyContent: "flex-end",
               padding: 15,
               width: constants.width,
-              height: constants.height / 2,
+              height: constants.height / 1.8,
             }}
           >
             <TouchableOpacity onPress={toggleType}>

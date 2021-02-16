@@ -16,7 +16,6 @@ export default createStackNavigator(
     QRcode,
     Profiledetail,
     Account,
-    PhotoNavigation,
     MyPostlScreen: {
       screen: MyPostlScreen,
       navigationOptions: {

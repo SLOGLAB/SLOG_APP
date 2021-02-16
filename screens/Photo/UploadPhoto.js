@@ -74,13 +74,9 @@ export default ({ navigation }) => {
   // }
 
   const onAvatar = async () => {
-    // handleFileInput(photo)
     const formData = new FormData()
-
-    // console.log(photo, "1212")
     const name = photo.filename
     const [, type] = name.split(".")
-
     formData.append("file", {
       name,
       type: type.toLowerCase(),
@@ -187,7 +183,7 @@ export default ({ navigation }) => {
   //   }
   // }
   useEffect(() => {
-    console.log(photo)
+    // console.log(photo)
   }, [])
   return (
     <View>

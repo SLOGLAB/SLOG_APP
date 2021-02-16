@@ -21,14 +21,14 @@
     ],
     "ios": {
       "bundleIdentifier": "com.slog.deeptime",
-      "buildNumber": "1.0.8",
+      "buildNumber": "1.0.9",
       "supportsTablet": true
     },
     "android": {
       "package": "com.slog.deeptime",
-      "versionCode": 9,
+      "versionCode": 10,
       "permissions":[
-      "CAMERA","SYSTEM_BRIGHTNESS","CAMERA_ROLL","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
+      "CAMERA","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
       "ACCESS_NETWORK_STATE",
       "ACCESS_WIFI_STATE",
       "FOREGROUND_SERVICE",
@@ -36,6 +36,8 @@
       "MODIFY_AUDIO_SETTINGS",
       "READ_APP_BADGE",
       "RECEIVE_BOOT_COMPLETED",
+      "READ_EXTERNAL_STORAGE", 
+      "WRITE_EXTERNAL_STORAGE",
       "STORAGE",
       "SYSTEM_ALERT_WINDOW",
       "WAKE_LOCK", 
