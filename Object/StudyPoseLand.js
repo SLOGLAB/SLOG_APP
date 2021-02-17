@@ -114,6 +114,7 @@ const PoseCamera = ({
   const [setting, setSetting] = useState(true)
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [poseonoff, setPoseonoff] = useState(true)
+  const [personOnoff, setpersonOnoff] = useState(true)
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
 
@@ -247,7 +248,6 @@ const PoseCamera = ({
                 ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
                 : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
             </Text>
-
             <Image
               style={{
                 height: HEIGHT / 17,
@@ -306,68 +306,86 @@ const PoseCamera = ({
             </View>
           ))}
         </ScrollView>
-        {/* <TouchableOpacity onPress={()=>{
-        getAndSetSystemBrightnessAsync()
-        // setbrightnessButton(!brightnessButton)
-      }}>
-      <Icon name={Platform.OS === "ios" ? "ios-moon" : "md-moon"} color={"#000000"} size={40}/>
-      </TouchableOpacity> */}
       </View>
       <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
         <View style={styles.moon}>
-          <TouchableOpacity
-            onPress={() => {
-              getAndSetSystemBrightnessAsync()
-              // setbrightnessButton(!brightnessButton)
-            }}
-            style={styles.round}
-          >
-            {/* <View style={styles.round}> */}
-            {brightnessButton ? (
-              <Icon
-                name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
-                color={"#fff"}
-                size={40}
-              />
-            ) : (
-              <Icon
-                name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
-                color={"#fff"}
-                size={40}
-              />
-            )}
-            {/* </View> */}
-          </TouchableOpacity>
-          <View style={styles.posebutton}>
+          <View style={styles.person}>
             <TouchableOpacity
               onPress={() => {
-                setPoseonoff(!poseonoff)
+                setpersonOnoff(!personOnoff)
               }}
+              style={styles.round}
             >
-              {poseonoff ? (
-                <Image
-                  style={{
-                    height: 60,
-                    width: 50,
-                    marginTop: 0,
-                    marginBottom: 0,
-                  }}
-                  source={require("../assets/poseon.png")}
+              {personOnoff ? (
+                <Icon
+                  name={Platform.OS === "ios" ? "ios-eye" : "md-eye"}
+                  color={"#fff"}
+                  size={30}
                 />
               ) : (
-                <Image
-                  style={{
-                    height: 60,
-                    width: 50,
-                    marginTop: 0,
-                    marginBottom: 0,
-                  }}
-                  source={require("../assets/poseoff.png")}
+                <Icon
+                  name={Platform.OS === "ios" ? "ios-eye-off" : "md-eye-off"}
+                  color={"#E5E5E5"}
+                  size={30}
                 />
               )}
             </TouchableOpacity>
           </View>
+
+          <View style={styles.moon2}>
+            <TouchableOpacity
+              onPress={() => {
+                getAndSetSystemBrightnessAsync()
+                // setbrightnessButton(!brightnessButton)
+              }}
+              style={styles.round}
+            >
+              {brightnessButton ? (
+                <Icon
+                  name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
+                  color={"#fff"}
+                  size={40}
+                />
+              ) : (
+                <Icon
+                  name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
+                  color={"#fff"}
+                  size={40}
+                />
+              )}
+            </TouchableOpacity>
+            <View style={styles.posebutton}>
+              <TouchableOpacity
+                onPress={() => {
+                  setPoseonoff(!poseonoff)
+                }}
+              >
+                {poseonoff ? (
+                  <Image
+                    style={{
+                      height: 60,
+                      width: 50,
+                      marginTop: 0,
+                      marginBottom: 0,
+                    }}
+                    source={require("../assets/poseon.png")}
+                  />
+                ) : (
+                  <Image
+                    style={{
+                      height: 60,
+                      width: 50,
+                      marginTop: 0,
+                      marginBottom: 0,
+                    }}
+                    source={require("../assets/poseoff.png")}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+
         <>
           <View
             style={[
@@ -395,27 +413,7 @@ const PoseCamera = ({
               <View style={[styles.modelResults]}>{pose && <Pose pose={pose} />}</View>
             ) : null}
           </View>
-          {/* {setting?
-        null
-        :
-        <View style={[styles.cameraAbsolute,{
-          transform: [{ rotate:"270deg" }]
-        }]}>
-          <View>
-            <Loader/>
-          </View>
-        </View> 
-        } */}
-          {/* {camsetting?
-        null
-        :
-        <View style={[styles.camAbsolute,{
-          transform: [{ rotate:"270deg" }]
-        }]}>
-          <View style={styles.cameraAbsoluteView}>
-          </View>
-        </View> 
-        } */}
+          {personOnoff ? null : <View style={styles.cameraAbsolute}></View>}
         </>
       </View>
     </>
@@ -518,19 +516,19 @@ const styles = StyleSheet.create({
   },
   cameraAbsolute: {
     position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    // width: 600 / 3,
+    // height: 800 / 3,
     alignItems: "center",
-    width: Dimensions.get("window").width / 1.3,
-    height: Dimensions.get("window").height / 2.1,
-    backgroundColor: "#fff",
+    justifyContent: "center",
+    width: "55%",
+    height: "100%",
+    zIndex: 1,
+    // borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 0,
+    backgroundColor: "#0F4C82",
   },
-  cameraAbsoluteView: {
-    width: Dimensions.get("window").width / 1.8 / 2,
-    height: Dimensions.get("window").height / 2.2 / 2,
-    backgroundColor: "#000",
-  },
+
   camAbsolute: {
     position: "absolute",
     display: "flex",
@@ -593,9 +591,24 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: Dimensions.get("window").width / 1.1,
     height: "80%",
+    // justifyContent: "flex-start",
+    // alignItems: "flex-end",
+    flexDirection: "row",
+    // backgroundColor: "#0F4B82",
+  },
+  moon2: {
+    height: "100%",
+    flex: 1,
     justifyContent: "flex-start",
     alignItems: "flex-end",
-    // backgroundColor:"#0F4B82",
+    // backgroundColor: "#0F4B82",
+  },
+  person: {
+    height: "20%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
   },
   round: {
     width: 50,
@@ -607,10 +620,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  roundEye: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   posebutton: {
     width: 50,
     height: 50,
-
     justifyContent: "center",
     alignItems: "center",
     flex: 1,

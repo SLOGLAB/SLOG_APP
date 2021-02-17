@@ -9,6 +9,8 @@ const Container = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
 `
 const ButtonText = styled.Text`
   font-size: 15;

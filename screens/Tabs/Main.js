@@ -70,6 +70,7 @@ const Main = ({
   goWithMutation,
   myInfoRefetch,
   navigation,
+  editStudyPlaySetMutation,
 }) => {
   const scheduleList = myData.schedules
   const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
@@ -415,6 +416,7 @@ const Main = ({
         myInfoRefetch={myInfoRefetch}
         nowEnd={nowEnd}
         navigation={navigation}
+        editStudyPlaySetMutation={editStudyPlaySetMutation}
       />
     </MainView1>
   )

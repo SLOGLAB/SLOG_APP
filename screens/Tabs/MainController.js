@@ -86,6 +86,35 @@ export const ME = gql`
     }
   }
 `
+export const EDIT_STUDYSET = gql`
+  mutation editStudySet(
+    $timelapseRecord: Boolean
+    $nonScheduleRecord: Boolean
+    $autoRefresh: Boolean
+    $autoRefreshTerm: Int
+    $startScheduleTerm: Int
+    $cutExtenTerm: Int
+    $scheduleStart: Int
+    $scheduleEnd: Int
+    $dDayOn: Boolean
+    $dDateName: String
+    $dDate: String
+  ) {
+    editStudySet(
+      timelapseRecord: $timelapseRecord
+      nonScheduleRecord: $nonScheduleRecord
+      autoRefresh: $autoRefresh
+      autoRefreshTerm: $autoRefreshTerm
+      startScheduleTerm: $startScheduleTerm
+      cutExtenTerm: $cutExtenTerm
+      scheduleStart: $scheduleStart
+      scheduleEnd: $scheduleEnd
+      dDayOn: $dDayOn
+      dDateName: $dDateName
+      dDate: $dDate
+    )
+  }
+`
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 export default ({ navigation }) => {
@@ -99,7 +128,11 @@ export default ({ navigation }) => {
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
 
-  ///
+  //현재 스케줄 있을 때만 시간기록 mutation
+  const [editStudyPlaySetMutation] = useMutation(EDIT_STUDYSET, {
+    refetchQueries: () => [{ query: ME }],
+  })
+  //
   const minValue_10 = (value) => value >= 10
   const refreshTerm = useInput(10, minValue_10)
 
@@ -170,6 +203,7 @@ export default ({ navigation }) => {
             refreshing={refreshing}
             setRefreshing={setRefreshing}
             navigation={navigation}
+            editStudyPlaySetMutation={editStudyPlaySetMutation}
             // targetToday={targetToday}
             // setSelectDate={setSelectDate}
             // oneDayHours={oneDayHours}

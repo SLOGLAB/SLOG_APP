@@ -10,6 +10,7 @@ import {
   RefreshControl,
   Image,
   Button,
+  Switch,
 } from "react-native"
 import Barcharts from "../../graphs/BarCharts"
 import Icon from "../../components/Icon"
@@ -181,10 +182,21 @@ const IndiviList1 = styled.View`
 
   /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
 `
-
+const PlayBottom = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
+`
 const FollowerName_Text = styled.Text`
   font-size: 9;
   font-family: "GmarketMedium";
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const Play_Text = styled.Text`
+  font-size: 13;
+  font-family: "GmarketMedium";
+  margin-bottom: 10;
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const CircleAvartar = styled.View`
@@ -211,6 +223,15 @@ const StyledModalContainer = styled.View`
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
+const StyledPlayModalContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.4;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
 const ModalView = styled.View`
   flex: 1;
   justify-content: center;
@@ -222,6 +243,12 @@ const ModalSubView = styled.View`
 `
 const ModalSubView2 = styled.View`
   flex: 0.8;
+  width: ${WIDTH / 1.15};
+`
+const ModalPlay = styled.View`
+  flex: 0.6;
+  justify-content: center;
+  align-items: center;
   width: ${WIDTH / 1.15};
 `
 const LineView = styled.View`
@@ -296,11 +323,35 @@ const AvartarView1 = styled.View`
   height: 20%;
   /* background-color: rgba(196, 196, 196, 1); */
 `
+const PlayView = styled.View`
+  /* height:35%; */
+  margin-top: 10;
+  margin-left: 5;
+  margin-right: 5;
+  background-color: rgba(255, 255, 255, 1);
+  /* background-color: rgba(15, 76, 130, 1); */
+  border: 2px;
+  border-radius: 5;
+  border-color: rgba(233, 236, 243, 1);
+  /* height: 30%; */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`
 const Container = styled.TouchableOpacity`
   /* padding-right: 20px; */
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex: 1;
+`
+const Flex1View = styled.View`
+  /* padding-right: 20px; */
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex: 1;
+  padding-right: 15;
 `
 const ButtonText = styled.Text`
   font-size: 30;
@@ -310,6 +361,14 @@ const ButtonText = styled.Text`
   /* color: rgba(255, 255, 255, 1); */
   font-family: "GmarketMedium";
   margin-top: 8;
+`
+const PlaySetText = styled.Text`
+  font-size: 25;
+  margin-left: 5;
+  margin-bottom: 3;
+  color: rgba(15, 76, 130, 1);
+  /* color: rgba(255, 255, 255, 1); */
+  font-family: "GmarketMedium";
 `
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({
@@ -346,11 +405,15 @@ const MainDay = ({
   setRefreshing,
   navigation,
   nowEnd,
+  editStudyPlaySetMutation,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
+  const [modalPlayVisible, setModalPlayVisible] = useState(false)
+  const [isEnabled, setIsEnabled] = useState(myData.studyDefaultSet.nonScheduleRecord)
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
 
   // useEffect(() => {
   //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
@@ -366,7 +429,33 @@ const MainDay = ({
   //     Notifications.removeNotificationSubscription(responseListener)
   //   }
   // }, [])
-
+  const onSaveSet = async () => {
+    try {
+      const {
+        data: { editStudySet },
+      } = await editStudyPlaySetMutation({
+        variables: {
+          nonScheduleRecord: isEnabled,
+          autoRefresh: myData.studyDefaultSet.autoRefresh,
+          autoRefreshTerm: myData.studyDefaultSet.autoRefreshTerm,
+          startScheduleTerm: myData.studyDefaultSet.startScheduleTerm,
+          cutExtenTerm: myData.studyDefaultSet.cutExtenTerm,
+          dDayOn: myData.studyDefaultSet.isEnabled,
+          dDateName: myData.studyDefaultSet.dDateName,
+          dDate: myData.studyDefaultSet.dDate,
+        },
+      })
+      if (editStudySet) {
+        // console.log("go")
+      } else {
+        // console.log("f")
+      }
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setModalPlayVisible(false)
+    }
+  }
   // const pushToken = async () => {
   //   await sendPushNotification(expoPushToken)
   // }
@@ -534,8 +623,8 @@ const MainDay = ({
         {/* <AvartarView1> */}
         {/* {studyBool ? <Apps studyBool={studyBool} setStudyBool={setStudyBool} /> : null} */}
         {/* </AvartarView1> */}
-        <TextView>
-          {/* <StudyButton /> */}
+        <PlayView>
+          <Flex1View />
           <Container
             onPress={() => {
               getAndSetSystemBrightnessAsync()
@@ -554,18 +643,67 @@ const MainDay = ({
             <Image source={require("../../assets/Group1.png")} style={{ height: 30, width: 30 }} />
             <ButtonText>PLAY</ButtonText>
           </Container>
-        </TextView>
+          <Flex1View>
+            <TouchableOpacity onPress={() => setModalPlayVisible(!modalPlayVisible)}>
+              <Icon
+                name={Platform.OS === "ios" ? "ios-settings" : "md-settings"}
+                color={"rgba(15, 76, 130, 1)"}
+                size={25}
+              />
+            </TouchableOpacity>
+          </Flex1View>
+        </PlayView>
+        <Modal
+          isVisible={modalPlayVisible}
+          onBackdropPress={() => setModalPlayVisible(false)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: Math.round(Dimensions.get("window").height),
+          }}
+        >
+          <StyledPlayModalContainer>
+            <ModalView>
+              <ModalSubView>
+                <PlaySetText>
+                  <Image
+                    source={require("../../assets/Group1.png")}
+                    style={{ height: 25, width: 25 }}
+                  />
+                  PLAY 설정
+                </PlaySetText>
+              </ModalSubView>
+              <LineView />
+              <ModalPlay>
+                <Play_Text>현재 스케줄 있을 때만 시간기록</Play_Text>
 
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={isEnabled ? "#f5dd4b" : "#767577"}
+                  ios_backgroundColor="#F4F3F4"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              </ModalPlay>
+              <PlayBottom>
+                <Container>
+                  <AuthButton
+                    onPress={() => {
+                      onSaveSet()
+                    }}
+                    text="저장"
+                    color="white"
+                    bgColor={"#7BA9EB"}
+                    widthRatio={LastWidth(1, 2, 4)}
+                  />
+                </Container>
+              </PlayBottom>
+            </ModalView>
+          </StyledPlayModalContainer>
+        </Modal>
         <ChartView>
           <ProgressView>
-            {/* {studyBool ? null : (
-              <Button
-                title="Start!!!"
-                onPress={() => {
-                  setStudyBool(!studyBool)
-                }}
-              />
-            )} */}
             <TouchableOpacity onPress={onRefresh}>
               <VdayProgress number={donutPercent} />
             </TouchableOpacity>

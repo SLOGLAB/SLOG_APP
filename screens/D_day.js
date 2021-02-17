@@ -62,7 +62,6 @@ const D_day = ({ myData, editStudySetMutation }) => {
           autoRefreshTerm: myData.autoRefreshTerm,
           startScheduleTerm: myData.startScheduleTerm,
           cutExtenTerm: myData.cutExtenTerm,
-
           dDayOn: isEnabled,
           dDateName: selectDayNameInput.value,
           dDate: new Date(selectDay2),
