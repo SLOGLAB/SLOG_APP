@@ -79,10 +79,9 @@ export default ({ navigation }) => {
     const [, type] = name.split(".")
     formData.append("file", {
       name,
-      type: type.toLowerCase(),
+      type: "image/" + type.toLowerCase(),
       uri: photo.uri,
     })
-
     try {
       setIsLoading(true)
       // console.log(formData, "formdata")
@@ -90,7 +89,7 @@ export default ({ navigation }) => {
       const { data } = await axios.post(
         // process.env.REACT_APP_BACKEND_URI + "/api/upload/avatar",
         "https://slog-deeptime-backend.herokuapp.com/api/upload/avatar",
-        // `http://${Platform.OS === "ios" ? "localhost" : "10.0.2.2"}:4000/api/upload/avatar`,
+        // `http://${Platform.OS === "ios" ? "localhost" : "192.168.0.229"}:4000/api/upload/avatar`,
         // `http://192.168.0.229:19001/api/upload/avatar`,
         formData,
         {
@@ -182,9 +181,7 @@ export default ({ navigation }) => {
   //     setIsLoading(false)
   //   }
   // }
-  useEffect(() => {
-    // console.log(photo)
-  }, [])
+  useEffect(() => {}, [])
   return (
     <View>
       <Container>
