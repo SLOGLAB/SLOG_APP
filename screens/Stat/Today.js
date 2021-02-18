@@ -500,7 +500,7 @@ const Today = ({
       <View>
         <CenterView>
           {/* <Icon name={Platform.OS === "ios" ? "ios-time" : "md-time"} color={"black"} size={15} /> */}
-          <SubText>시간대별 Deep Time </SubText>
+          <SubText>시간대별 학습 시간 </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>오늘</BoxText>
@@ -520,7 +520,7 @@ const Today = ({
       <Line />
       <View>
         <CenterView>
-          <SubText>과목 Deep Time </SubText>
+          <SubText>과목별 학습 시간 </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>학습</BoxText>
@@ -542,9 +542,7 @@ const Today = ({
       <Line />
       <View>
         <CenterView>
-          <SubText>
-            {selectPercent ? "과목별 목표 Deep Time 비율" : "과목별 학습 Deep Time 비율"}
-          </SubText>
+          <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
           <BoxView1>
             {schedule_label.map((name, index) => (
               <RowView key={name} multiline={true}>
@@ -570,7 +568,7 @@ const Today = ({
               data={selectPercent ? taskArray_percentT : taskArray_percent}
               dataColor={schedule_color}
               labels={schedule_label}
-              title={selectPercent ? "과목별 목표 Deep Time 비율" : "과목별 학습 Deep Time 비율"}
+              title={selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}
               updateBoolean={selectPercent}
             />
           </FlexView>
@@ -591,8 +589,8 @@ const Today = ({
         <CenterView>
           <SubText>
             {selectPercent2
-              ? `목표 Deep Time ${myState[0]}&${myState[1]} 비율`
-              : `학습 Deep Time ${myState[0]}&${myState[1]} 비율`}
+              ? `목표 시간 ${myState[0]}&${myState[1]} 비율`
+              : `학습 시간 ${myState[0]}&${myState[1]} 비율`}
           </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />

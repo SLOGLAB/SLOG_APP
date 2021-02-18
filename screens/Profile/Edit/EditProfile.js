@@ -24,6 +24,10 @@ import useSelect from "../../../hooks/useSelect"
 import useSelect_dynamic from "../../../hooks/useSelect_dynamic"
 import useSelect_dynamic2 from "../../../hooks/useSelect_dynamic2"
 import { ME } from "../UserProfile"
+
+let pubOfFeedBool
+let pubOfStatisticBool
+let pubOfScheduleBool
 const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
   const maxLen_11 = (value) => value.length <= 12
   const minLen_6 = (value) => value.length < 6 && value.length > 0
@@ -122,6 +126,9 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
       key: emailKey.value,
     },
   })
+  pubOfFeedBool = data.me.pubOfFeed
+  pubOfStatisticBool = data.me.pubOfStatistic
+  pubOfScheduleBool = data.me.pubOfSchedule
   const onEditAccount = async (e) => {
     e.preventDefault()
     if (data.me.loginPosition === "student") {
@@ -145,9 +152,9 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
             address1: myAddress1.value,
             address2: myAddress2.value,
             termsOfMarketing: marketing,
-            pubOfFeed: data.me.pubOfFeed,
-            pubOfStatistic: data.me.pubOfStatistic,
-            pubOfSchedule: data.me.pubOfSchedule,
+            pubOfFeed: pubOfFeedBool,
+            pubOfStatistic: pubOfStatisticBool,
+            pubOfSchedule: pubOfScheduleBool,
           },
           refetchQueries: () => [{ query: ME }],
         })
@@ -185,9 +192,9 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
             address2: myAddress2.value,
             detailAddress: detailAddress.value,
             termsOfMarketing: marketing,
-            pubOfFeed: data.me.pubOfFeed,
-            pubOfStatistic: data.me.pubOfStatistic,
-            pubOfSchedule: data.me.pubOfSchedule,
+            pubOfFeed: pubOfFeedBool,
+            pubOfStatistic: pubOfStatisticBool,
+            pubOfSchedule: pubOfScheduleBool,
           },
           refetchQueries: () => [{ query: ME }],
         })

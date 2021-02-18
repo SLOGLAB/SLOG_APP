@@ -15,6 +15,9 @@ export const EDIT_ACCOUNT = gql`
     $address1: String!
     $address2: String!
     $termsOfMarketing: Boolean!
+    $pubOfFeed: Boolean!
+    $pubOfStatistic: Boolean!
+    $pubOfSchedule: Boolean!
   ) {
     editAccount(
       firstName: $firstName
@@ -30,6 +33,9 @@ export const EDIT_ACCOUNT = gql`
       address1: $address1
       address2: $address2
       termsOfMarketing: $termsOfMarketing
+      pubOfFeed: $pubOfFeed
+      pubOfStatistic: $pubOfStatistic
+      pubOfSchedule: $pubOfSchedule
     )
   }
 `
@@ -47,6 +53,9 @@ export const EDIT_ACCOUNT_M = gql`
     $address2: String!
     $detailAddress: String!
     $termsOfMarketing: Boolean!
+    $pubOfFeed: Boolean!
+    $pubOfStatistic: Boolean!
+    $pubOfSchedule: Boolean!
   ) {
     editAccount_M(
       firstName: $firstName
@@ -60,6 +69,9 @@ export const EDIT_ACCOUNT_M = gql`
       address2: $address2
       detailAddress: $detailAddress
       termsOfMarketing: $termsOfMarketing
+      pubOfFeed: $pubOfFeed
+      pubOfStatistic: $pubOfStatistic
+      pubOfSchedule: $pubOfSchedule
     )
   }
 `

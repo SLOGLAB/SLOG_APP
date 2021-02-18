@@ -142,40 +142,26 @@ const CenterView = styled.View`
   justify-content: center;
   align-items: center;
 `
-let taskArray = []
 let taskArray_week = []
 let taskArray_week_pre = []
 
-let taskArray_month = []
-let taskArray_schedule = []
 let taskArray_schedule_week = []
-let taskArray_schedule_month = []
-let taskArray_scheduleT = []
+
 let taskArray_scheduleT_week = []
-let taskArray_scheduleT_month = []
 let taskArray_percent = []
 let taskArray_percentT = []
 let schedule_label = []
 let schedule_color = []
-let scheduleList_selectDay = []
 let scheduleList_selectDay_week = [[], [], [], [], [], [], []]
 let scheduleList_week_pre = [[], [], [], [], [], [], []] // 저번주
-
-let scheduleList_selectDay_month = []
-let donutData = []
 let donutData_1 = 0
 let donutData_2 = 0
 let donutPercent = 0
-let rgbBox = []
-let scheduleList_selectDay_length = 0
 // let scheduleList_selectDay_week_length = 0;
-let scheduleList_selectDay_month_length = 0
 let self_percent = []
 let lecture_percent = []
 let self_percentT = []
 let lecture_percentT = []
-let existTime_donut = 0
-let targetTime_donut = 0
 const Weeks = ({
   myData,
   onRefresh,
@@ -478,8 +464,8 @@ const Weeks = ({
 
     const targetTime = SumArray(taskArray_scheduleT_week) * 3600
     if (targetTime === 0) {
-      donutData_1 = 0
-      donutData_2 = 0
+      donutData_1 = existTime_tmp
+      donutData_2 = targetTime
       donutPercent = 0
     } else {
       donutData_1 = existTime_tmp
@@ -560,10 +546,16 @@ const Weeks = ({
         </ChartView>
       </TouchableOpacity>
       <Line />
-      {SumArray(taskArray_week) === 0 ? (
+      {SumArray(taskArray_week) === 0 && SumArray(taskArray_week_pre) === 0 ? (
         <View>
           <CenterView>
-            <SubText>요일별 Deep Time(시) </SubText>
+            <SubText>요일별 학습 시간(시) </SubText>
+            <ChartView1>
+              <Box selectColor={"rgba(123, 169, 234, 1)"} />
+              <BoxText>이번주 </BoxText>
+              <Box selectColor={"rgba(199, 233, 248, 1)"} />
+              <BoxText>저번주</BoxText>
+            </ChartView1>
           </CenterView>
           <VweekBar
             taskArray_week={taskArray_week}
@@ -574,11 +566,7 @@ const Weeks = ({
                   })
                 : taskArray_week_pre
             }
-            ylength={
-              Math.max.apply(null, taskArray_week_pre) < 60
-                ? Math.max.apply(null, taskArray_week_pre)
-                : Math.max.apply(null, taskArray_week_pre) / 60
-            }
+            ylength={1}
             weekHMsosu={Math.max.apply(null, taskArray_week) < 60 ? 0 : 1}
             weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 60 ? 0 : 1}
           />
@@ -587,9 +575,9 @@ const Weeks = ({
         <View>
           <CenterView>
             {Math.max.apply(null, taskArray_week) < 60 ? (
-              <SubText>요일별 Deep Time(분) </SubText>
+              <SubText>요일별 학습 시간(분) </SubText>
             ) : (
-              <SubText>요일별 Deep Time(시) </SubText>
+              <SubText>요일별 학습 시간(시) </SubText>
             )}
             <ChartView1>
               <Box selectColor={"rgba(123, 169, 234, 1)"} />
@@ -614,12 +602,12 @@ const Weeks = ({
                 : taskArray_week_pre
             }
             ylength={
-              Math.max.apply(null, taskArray_week) < 60
-                ? Math.max.apply(null, taskArray_week)
+              Math.max.apply(null, taskArray_week) < Math.max.apply(null, taskArray_week_pre)
+                ? Math.max.apply(null, taskArray_week_pre) / 60
                 : Math.max.apply(null, taskArray_week) / 60
             }
-            title={"요일별 Deep Time"}
-            title_y={"Deep Time(분)"}
+            title={"요일별 학습 시간"}
+            title_y={"학습 시간(분)"}
             weekHMsosu={Math.max.apply(null, taskArray_week) < 60 ? 0 : 1}
             weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 60 ? 0 : 1}
           />
@@ -629,7 +617,7 @@ const Weeks = ({
       <Line />
       <View>
         <CenterView>
-          <SubText>과목 Deep Time(시)</SubText>
+          <SubText>과목별 학습 시간(시)</SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>학습 </BoxText>
@@ -643,7 +631,7 @@ const Weeks = ({
           labels={schedule_label}
           label_1={"학습"}
           label_2={"목표"}
-          title={"과목별 Deep Time"}
+          title={"과목별 시간"}
           title_x={"시간(분)"}
           stepSize_x={60}
         />
@@ -651,9 +639,7 @@ const Weeks = ({
       <Line />
       <View>
         <CenterView>
-          <SubText>
-            {selectPercent ? "과목별 목표 Deep Time 비율" : "과목별 학습 Deep Time 비율"}
-          </SubText>
+          <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
           <BoxView1>
             {schedule_label.map((name, index) => (
               <RowView key={name} multiline={true}>
@@ -679,7 +665,7 @@ const Weeks = ({
               data={selectPercent ? taskArray_percentT : taskArray_percent}
               dataColor={schedule_color}
               labels={schedule_label}
-              title={selectPercent ? "과목별 목표 Time 비율" : "과목별 Deep Time 비율"}
+              title={selectPercent ? "과목별 목표 Time 비율" : "과목별 시간 비율"}
               updateBoolean={selectPercent}
             />
           </FlexView>
@@ -700,8 +686,8 @@ const Weeks = ({
         <CenterView>
           <SubText>
             {selectPercent2
-              ? `목표 Deep Time ${myState[0]}&${myState[1]} 비율`
-              : `학습 Deep Time ${myState[0]}&${myState[1]} 비율`}
+              ? `목표 시간 ${myState[0]}&${myState[1]} 비율`
+              : `학습 시간 ${myState[0]}&${myState[1]} 비율`}
           </SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
