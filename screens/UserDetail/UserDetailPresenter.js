@@ -150,9 +150,9 @@ const ProfileMeta = styled.View`
   margin-top: 20;
 `
 const Setting = styled.View`
-  margin-top: 15;
+  margin-top: 25;
   /* margin-right: 25; */
-  padding-left: 10;
+  padding-left: 15;
   margin-bottom: 0;
   justify-content: center;
   align-items: flex-start;
