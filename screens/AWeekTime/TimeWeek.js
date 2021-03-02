@@ -1301,15 +1301,15 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                   onPress={() => {
                     Alert.alert("", "스케줄을 정말 삭제하시겠습니까?", [
                       {
-                        text: "YES",
-                        onPress: () => {
-                          deleteSchedule()
-                        },
-                      },
-                      {
                         text: "NO",
                         onPress: () => {
                           return
+                        },
+                      },
+                      {
+                        text: "YES",
+                        onPress: () => {
+                          deleteSchedule()
                         },
                         style: "cancel",
                       },

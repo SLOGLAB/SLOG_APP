@@ -91,6 +91,7 @@ const CoText = styled.Text`
   color: black;
   font-size: 20;
   font-weight: normal;
+  font-family: "GmarketMedium";
 `
 const SubText = styled.Text`
   color: black;
@@ -596,21 +597,30 @@ const MainDay = ({
                       Math.floor(list.todayTime.existTime / 3600) * 60}
                 </TextTimestyle>
                 <AvartarView>
-                  <Image
-                    style={{
-                      height: HEIGHT / 15,
-                      width: HEIGHT / 15,
-                      borderRadius: 30,
-                      marginTop: 0,
-                      marginBottom: 0,
-                      borderWidth: 4.5,
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Userdetail", {
+                        username: list.username,
+                        myname: myData.username,
+                      })
+                    }
+                  >
+                    <Image
+                      style={{
+                        height: HEIGHT / 15,
+                        width: HEIGHT / 15,
+                        borderRadius: 30,
+                        marginTop: 0,
+                        marginBottom: 0,
+                        borderWidth: 4.5,
 
-                      borderColor: list.existToggle
-                        ? "rgba(107, 152, 247, 1)"
-                        : "rgba(133, 133, 133, 1)",
-                    }}
-                    source={{ uri: list.avatar }}
-                  />
+                        borderColor: list.existToggle
+                          ? "rgba(107, 152, 247, 1)"
+                          : "rgba(133, 133, 133, 1)",
+                      }}
+                      source={{ uri: list.avatar }}
+                    />
+                  </TouchableOpacity>
                 </AvartarView>
                 <FollowerName_Text>
                   {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}

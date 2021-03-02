@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import * as tf from "@tensorflow/tfjs"
+import "@tensorflow/tfjs-react-native"
 import {
   Button,
   Platform,
@@ -17,8 +18,8 @@ import { cameraWithTensors, fetch } from "@tensorflow/tfjs-react-native"
 import { Camera } from "expo-camera"
 import { inputTensorHeight, inputTensorWidth, Pose } from "./Pose"
 import Icon from "../components/Icon"
-import { gql } from "apollo-boost"
-import { useMutation } from "@apollo/react-hooks"
+// import { gql } from "apollo-boost"
+// import { useMutation } from "@apollo/react-hooks"
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { PoseNet } from "@tensorflow-models/posenet"
 import { ExpoWebGLRenderingContext } from "expo-gl"
@@ -31,7 +32,7 @@ import { ExpoWebGLRenderingContext } from "expo-gl"
 // import useInterval from "../hooks/useInterval"
 // import moment from 'moment';
 
-// import * as cocossd from "@tensorflow-models/coco-ssd"
+import * as cocossd from "@tensorflow-models/coco-ssd"
 // import * as FileSystem from "expo-file-system"
 
 // import * as ImagePicker from "expo-image-picker"
@@ -40,12 +41,17 @@ import * as Brightness from "expo-brightness"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 var image = null
-
-export const UPDATE_EXISTTOGGLE = gql`
-  mutation update_existToggle($email: String!, $existToggle: Boolean!, $userStatus: String!) {
-    update_existToggle(email: $email, existToggle: $existToggle, userStatus: $userStatus)
-  }
-`
+// const UPDATE_EXISTTOGGLE = gql`
+//   mutation update_existToggle($email: String!, $existToggle: Boolean!) {
+//     update_existToggle(email: $email, existToggle: $existToggle)
+//   }
+// `
+//
+// export const UPDATE_EXISTTOGGLE = gql`
+//   mutation update_existToggle($email: String!, $existToggle: Boolean!, $userStatus: String!) {
+//     update_existToggle(email: $email, existToggle: $existToggle, userStatus: $userStatus)
+//   }
+// `
 const useInitTensorFlow = () => {
   const [isTfReady, setIsTfReady] = useState(false)
   const initializeTf = async () => {
@@ -58,32 +64,35 @@ const useInitTensorFlow = () => {
 
   return isTfReady
 }
-
-const usePosenetModel = () => {
-  const [posenetModel, setPosenetModel] = useState(null)
+let texture
+if (Platform.OS === "ios") {
+  texture = {
+    height: 200,
+    width: 152,
+  }
+} else {
+  texture = {
+    height: 1200,
+    width: 1600,
+  }
+}
+const useSsdModel = () => {
+  const [ssdModel, setSsdModel] = useState(null)
 
   const initModel = async () => {
     await Permissions.askAsync(Permissions.CAMERA)
     await Permissions.askAsync(Permissions.CAMERA_ROLL)
+    const ssd_model = await cocossd.load({ base: "mobilenet_v2" })
 
-    const posenetModel = await posenet.load({
-      // Config param information
-      // https://github.com/tensorflow/tfjs-models/tree/master/posenet#config-params-in-posenetload
-      architecture: "MobileNetV1",
-      outputStride: 16,
-      inputResolution: { width: inputTensorWidth, height: inputTensorHeight },
-      multiplier: 0.75,
-      quantBytes: 2,
-    })
-
-    setPosenetModel(posenetModel)
+    setSsdModel(ssd_model)
+    beforeImg = tf.zeros([200, 152, 3])
   }
 
   useEffect(() => {
     initModel()
   }, [])
 
-  return posenetModel
+  return ssdModel
 }
 const AUTORENDER = false
 
@@ -91,6 +100,39 @@ const TensorCamera = cameraWithTensors(Camera)
 let studyInterval = undefined
 let studyArray = []
 let heigt = 812 / HEIGHT
+// 1.personBbox area
+// val : pixel's diff
+let normArray = new Array(24).fill(5000)
+// 1.personBbox area
+let personDecisionArray = new Array(24).fill(0)
+
+let cellphoneDecisionArray = [0, 0, 0, 0, 0, 0] // 1.true 2.false
+
+// let finalDecisionArray = []; // 1.study 2.none 3.cell phone 4.sleep
+
+let detect_interval = 3000 * 1
+let mutation_interval = 6
+
+let decision_size = 6
+let normDecision_size = decision_size * 4
+let personDecision_size = decision_size * 2
+let cellphoneDecision_size = decision_size
+let window_size = decision_size * 5
+
+const personSizeThreshold = 29999
+const normArrayThreshold_low = 2000
+const normArrayThreshold_midle = 3000
+const normArrayThreshold_high = 10000
+
+let displayDetectResult = true
+
+let detect_count = 5
+let doDrawResult = false
+
+let ssd_model = null
+let videoWidth = null
+let videoHeight = null
+let beforeImg = null
 
 const PoseCamera = ({
   navigation,
@@ -104,12 +146,12 @@ const PoseCamera = ({
   selectDate,
   nextDate,
 }) => {
-  const posenetModel = usePosenetModel()
+  const SsdModel = useSsdModel()
   const [pose, setPose] = useState(null)
   const rafId = useRef(null)
   const camRef = useRef(null)
   const [button, setButton] = useState(false)
-  const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
+  // const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
   const [setting, setSetting] = useState(true)
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [poseonoff, setPoseonoff] = useState(true)
@@ -151,55 +193,224 @@ const PoseCamera = ({
       clearInterval(interval)
     }, 10000)
   }, [])
+
+  const ConcludeFinalDecision = () => {
+    // normArray = [] // val : pixel's diff
+    // personDecisionArray = [] // 1.true 2.false
+    // cellphoneDecisionArray = [] // 1.true 2.false
+
+    let finalDecision = 0 // 0.study 1.none 2.sleep
+    let finalDecisionPerson = true
+    let finalDecisionNorm = true
+    let finalDecisionCellphone = true
+
+    //person data preprocessing
+    let personDecisionArray_decision = personDecisionArray.slice(0, personDecision_size) //detect using the data for 2 min
+
+    personDecisionArray_decision = personDecisionArray_decision.filter(
+      (Decision) => Decision > personSizeThreshold
+    )
+
+    if (personDecisionArray_decision.length > 1) {
+      finalDecisionPerson = true
+    } else {
+      finalDecisionPerson = false
+    }
+
+    //norm data preprocessing
+    let normArray_decision = normArray.slice(0, normDecision_size) //detect using the data for 2 min
+
+    let normArray_decision_sum = normArray_decision.reduce((a, b) => a + b)
+    let normArray_decision_Average = normArray_decision_sum / normArray_decision.length
+    // console.log(normArray_decision_Average)
+    let normArray_decision_high = normArray_decision.filter(
+      (Decision) => Decision > normArrayThreshold_high
+    )
+
+    if (
+      normArray_decision_Average > normArrayThreshold_midle ||
+      normArray_decision_high.length > 4
+    ) {
+      finalDecisionNorm = true
+    } else {
+      finalDecisionNorm = false
+    }
+
+    //cell phone data preprocessing
+    let cellphoneDecisionArray_decision = cellphoneDecisionArray.slice(0, cellphoneDecision_size) //detect using the data for 1 min
+    let cellphoneDecisionArray_decisionSum = cellphoneDecisionArray_decision.reduce((a, b) => a + b)
+
+    if (cellphoneDecisionArray_decisionSum > 0) {
+      finalDecisionCellphone = true
+    } else {
+      finalDecisionCellphone = false
+    }
+
+    //final decision
+    if (finalDecisionPerson === true) {
+      if (finalDecisionNorm === true) {
+        if (finalDecisionCellphone === true) {
+          console.log("phone")
+          // ThrowTime(true, "phone")
+          // setStudyBool(true)
+        } else if (finalDecisionCellphone === false) {
+          console.log("study")
+          // ThrowTime(true, "study")
+          // setStudyBool(true)
+        }
+      } else if (finalDecisionNorm === false) {
+        console.log("sleep")
+        // ThrowTime(false, "sleep")
+        // setStudyBool(false)
+      }
+    } else if (finalDecisionPerson === false) {
+      if (finalDecisionNorm === true) {
+        if (normArray_decision_high.length >= decision_size) {
+          if (finalDecisionCellphone === true) {
+            console.log("phone")
+            // ThrowTime(true, "phone")
+            // setStudyBool(true)
+          } else {
+            console.log("study")
+            // ThrowTime(true, "study")
+            // setStudyBool(true)
+          }
+        } else if (normArray_decision_high.length < decision_size) {
+          console.log("none")
+          // ThrowTime(false, "none")
+          // setStudyBool(false)
+        }
+      } else if (finalDecisionNorm === false) {
+        console.log("none")
+        // ThrowTime(false, "none")
+        // setStudyBool(false)
+      }
+    }
+  }
+  /////////////////////////////////////
   async function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
+  // const ThrowTime = async (existToggle, userStatus) => {
+  //   existToggleMutation({
+  //     variables: { email: myInfoData.me.email, existToggle, userStatus },
+  //   })
+  //   console.log("throw time!")
+  // }
+
+  // let finalDecisionArray=[] // 1.study 2.none 3.cell phone 4.sleep
+  const personDecision = (personDetections) => {
+    if (personDecisionArray.length >= window_size) {
+      personDecisionArray.pop()
+    }
+    let bbox_area = 0
+    let personBboxArray = []
+    if (personDetections.length > 0) {
+      for (var i = 0; i < personDetections.length; i++) {
+        bbox_area = personDetections[i].bbox[2] * personDetections[i].bbox[3]
+        personBboxArray = [bbox_area, ...personBboxArray]
+      }
+      personDecisionArray = [Math.max(...personBboxArray), ...personDecisionArray]
+    } else {
+      personDecisionArray = [0, ...personDecisionArray]
+    }
+    // console.log(personDecisionArray)
+  }
+
+  const cellphoneDecision = (cellphoneDetections) => {
+    if (cellphoneDecisionArray.length >= window_size) {
+      cellphoneDecisionArray.pop()
+    }
+
+    let cellphoneDecision = 0
+
+    if (cellphoneDetections.length > 0) {
+      cellphoneDecision = cellphoneDetections.length
+    }
+    cellphoneDecisionArray = [cellphoneDecision, ...cellphoneDecisionArray]
+    // console.log(cellphoneDecisionArray)
   }
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     studyInterval = setInterval(async () => {
       if (!AUTORENDER && !button) {
         updatePreview()
       }
-      const imageTensor = images.next().value
+      console.log(images)
+      const img = images.next().value
+      const prediction = await SsdModel.detect(img)
+      // console.log(prediction, "prediction")
+      const personDetections = prediction.filter((p) => p.class === "person")
+      const cellphoneDetections = prediction.filter((p) => p.class === "cell phone")
       const flipHorizontal = Platform.OS === "ios" ? false : true
-      const pose = await posenetModel.estimateSinglePose(imageTensor, {
-        flipHorizontal,
-      })
-      setPose(pose)
+      let sub = tf.sub(img, beforeImg)
 
-      let sub = tf.sub(imageTensor, imageTensor)
-      let temp = sub.norm(2).sum()
+      console.log("11111")
+
+      // img.reshape([1, -1]).transpose().print()
+      // img.transpose([1, -1]).print()
+
+      img.print()
+
+      console.log(img.shape)
+
+      console.log("22222")
+
+      beforeImg.print()
+      console.log(beforeImg.shape)
+
+      console.log("33333")
+
+      sub.print()
+      console.log(sub.shape)
+
+      console.log(sub, "sub")
+      let temp = sub.sum()
+      console.log(temp, "temp")
+
+      temp.print()
       let norm = await temp.array(1)
-
-      tf.dispose([imageTensor])
-
-      if (pose.score > 0.1) {
-        studyArray.push("true")
-        setSetting(true)
-      } else {
-        studyArray.push("false")
-        setSetting(false)
+      console.log(norm, "norm")
+      if (normArray.length >= window_size) {
+        normArray.pop()
       }
-      if (studyArray.length == 4) {
-        myInfoRefetch()
-        if (studyArray.findIndex((obj) => obj == "true") == -1) {
-          existToggleMutation({
-            variables: { email: myInfoData.me.email, existToggle: false, userStatus: "none" },
-          })
-          studyArray = []
-        } else {
-          existToggleMutation({
-            variables: { email: myInfoData.me.email, existToggle: true, userStatus: "study" },
-          })
-          studyArray = []
-        }
+
+      normArray = [norm, ...normArray]
+      sub.dispose()
+      temp.dispose()
+      beforeImg.dispose()
+      // console.log(normArray)
+      beforeImg = img
+
+      personDecision(personDetections)
+      cellphoneDecision(cellphoneDetections)
+
+      console.log(detect_count, "detect_count")
+      if (detect_count % mutation_interval === 0) {
+        ConcludeFinalDecision()
+        detect_count = 0
       }
+
+      // if (imgTensorArray.length === window_size + 1) {
+      //   console.log("here")
+      //   // console.log(imgTensorArray.length)
+      //   await imgTensorArray[window_size].dispose()
+      //   imgTensorArray[window_size].print()
+      // }
+      console.log("normArray: " + normArray)
+      console.log("personDecisionArray: " + personDecisionArray)
+      console.log("cellphoneDecisionArray" + cellphoneDecisionArray)
+
+      detect_count = detect_count + 1
+      // existToggleMutation({ variables: { email: myInfoData.me.email, existToggle: false } })
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
+      await tf.nextFrame()
     }, 10000)
   }
 
-  if (!posenetModel) {
+  if (!SsdModel) {
     return (
       <View>
         <Text></Text>

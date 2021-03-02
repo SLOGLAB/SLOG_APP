@@ -12,12 +12,15 @@ import {
   Keyboard,
   StatusBar,
 } from "react-native"
+import { gql } from "apollo-boost"
+
 import styled from "styled-components"
 import RNPickerSelect from "react-native-picker-select"
 import { Ionicons } from "@expo/vector-icons"
 import AuthButton from "../../components/AuthButton"
 import AuthInput from "../../components/AuthInput"
 import LastWidth from "../../components/LastWidth"
+import Loader from "../../components/Loader"
 import Icon from "../../components/Icon"
 import Studyinfo from "./Studyinfo"
 import moment, { Moment } from "moment"
@@ -26,6 +29,42 @@ import SumArray from "../../components/SumArray"
 import WeekRange from "../../components/WeekRange"
 import twoArraySum from "../../components/twoArraySum"
 import ObjectCopy from "../../components/ObjectCopy"
+import { useQuery, useMutation } from "@apollo/react-hooks"
+import {
+  START_SCHEDULE,
+  STOP_SCHEDULE,
+  PULL_SCHEDULE,
+  CUT_SCHEDULE,
+  EXTENSION_SCHEDULE,
+  EDIT_STUDYSET,
+  GO_WITH,
+} from "./StudyQueries"
+export const SUBJECT_NAME = gql`
+  {
+    mySubject {
+      id
+      name
+      bgColor
+      bookMark
+    }
+  }
+`
+export const MY_TODOLIST = gql`
+  {
+    myTodolist {
+      id
+      name
+      finish
+      finishAt
+      subject {
+        id
+        name
+        bgColor
+        bookMark
+      }
+    }
+  }
+`
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 const MainView = styled.View`
   justify-content: center;
@@ -70,6 +109,7 @@ let total_min = 0
 let endPoint = 0
 let existTime_donut = 0
 let targetTime_donut = 0
+
 export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
   const scheduleList = myData.schedules
   const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
@@ -378,40 +418,79 @@ export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
       donutPercent = todayTime.existTime / targetTime
     }
   }
+
   if (!loading) {
     todaySchedule_calculate()
     todayGraph_calculate()
   }
+  const [startScheduleMutation] = useMutation(START_SCHEDULE)
+  const [cutScheduleMutation] = useMutation(CUT_SCHEDULE)
+  const [extensionScheduleMutation] = useMutation(EXTENSION_SCHEDULE)
+  const [stopScheduleMutation] = useMutation(STOP_SCHEDULE)
+  const [onLoading, setOnLoading] = useState(false)
+  const [onstopLoading, setstopOnLoading] = useState(false)
+  const [onexLoading, setexOnLoading] = useState(false)
+  const [oncutLoading, setcutOnLoading] = useState(false)
+
+  const { loading: subLoading, data: subjectsName, refetch } = useQuery(SUBJECT_NAME, {})
+  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
+    MY_TODOLIST
+  )
   useEffect(() => {
     // console.log(myInfoData)
   }, [])
+
   return (
     <MainView>
-      <Studyinfo
-        nexistTime={existTime_donut}
-        nowtarget={targetTime_donut}
-        donutPercent={donutPercent}
-        taskArray={taskArray}
-        nowScheduleTime={nowScheduleTime}
-        nowScheduleTimeT={nowScheduleTimeT}
-        nowScheduleColor={nowScheduleColor}
-        nowTitle1={nowTitle1}
-        nowTitle2={nowTitle2}
-        break_title={break_title}
-        break_time={break_time}
-        break_countdown={break_countdown}
-        nextTitle1={nextTitle1}
-        nextTitle2={nextTitle2}
-        next_TimeText={next_TimeText}
-        myData={myData}
-        // modalVisible={modalVisible}
-        // setModalVisible={setModalVisible}
-        // refreshing={refreshing}
-        // setRefreshing={setRefreshing}
-        // goWithMutation={goWithMutation}
-        myInfoRefetch={myInfoRefetch}
-        nowEnd={nowEnd}
-      />
+      {todolistLoading || subLoading ? (
+        <Loader />
+      ) : (
+        <Studyinfo
+          nexistTime={existTime_donut}
+          nowtarget={targetTime_donut}
+          donutPercent={donutPercent}
+          taskArray={taskArray}
+          nowScheduleTime={nowScheduleTime}
+          nowScheduleTimeT={nowScheduleTimeT}
+          nowScheduleColor={nowScheduleColor}
+          nowTitle1={nowTitle1}
+          nowTitle2={nowTitle2}
+          break_title={break_title}
+          break_time={break_time}
+          break_countdown={break_countdown}
+          nextTitle1={nextTitle1}
+          nextTitle2={nextTitle2}
+          next_TimeText={next_TimeText}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          // refreshing={refreshing}
+          // setRefreshing={setRefreshing}
+          // goWithMutation={goWithMutation}
+          myData={myData}
+          myInfoRefetch={myInfoRefetch}
+          loading={loading}
+          nowEnd={nowEnd}
+          startScheduleMutation={startScheduleMutation}
+          cutScheduleMutation={cutScheduleMutation}
+          extensionScheduleMutation={extensionScheduleMutation}
+          stopScheduleMutation={stopScheduleMutation}
+          onLoading={onLoading}
+          setOnLoading={setOnLoading}
+          todayGraph_calculate={todayGraph_calculate}
+          nowScheduleIndex={nowScheduleIndex}
+          subjectsName={subjectsName}
+          todolistData={todolistData.myTodolist}
+          scheduleList_selectDay={scheduleList_selectDay}
+          scheduleList_selectDay_length={scheduleList_selectDay_length}
+          nextScheduleIndex={nextScheduleIndex}
+          onstopLoading={onstopLoading}
+          setstopOnLoading={setstopOnLoading}
+          onexLoading={onexLoading}
+          setexOnLoading={setexOnLoading}
+          oncutLoading={oncutLoading}
+          setcutOnLoading={setcutOnLoading}
+        />
+      )}
     </MainView>
   )
 }
