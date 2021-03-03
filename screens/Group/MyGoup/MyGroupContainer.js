@@ -10,7 +10,8 @@ const MainView = styled.View`
   align-items: center;
   flex: 1;
 `
-export default () => {
+
+export default ({ navigation }) => {
   const { loading, data, refetch } = useQuery(MY_GROUP)
   const [bookmarkGroupMutation] = useMutation(BOOKMARK_GROUP)
   const onBookmark = async (groupId, orderBool) => {
@@ -27,10 +28,10 @@ export default () => {
         Alert.alert("그룹을 북마크할 수 없습니다.")
       } else {
         await refetch()
-        toast.success("그룹 북마크를 완료하였습니다.")
       }
     } catch (e) {
       console.log(e)
+      Alert.alert("그룹 북마크는 1개만 가능합니다. ")
     }
   }
   return (
@@ -40,7 +41,12 @@ export default () => {
           <Loader />
         </MainView>
       ) : (
-        <MyGoupPresenter groupData={data.myGroup} groupRefetch={refetch} onBookmark={onBookmark} />
+        <MyGoupPresenter
+          groupData={data.myGroup}
+          groupRefetch={refetch}
+          onBookmark={onBookmark}
+          navigation={navigation}
+        />
       )}
     </>
   )

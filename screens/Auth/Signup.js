@@ -396,7 +396,7 @@ export default ({ navigation }) => {
             paddingArray={[5, 5, 5, 5]}
             value={emailInput.value}
             onChange={() => {}}
-            placeholder="Email"
+            placeholder="email 인증 버튼 =>"
             keyboardType="email-address"
             returnKeyType="send"
             autoCorrect={false}
@@ -468,7 +468,7 @@ export default ({ navigation }) => {
             marginArray={[0, 0, 0, 0]}
             value={phoneNumberInput.value}
             onChange={() => {}}
-            placeholder="휴대폰 번호"
+            placeholder="휴대폰 인증 버튼=>"
             returnKeyType="send"
             autoCorrect={false}
             widthRatio={2.5}

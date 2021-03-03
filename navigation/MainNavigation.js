@@ -16,6 +16,7 @@ import Timecontrol from "../screens/TimeTable/Timecontrol"
 // import FollowSwiper from "../screens/Profile/Follow/FollowSwiper"
 import PhotoNavigation from "./PhotoNavigation"
 import Userdetail from "../screens/UserDetail/UserDetail"
+import OneGroupContainer from "../screens/Group/OneGroup/OneGroupContainer"
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -27,6 +28,7 @@ const MainNavigation = createStackNavigator(
     PhotoNavigation,
     Userdetail,
     Timecontrol,
+    OneGroupContainer,
   },
   {
     defaultNavigationOptions: {
