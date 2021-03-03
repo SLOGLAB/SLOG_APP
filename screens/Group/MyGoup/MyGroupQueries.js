@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost"
 
 export const MY_GROUP = gql`
   {
@@ -21,10 +21,9 @@ export const MY_GROUP = gql`
       createdAt
     }
   }
-`;
-
+`
 export const BOOKMARK_GROUP = gql`
   mutation bookmarkGroup($groupId: String!, $orderBool: Boolean!) {
     bookmarkGroup(groupId: $groupId, orderBool: $orderBool)
   }
-`;
+`

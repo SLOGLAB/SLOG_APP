@@ -27,6 +27,7 @@ const ProfileHeader2 = styled.View`
   width: ${constants.width / 1.7};
   flex: 1;
 `
+
 // const MainView = styled.View`
 //   align-items: center;
 //   background-color: rgba(255, 255, 255, 1);

@@ -19,9 +19,16 @@ import { inputTensorHeight, inputTensorWidth, Pose } from "./Pose"
 import Icon from "../components/Icon"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
+import styled from "styled-components"
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { PoseNet } from "@tensorflow-models/posenet"
 import { ExpoWebGLRenderingContext } from "expo-gl"
+const TimeText = styled.Text`
+  font-size: 15;
+  color: #fff;
+  font-family: "GmarketMedium";
+  margin-bottom: 50;
+`
 // import * as ScreenOrientation from "expo-screen-orientation"
 // import Loader from "../components/Loader"
 // import StudyPresenter from "../screens/Study/StudyPresenter"
@@ -319,19 +326,18 @@ const PoseCamera = ({
               onPress={() => {
                 setpersonOnoff(!personOnoff)
               }}
-              style={styles.round}
             >
               {personOnoff ? (
                 <Icon
-                  name={Platform.OS === "ios" ? "ios-eye" : "md-eye"}
-                  color={"#fff"}
-                  size={30}
+                  name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
+                  color={"#ffffff"}
+                  size={45}
                 />
               ) : (
                 <Icon
-                  name={Platform.OS === "ios" ? "ios-eye-off" : "md-eye-off"}
-                  color={"#E5E5E5"}
-                  size={30}
+                  name={Platform.OS === "ios" ? "ios-square" : "md-square"}
+                  color={"#224C7E"}
+                  size={45}
                 />
               )}
             </TouchableOpacity>
@@ -418,7 +424,11 @@ const PoseCamera = ({
               <View style={[styles.modelResults]}>{pose && <Pose pose={pose} />}</View>
             ) : null}
           </View>
-          {personOnoff ? null : <View style={styles.cameraAbsolute}></View>}
+          {personOnoff ? null : (
+            <View style={styles.cameraAbsolute}>
+              <TimeText>시간 측정중...</TimeText>
+            </View>
+          )}
         </>
       </View>
     </>
@@ -563,7 +573,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     // width: "100%",
     // height: "100%",
-    width: Dimensions.get("window").width / 2.16 / heigt / 0.8,
+    width: Dimensions.get("window").width / 2 / heigt / 0.8,
     height: Dimensions.get("window").height / 2.64,
     zIndex: 20,
     borderWidth: 0,

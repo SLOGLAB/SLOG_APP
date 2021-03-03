@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost"
 
 export const SEEONE_GROUP = gql`
   query seeOneGroup($groupId: String!) {
@@ -31,31 +31,31 @@ export const SEEONE_GROUP = gql`
       createdAt
     }
   }
-`;
+`
 
 export const JOIN_GROUP = gql`
   mutation joinGroup($groupId: String!) {
     joinGroup(groupId: $groupId)
   }
-`;
+`
 
 export const DELETE_GROUP = gql`
   mutation deleteGroup($groupId: String!) {
     deleteGroup(groupId: $groupId)
   }
-`;
+`
 
 export const OUT_GROUP = gql`
   mutation outGroup($groupId: String!) {
     outGroup(groupId: $groupId)
   }
-`;
+`
 
 export const OUT_MEMBER = gql`
   mutation outMember($groupId: String!, $memberId: String!) {
     outMember(groupId: $groupId, memberId: $memberId)
   }
-`;
+`
 
 export const EDIT_GROUP = gql`
   mutation editGroup(
@@ -77,4 +77,4 @@ export const EDIT_GROUP = gql`
       bio: $bio
     )
   }
-`;
+`

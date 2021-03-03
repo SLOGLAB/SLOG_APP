@@ -113,10 +113,6 @@ export default createBottomTabNavigator(
     // },
     TimetableWeek: {
       screen: TimetableWeek,
-      // screen: stackFactory(TimetableWeek, {
-      //   title: "Study Log",
-      //   // headerLeft: <Iam />
-      // }),
 
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
@@ -156,11 +152,7 @@ export default createBottomTabNavigator(
     // },
     ProfileNavi: {
       screen: ProfileNavi,
-      // screen: stackFactory(ProfileNavi, {
-      //   headerRight: <Timetablecontrol />,
-      //   title: "프로필",
-      //   // headerLeft: <Menu2 />,
-      // }),
+
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-person" : "md-person"} />

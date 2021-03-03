@@ -10,7 +10,6 @@ const MainView = styled.View`
   align-items: center;
   flex: 1;
 `
-
 export default () => {
   const { loading, data, refetch } = useQuery(MY_GROUP)
   const [bookmarkGroupMutation] = useMutation(BOOKMARK_GROUP)

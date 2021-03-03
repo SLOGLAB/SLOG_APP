@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost"
 
 export const SEE_GROUP = gql`
   {
@@ -20,8 +20,7 @@ export const SEE_GROUP = gql`
       createdAt
     }
   }
-`;
-
+`
 export const CREATE_GROUP = gql`
   mutation createGroup(
     $name: String!
@@ -40,4 +39,4 @@ export const CREATE_GROUP = gql`
       bio: $bio
     )
   }
-`;
+`

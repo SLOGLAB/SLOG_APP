@@ -92,7 +92,6 @@ const ContainerLandscape = styled.View`
   justify-content: center; */
   /* height: ${(constants.height / 13) * 12}; */
 `
-
 const RowView = styled.View`
   /* flex-direction: row; */
   height: ${(constants.height / 13) * 13};

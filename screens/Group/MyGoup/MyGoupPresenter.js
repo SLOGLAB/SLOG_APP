@@ -6,6 +6,7 @@ const MainView = styled.View`
   align-items: center;
   flex: 1;
   background-color: rgba(255, 255, 255, 1);
+  border-width: 1;
 `
 const GroupBox = styled.View`
   flex: 0.3;
@@ -24,7 +25,6 @@ const GroupName = styled.Text`
   font-family: "GmarketBold";
   color: rgba(34, 76, 126, 1);
 `
-
 // font-family: "GmarketLight";
 // font-family: "GmarketBold";
 
