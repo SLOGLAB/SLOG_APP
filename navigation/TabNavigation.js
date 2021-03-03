@@ -13,14 +13,7 @@ import ProfileNavi from "../navigation/ProfileNavi"
 import SwiperBase from "../screens/Stat/SwiperBase"
 // import UserProfile from "../screens/Profile/UserProfile"
 import ToDoButton from "../screens/TodoList/ToDoButton"
-import StudyButton from "../screens/Study/StudyButton"
-import FeedContainer from "../screens/Feed/FeedContainer"
-import D_day from "../screens/D_day"
-import TodoListSwiper from "../screens/TodoList/TodoListSwiper"
-import ObjectButton from "../Object/ObjectButton"
-import NavGreenIcon from "../components/NavGreenIcon"
-import MenuButton from "../components/MenuButton"
-import StudyContainer from "../screens/Study/StudyContainer"
+import MyGroupContainer from "../screens/Group/MyGoup/MyGroupContainer"
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
@@ -146,7 +139,21 @@ export default createBottomTabNavigator(
     //     ),
     //   },
     // },
-
+    // MyGroupContainer: {
+    //   screen: stackFactory(MyGroupContainer, {
+    //     // headerLeft: "DEEPTIME",
+    //     // headerRight: <ToDoButton />,
+    //     title: "나의 그룹",
+    //     headerTitleStyle: {
+    //       fontFamily: "GmarketBold",
+    //     },
+    //   }),
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-people" : "md-people"} />
+    //     ),
+    //   },
+    // },
     ProfileNavi: {
       screen: ProfileNavi,
       // screen: stackFactory(ProfileNavi, {
