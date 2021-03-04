@@ -123,7 +123,6 @@ export default createBottomTabNavigator(
         ),
       },
     },
-
     // FeedPhotoNavigation: {
     //   screen: stackFactory(FeedPhotoNavigation, {
     //     title: "Feed",

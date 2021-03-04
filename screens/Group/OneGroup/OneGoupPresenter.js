@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { Alert } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity, ScrollView } from "react-native-gesture-handler"
 import styled from "styled-components"
 import Icon from "../../../components/Icon"
-
+import GroupSwiperBase from "../GroupStat/GroupSwiperBase"
 const MainView = styled.View`
   justify-content: center;
   align-items: center;
@@ -12,14 +12,13 @@ const MainView = styled.View`
   border-width: 1;
 `
 const GroupBox = styled.View`
-  flex: 0.3;
-  width: 90%;
+  flex: 0.2;
+  width: 100%;
   border-width: 1;
   justify-content: center;
-  border-radius: 10;
   padding: 10px;
   border-color: rgba(196, 196, 196, 1);
-  background-color: rgba(199, 199, 199, 1);
+  background-color: rgba(255, 255, 255, 1);
 `
 const LineView = styled.View`
   width: 100%;
@@ -41,20 +40,46 @@ const GroupText = styled.Text`
 const BoxTopView = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-right: 10;
+  padding-left: 10;
+  padding-top: 5;
+  width: 100%;
 `
-
-export default ({ groupData, navigation }) => {
+const BoxTopView2 = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 10;
+  width: 100%;
+`
+export default ({ groupData, navigation, myData, groupRefetch, loading }) => {
   useEffect(() => {}, [])
   return (
     <MainView>
-      <TouchableOpacity onPress={() => navigation.navigate("TabNavigation")}>
-        <Icon
-          name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-          color={"#000000"}
-          size={40}
-        />
-      </TouchableOpacity>
+      <BoxTopView>
+        <TouchableOpacity onPress={() => navigation.navigate("TabNavigation")}>
+          <Icon
+            name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+            color={"#000000"}
+            size={40}
+          />
+        </TouchableOpacity>
+      </BoxTopView>
+      <GroupBox>
+        <BoxTopView2>
+          <GroupCate>{groupData.category} </GroupCate>
+          <GroupText>멤버 {groupData.memberCount}</GroupText>
+        </BoxTopView2>
+        <GroupName>{groupData.name}</GroupName>
+        <ScrollView>
+          <GroupText>{groupData.bio}</GroupText>
+        </ScrollView>
+      </GroupBox>
+      <GroupSwiperBase
+        groupData={groupData}
+        groupRefetch={groupRefetch}
+        loading={loading}
+        navigation={navigation}
+        myData={myData}
+      />
     </MainView>
   )
 }

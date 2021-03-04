@@ -119,7 +119,7 @@ const PoseCamera = ({
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
   const [setting, setSetting] = useState(true)
   const [brightnessButton, setbrightnessButton] = useState(true)
-  const [poseonoff, setPoseonoff] = useState(true)
+  const [androidCam, setandroidCam] = useState(true)
   const [personOnoff, setpersonOnoff] = useState(true)
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
@@ -156,6 +156,10 @@ const PoseCamera = ({
     }, 1000)
     setTimeout(function () {
       clearInterval(interval)
+      if (Platform.OS !== "ios") {
+        setSetting(true)
+      }
+      setandroidCam(false)
     }, 10000)
   }, [])
   async function sleep(ms) {
@@ -186,7 +190,7 @@ const PoseCamera = ({
         studyArray.push("false")
         setSetting(false)
       }
-      if (studyArray.length == 4) {
+      if (studyArray.length == 6) {
         myInfoRefetch()
         if (studyArray.findIndex((obj) => obj == "true") == -1) {
           existToggleMutation({
@@ -203,7 +207,7 @@ const PoseCamera = ({
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
-    }, 10000)
+    }, 9900)
   }
 
   if (!posenetModel) {
@@ -321,28 +325,6 @@ const PoseCamera = ({
       </View>
       <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
         <View style={styles.moon}>
-          <View style={styles.person}>
-            <TouchableOpacity
-              onPress={() => {
-                setpersonOnoff(!personOnoff)
-              }}
-            >
-              {personOnoff ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
-                  color={"#ffffff"}
-                  size={45}
-                />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-square" : "md-square"}
-                  color={"#224C7E"}
-                  size={45}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-
           <View style={styles.moon2}>
             <TouchableOpacity
               onPress={() => {
@@ -368,35 +350,26 @@ const PoseCamera = ({
             <View style={styles.posebutton}>
               <TouchableOpacity
                 onPress={() => {
-                  setPoseonoff(!poseonoff)
+                  setpersonOnoff(!personOnoff)
                 }}
               >
-                {poseonoff ? (
-                  <Image
-                    style={{
-                      height: 60,
-                      width: 50,
-                      marginTop: 0,
-                      marginBottom: 0,
-                    }}
-                    source={require("../assets/poseon.png")}
+                {personOnoff ? (
+                  <Icon
+                    name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
+                    color={"#ffffff"}
+                    size={45}
                   />
                 ) : (
-                  <Image
-                    style={{
-                      height: 60,
-                      width: 50,
-                      marginTop: 0,
-                      marginBottom: 0,
-                    }}
-                    source={require("../assets/poseoff.png")}
+                  <Icon
+                    name={Platform.OS === "ios" ? "ios-square" : "md-square"}
+                    color={"#224C7E"}
+                    size={45}
                   />
                 )}
               </TouchableOpacity>
             </View>
           </View>
         </View>
-
         <>
           <View
             style={[
@@ -406,27 +379,58 @@ const PoseCamera = ({
               },
             ]}
           >
-            <TensorCamera
-              ref={camRef}
-              style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
-              type={Camera.Constants.Type.front}
-              zoom={0}
-              cameraTextureHeight={textureDims.height}
-              cameraTextureWidth={textureDims.width}
-              resizeHeight={200}
-              resizeWidth={152}
-              resizeDepth={3}
-              onReady={handleImageTensorReady}
-              autorender={false}
-              // rotation={90} // or -90 for landscape right
-            />
-            {poseonoff ? (
-              <View style={[styles.modelResults]}>{pose && <Pose pose={pose} />}</View>
-            ) : null}
+            {Platform.OS == "ios" ? (
+              <TensorCamera
+                ref={camRef}
+                style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
+                type={Camera.Constants.Type.front}
+                zoom={0}
+                cameraTextureHeight={textureDims.height}
+                cameraTextureWidth={textureDims.width}
+                resizeHeight={200}
+                resizeWidth={152}
+                resizeDepth={3}
+                onReady={handleImageTensorReady}
+                autorender={false}
+                // rotation={90} // or -90 for landscape right
+              />
+            ) : (
+              <>
+                {androidCam ? (
+                  <Camera
+                    ref={camRef}
+                    type={Camera.Constants.Type.front}
+                    style={{
+                      justifyContent: "flex-end",
+                      padding: 15,
+                      width: Dimensions.get("window").width / 2.16 / heigt,
+                      height: Dimensions.get("window").height / 2.64,
+                    }}
+                  ></Camera>
+                ) : (
+                  <TensorCamera
+                    ref={camRef}
+                    style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
+                    type={Camera.Constants.Type.front}
+                    zoom={0}
+                    cameraTextureHeight={textureDims.height}
+                    cameraTextureWidth={textureDims.width}
+                    resizeHeight={200}
+                    resizeWidth={152}
+                    resizeDepth={3}
+                    onReady={handleImageTensorReady}
+                    autorender={false}
+                    // rotation={90} // or -90 for landscape right
+                  />
+                )}
+              </>
+            )}
           </View>
           {personOnoff ? null : (
             <View style={styles.cameraAbsolute}>
-              <TimeText>시간 측정중...</TimeText>
+              {androidCam ? null : (
+                <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+              )}
             </View>
           )}
         </>

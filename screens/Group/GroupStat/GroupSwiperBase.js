@@ -1,12 +1,12 @@
 import React, { Component } from "react"
 import { Platform } from "react-native"
 import { Container, TabHeading, Text, Tab, Tabs } from "native-base"
-import TodayController from "./TodayController"
-import WeekController from "./WeekController"
-import MonthController from "./MonthController"
+import GroupTodayController from "./GroupTodayController"
+import GroupWeekController from "./GroupWeekController"
+import GroupMonthController from "./GroupMonthController"
 import { StatusBar } from "react-native"
 
-export default () => {
+export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
   return (
     <Container>
       {Platform.OS == "ios" ? (
@@ -30,7 +30,13 @@ export default () => {
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
           }
         >
-          <TodayController />
+          <GroupTodayController
+            groupData={groupData}
+            groupRefetch={groupRefetch}
+            loading={loading}
+            navigation={navigation}
+            myData={myData}
+          />
         </Tab>
         <Tab
           heading={
@@ -46,7 +52,13 @@ export default () => {
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
           }
         >
-          <WeekController />
+          <GroupWeekController
+            groupData={groupData}
+            groupRefetch={groupRefetch}
+            loading={loading}
+            navigation={navigation}
+            myData={myData}
+          />
         </Tab>
         <Tab
           heading={
@@ -62,7 +74,13 @@ export default () => {
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
           }
         >
-          <MonthController />
+          <GroupMonthController
+            groupData={groupData}
+            groupRefetch={groupRefetch}
+            loading={loading}
+            navigation={navigation}
+            myData={myData}
+          />
         </Tab>
       </Tabs>
     </Container>
