@@ -25,10 +25,11 @@ import LastWidth from "../../../components/LastWidth"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import BackButton from "../../../components/BackButton"
 
-const View = styled.View`
+const MainView = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+  height: ${constants.height / 1};
 `
 const EmptyView = styled.View`
   flex: 1;
@@ -70,6 +71,7 @@ const CheckWrap = styled.View`
   align-items: center;
   flex-direction: row;
   margin-bottom: 20px;
+  height: 5%;
 `
 
 const MarginR = styled.View``
@@ -114,8 +116,8 @@ const FBContainer = styled.View`
   border-style: solid;
 `
 
-const GoogleContainer = styled.View`
-  margin-top: 20px;
+const CheckView = styled.View`
+  margin-left: 15px;
 `
 
 const TouchBox = styled.TouchableOpacity`
@@ -190,12 +192,12 @@ export default ({
   const [isQVisible, setisQVisible] = useState(false)
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
+    <KeyboardAwareScrollView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      // style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <MainView>
           {Platform.OS === "ios" ? (
             <View2 style={{ width: constants.width / 1.7 }}>
               <View21>
@@ -245,190 +247,190 @@ export default ({
           )}
           {selectPercent ? (
             <EmptyView>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <RowView>
-                  <AuthInput
-                    paddingArray={[5, 5, 5, 5]}
-                    {...lastName}
-                    placeholder="성 (예: 홍)"
-                    autoCapitalize="words"
-                    widthRatio={4.5}
-                  />
-                  <MarginR style={{ width: constants.width / 40 }} />
-                  <AuthInput
-                    paddingArray={[5, 5, 5, 5]}
-                    {...firstName}
-                    placeholder="이름 (예: 길동)"
-                    autoCapitalize="words"
-                    widthRatio={LastWidth(1.7, 4.5, 40)}
-                  />
-                </RowView>
-                <MarginR style={{ height: constants.height / 90 }} />
-
+              {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+              <RowView>
                 <AuthInput
                   paddingArray={[5, 5, 5, 5]}
-                  {...username}
-                  placeholder="닉네임 (10글자 이내)"
+                  {...lastName}
+                  placeholder="성 (예: 홍)"
+                  autoCapitalize="words"
+                  widthRatio={4.5}
+                />
+                <MarginR style={{ width: constants.width / 40 }} />
+                <AuthInput
+                  paddingArray={[5, 5, 5, 5]}
+                  {...firstName}
+                  placeholder="이름 (예: 길동)"
+                  autoCapitalize="words"
+                  widthRatio={LastWidth(1.7, 4.5, 40)}
+                />
+              </RowView>
+              <MarginR style={{ height: constants.height / 90 }} />
+
+              <AuthInput
+                paddingArray={[5, 5, 5, 5]}
+                {...username}
+                placeholder="닉네임 (10글자 이내)"
+                returnKeyType="send"
+                autoCorrect={false}
+              />
+              <MarginR style={{ height: constants.height / 90 }} />
+
+              <RowView>
+                <AuthInput
+                  paddingArray={[5, 5, 5, 5]}
+                  {...email}
+                  onChange={() => {}}
+                  placeholder="Email"
+                  keyboardType="email-address"
                   returnKeyType="send"
                   autoCorrect={false}
+                  widthRatio={2.5}
                 />
-                <MarginR style={{ height: constants.height / 90 }} />
+                <MarginR style={{ width: constants.width / 40 }} />
+                <AuthButton
+                  color="white"
+                  onPress={() => setEmailVisible(true)}
+                  text="입력"
+                  paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+                  widthRatio={LastWidth(1.7, 2.5, 40)}
+                />
+              </RowView>
+              <MarginR style={{ height: constants.height / 90 }} />
 
-                <RowView>
-                  <AuthInput
-                    paddingArray={[5, 5, 5, 5]}
-                    {...email}
-                    onChange={() => {}}
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    returnKeyType="send"
-                    autoCorrect={false}
-                    widthRatio={2.5}
-                  />
-                  <MarginR style={{ width: constants.width / 40 }} />
-                  <AuthButton
-                    color="white"
-                    onPress={() => setEmailVisible(true)}
-                    text="입력"
-                    paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
-                    widthRatio={LastWidth(1.7, 2.5, 40)}
-                  />
-                </RowView>
-                <MarginR style={{ height: constants.height / 90 }} />
-
-                <Modal
-                  isVisible={isEmailVisible}
-                  onBackdropPress={() => setEmailVisible(false)}
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: Math.round(Dimensions.get("window").height),
-                  }}
-                >
-                  <StyledModalContainer style={{ width: constants.width / 1.5 }}>
-                    <TitleText>Email 인증</TitleText>
-                    <RowView>
-                      <AuthInput
-                        {...email}
-                        placeholder="(예: DeepTime@google.com)"
-                        keyboardType="email-address"
-                        returnKeyType="send"
-                        autoCorrect={false}
-                        widthRatio={2.5}
-                        marginArray={[10, 0, 10, 0]}
-                      />
-                      <MarginR style={{ width: constants.width / 40 }} />
-                      <AuthButton
-                        color="white"
-                        loading={vLoading}
-                        onPress={() => {
-                          if (data.email === email.value) {
-                            Alert.alert("기존 Email 주소와 동일합니다.")
-                          } else {
-                            sEmailOnClick()
-                          }
-                        }}
-                        text="인증"
-                        marginArray={[10, 0, 10, 0]}
-                        paddingArray={Platform.OS === "ios" ? [12, 10, 12, 10] : [15, 10, 15, 10]}
-                        widthRatio={LastWidth(1.7, 2.5, 40)}
-                      />
-                    </RowView>
+              <Modal
+                isVisible={isEmailVisible}
+                onBackdropPress={() => setEmailVisible(false)}
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: Math.round(Dimensions.get("window").height),
+                }}
+              >
+                <StyledModalContainer style={{ width: constants.width / 1.5 }}>
+                  <TitleText>Email 인증</TitleText>
+                  <RowView>
                     <AuthInput
-                      {...emailKey}
-                      placeholder="인증번호 입력"
+                      {...email}
+                      placeholder="(예: DeepTime@google.com)"
+                      keyboardType="email-address"
                       returnKeyType="send"
                       autoCorrect={false}
-                      marginArray={[0, 0, 20, 0]}
+                      widthRatio={2.5}
+                      marginArray={[10, 0, 10, 0]}
                     />
+                    <MarginR style={{ width: constants.width / 40 }} />
                     <AuthButton
                       color="white"
-                      bgColor={"#0f4c82"}
-                      loading={loading}
-                      onPress={async () => {
-                        const fucResult = await cEmailOnClick()
-                        if (fucResult) {
-                          setEmailVisible(false)
+                      loading={vLoading}
+                      onPress={() => {
+                        if (data.email === email.value) {
+                          Alert.alert("기존 Email 주소와 동일합니다.")
+                        } else {
+                          sEmailOnClick()
                         }
                       }}
-                      text="인증 완료"
+                      text="인증"
+                      marginArray={[10, 0, 10, 0]}
+                      paddingArray={Platform.OS === "ios" ? [12, 10, 12, 10] : [15, 10, 15, 10]}
+                      widthRatio={LastWidth(1.7, 2.5, 40)}
                     />
-                  </StyledModalContainer>
-                </Modal>
-                <RowView>
+                  </RowView>
                   <AuthInput
-                    {...phoneNumber}
-                    paddingArray={[5, 5, 5, 5]}
-                    marginArray={[0, 0, 0, 0]}
-                    onChange={() => {}}
-                    placeholder="휴대폰 번호"
+                    {...emailKey}
+                    placeholder="인증번호 입력"
                     returnKeyType="send"
                     autoCorrect={false}
-                    widthRatio={2.5}
+                    marginArray={[0, 0, 20, 0]}
                   />
-                  <MarginR style={{ width: constants.width / 40 }} />
                   <AuthButton
                     color="white"
-                    onPress={() => {
-                      setPhoneVisible(true)
+                    bgColor={"#0f4c82"}
+                    loading={loading}
+                    onPress={async () => {
+                      const fucResult = await cEmailOnClick()
+                      if (fucResult) {
+                        setEmailVisible(false)
+                      }
                     }}
-                    text="입력"
-                    paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
-                    widthRatio={LastWidth(1.7, 2.5, 40)}
+                    text="인증 완료"
                   />
-                </RowView>
-                <Modal
-                  isVisible={isPhoneVisible}
-                  onBackdropPress={() => setPhoneVisible(false)}
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: Math.round(Dimensions.get("window").height),
+                </StyledModalContainer>
+              </Modal>
+              <RowView>
+                <AuthInput
+                  {...phoneNumber}
+                  paddingArray={[5, 5, 5, 5]}
+                  marginArray={[0, 0, 0, 0]}
+                  onChange={() => {}}
+                  placeholder="휴대폰 번호"
+                  returnKeyType="send"
+                  autoCorrect={false}
+                  widthRatio={2.5}
+                />
+                <MarginR style={{ width: constants.width / 40 }} />
+                <AuthButton
+                  color="white"
+                  onPress={() => {
+                    setPhoneVisible(true)
                   }}
-                >
-                  <StyledModalContainer style={{ width: constants.width / 1.5 }}>
-                    <TitleText>휴대폰 인증</TitleText>
-                    <RowView>
-                      <AuthInput
-                        {...phoneNumber}
-                        placeholder="(예:01012345678)"
-                        returnKeyType="send"
-                        keyboardType={"phone-pad"}
-                        autoCorrect={false}
-                        widthRatio={2.5}
-                        marginArray={[10, 0, 10, 0]}
-                      />
-                      <MarginR style={{ width: constants.width / 40 }} />
-                      <AuthButton
-                        color="white"
-                        loading={vLoading}
-                        onPress={sPhoneOnClick}
-                        text="인증"
-                        marginArray={[10, 0, 10, 0]}
-                        paddingArray={Platform.OS === "ios" ? [12, 10, 12, 10] : [15, 10, 15, 10]}
-                        widthRatio={LastWidth(1.7, 2.5, 40)}
-                      />
-                    </RowView>
+                  text="입력"
+                  paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+                  widthRatio={LastWidth(1.7, 2.5, 40)}
+                />
+              </RowView>
+              <Modal
+                isVisible={isPhoneVisible}
+                onBackdropPress={() => setPhoneVisible(false)}
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: Math.round(Dimensions.get("window").height),
+                }}
+              >
+                <StyledModalContainer style={{ width: constants.width / 1.5 }}>
+                  <TitleText>휴대폰 인증</TitleText>
+                  <RowView>
                     <AuthInput
-                      {...phoneKey}
-                      placeholder="인증번호 입력"
+                      {...phoneNumber}
+                      placeholder="(예:01012345678)"
                       returnKeyType="send"
+                      keyboardType={"phone-pad"}
                       autoCorrect={false}
-                      marginArray={[0, 0, 20, 0]}
+                      widthRatio={2.5}
+                      marginArray={[10, 0, 10, 0]}
                     />
+                    <MarginR style={{ width: constants.width / 40 }} />
                     <AuthButton
                       color="white"
-                      bgColor={"#0f4c82"}
-                      loading={loading}
-                      onPress={cPhoneOnClick}
-                      text="인증 완료"
+                      loading={vLoading}
+                      onPress={sPhoneOnClick}
+                      text="인증"
+                      marginArray={[10, 0, 10, 0]}
+                      paddingArray={Platform.OS === "ios" ? [12, 10, 12, 10] : [15, 10, 15, 10]}
+                      widthRatio={LastWidth(1.7, 2.5, 40)}
                     />
-                  </StyledModalContainer>
-                </Modal>
-                <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
-                {/* <SelectView style={{ width: constants.width / 1.7 }}>
+                  </RowView>
+                  <AuthInput
+                    {...phoneKey}
+                    placeholder="인증번호 입력"
+                    returnKeyType="send"
+                    autoCorrect={false}
+                    marginArray={[0, 0, 20, 0]}
+                  />
+                  <AuthButton
+                    color="white"
+                    bgColor={"#0f4c82"}
+                    loading={loading}
+                    onPress={cPhoneOnClick}
+                    text="인증 완료"
+                  />
+                </StyledModalContainer>
+              </Modal>
+              <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
+              {/* <SelectView style={{ width: constants.width / 1.7 }}>
                   <RowView>
                     <SelectView style={{ width: constants.width / 2.5, marginRight: 10 }}>
                       <RNPickerSelect
@@ -453,128 +455,122 @@ export default ({
                     />
                   </RowView>
                 </SelectView> */}
-                <Modal
-                  isVisible={isQVisible}
-                  onBackdropPress={() => setisQVisible(false)}
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: Math.round(Dimensions.get("window").height),
-                  }}
-                >
-                  <StyledModalContainer style={{ width: constants.width / 1.2 }}>
-                    <View>
-                      <Title>학습</Title>
-                      <Sub1>스케줄을 크게 '자습','강의' 2가지로 구분 가능</Sub1>
-                      <Sub>(자습과 인강 수강 위주의 생활패턴 사용자에게 적합)</Sub>
+              {/* <Modal
+                isVisible={isQVisible}
+                onBackdropPress={() => setisQVisible(false)}
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: Math.round(Dimensions.get("window").height),
+                }}
+              >
+                <StyledModalContainer style={{ width: constants.width / 1.2 }}>
+                  <View>
+                    <Title>학습</Title>
+                    <Sub1>스케줄을 크게 '자습','강의' 2가지로 구분 가능</Sub1>
+                    <Sub>(자습과 인강 수강 위주의 생활패턴 사용자에게 적합)</Sub>
 
-                      <Title>업무</Title>
-                      <Sub1>스케줄을 크게 '업무','개인' 2가지로 구분 가능</Sub1>
-                      <Sub>(직장 업무 및 자기 개발 위주의 생활패턴 사용자에게 적합)</Sub>
-                      <AuthButton
-                        color="white"
-                        bgColor={"#0f4c82"}
-                        loading={loading}
-                        onPress={() => {
-                          setisQVisible(false)
-                        }}
-                        text="닫기"
-                      />
-                    </View>
-                  </StyledModalContainer>
-                </Modal>
-                {studyPurpose.value === "학습" && (
-                  <>
-                    <SelectView style={{ width: constants.width / 1.7 }}>
-                      <RNPickerSelect
-                        {...studyGroup}
-                        style={style_tmp}
-                        placeholder={{
-                          label: "학습 그룹 1...",
-                          value: null,
-                          color: "red",
-                        }}
-                      />
-                    </SelectView>
-                    <SelectView style={{ width: constants.width / 1.7 }}>
-                      <RNPickerSelect
-                        {...studyGroup2}
-                        style={style_tmp}
-                        placeholder={{
-                          label: "학습 그룹 2...",
-                          value: null,
-                          color: "red",
-                        }}
-                      />
-                    </SelectView>
-                    <SelectView style={{ width: constants.width / 1.7 }}>
-                      <RNPickerSelect
-                        {...studyGroup3}
-                        style={style_tmp}
-                        placeholder={{
-                          label: "학습 그룹 3...",
-                          value: null,
-                          color: "red",
-                        }}
-                      />
-                    </SelectView>
-                  </>
-                )}
-                <SelectView style={{ width: constants.width / 1.7 }}>
-                  <RNPickerSelect
-                    {...myAddress1}
-                    style={style_tmp}
-                    placeholder={{
-                      label: "주소 구분 1...",
-                      value: null,
-                      color: "red",
-                    }}
-                  />
-                </SelectView>
-                <SelectView style={{ width: constants.width / 1.7 }}>
-                  <RNPickerSelect
-                    {...myAddress2}
-                    style={style_tmp}
-                    placeholder={{
-                      label: "주소 구분 2...",
-                      value: null,
-                      color: "red",
-                    }}
-                  />
-                </SelectView>
-                <KeyboardAwareScrollView>
-                  <>
-                    {/* <SelectView style={{ height: constants.height / 8 }}> */}
-                    <AuthInputline
-                      // paddingArray={[0, 0, 90, 5]}
-                      numberOfLines={3}
-                      {...bio}
-                      placeholder="자기소개 (150자 이내)"
-                      returnKeyType="done"
-                      autoCorrect={false}
-                      // {...bio}
-                      // placeholder={"자기소개 (150자 이내)"}
-                      // required={false}
+                    <Title>업무</Title>
+                    <Sub1>스케줄을 크게 '업무','개인' 2가지로 구분 가능</Sub1>
+                    <Sub>(직장 업무 및 자기 개발 위주의 생활패턴 사용자에게 적합)</Sub>
+                    <AuthButton
+                      color="white"
+                      bgColor={"#0f4c82"}
+                      loading={loading}
+                      onPress={() => {
+                        setisQVisible(false)
+                      }}
+                      text="닫기"
                     />
-                    {/* </SelectView> */}
-                  </>
-                </KeyboardAwareScrollView>
-                <CheckWrap style={{ width: constants.width / 1.6 }}>
-                  <CheckBox checked={marketing} onPress={() => onChangeMarketing()} />
-                  <View style={{ marginLeft: 15 }}>
-                    <Text>마케팅 정보 수신 동의 </Text>
                   </View>
-                </CheckWrap>
-                <AuthButton
-                  color="white"
-                  bgColor={"#0f4c82"}
-                  loading={acLoading}
-                  onPress={onEditAccount}
-                  text="수정"
-                  marginArray={[0, 0, 0, 0]}
+                </StyledModalContainer>
+              </Modal> */}
+              {studyPurpose.value === "학습" && (
+                <>
+                  <SelectView style={{ width: constants.width / 1.7 }}>
+                    <RNPickerSelect
+                      {...studyGroup}
+                      style={style_tmp}
+                      placeholder={{
+                        label: "학습 그룹 1...",
+                        value: null,
+                        color: "red",
+                      }}
+                    />
+                  </SelectView>
+                  <SelectView style={{ width: constants.width / 1.7 }}>
+                    <RNPickerSelect
+                      {...studyGroup2}
+                      style={style_tmp}
+                      placeholder={{
+                        label: "학습 그룹 2...",
+                        value: null,
+                        color: "red",
+                      }}
+                    />
+                  </SelectView>
+                  <SelectView style={{ width: constants.width / 1.7 }}>
+                    <RNPickerSelect
+                      {...studyGroup3}
+                      style={style_tmp}
+                      placeholder={{
+                        label: "학습 그룹 3...",
+                        value: null,
+                        color: "red",
+                      }}
+                    />
+                  </SelectView>
+                </>
+              )}
+              <SelectView style={{ width: constants.width / 1.7 }}>
+                <RNPickerSelect
+                  {...myAddress1}
+                  style={style_tmp}
+                  placeholder={{
+                    label: "주소 구분 1...",
+                    value: null,
+                    color: "red",
+                  }}
                 />
-              </ScrollView>
+              </SelectView>
+              <SelectView style={{ width: constants.width / 1.7 }}>
+                <RNPickerSelect
+                  {...myAddress2}
+                  style={style_tmp}
+                  placeholder={{
+                    label: "주소 구분 2...",
+                    value: null,
+                    color: "red",
+                  }}
+                />
+              </SelectView>
+              <AuthInputline
+                // paddingArray={[0, 0, 90, 5]}
+                numberOfLines={3}
+                {...bio}
+                placeholder="자기소개 (150자 이내)"
+                returnKeyType="done"
+                autoCorrect={false}
+                // {...bio}
+                // placeholder={"자기소개 (150자 이내)"}
+                // required={false}
+              />
+              <CheckWrap style={{ width: constants.width / 1.6 }}>
+                <CheckBox checked={marketing} onPress={() => onChangeMarketing()} />
+                <CheckView>
+                  <Text>마케팅 정보 수신 동의 </Text>
+                </CheckView>
+              </CheckWrap>
+              <AuthButton
+                color="white"
+                bgColor={"#0f4c82"}
+                loading={acLoading}
+                onPress={onEditAccount}
+                text="수정"
+                marginArray={[0, 0, 0, 0]}
+              />
+              {/* </ScrollView> */}
             </EmptyView>
           ) : (
             <EmptyView>
@@ -628,9 +624,9 @@ export default ({
               />
             </EmptyView>
           )}
-        </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+        </MainView>
+      </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
   )
 }
 

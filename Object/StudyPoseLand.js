@@ -153,14 +153,14 @@ const PoseCamera = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setSetting((setting) => !setting)
-    }, 1000)
+    }, 990)
     setTimeout(function () {
       clearInterval(interval)
       if (Platform.OS !== "ios") {
         setSetting(true)
       }
       setandroidCam(false)
-    }, 10000)
+    }, 9900)
   }, [])
   async function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))

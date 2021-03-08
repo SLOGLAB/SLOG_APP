@@ -6,7 +6,17 @@ import GroupWeekController from "./GroupWeekController"
 import GroupMonthController from "./GroupMonthController"
 import { StatusBar } from "react-native"
 
-export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
+export default ({
+  groupData,
+  groupRefetch,
+  loading,
+  navigation,
+  myData,
+  modlaOutMember,
+  setmodlaOutMember,
+  onOutMember,
+  Groupid,
+}) => {
   return (
     <Container>
       {Platform.OS == "ios" ? (
@@ -36,6 +46,10 @@ export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
             loading={loading}
             navigation={navigation}
             myData={myData}
+            modlaOutMember={modlaOutMember}
+            setmodlaOutMember={setmodlaOutMember}
+            onOutMember={onOutMember}
+            Groupid={Groupid}
           />
         </Tab>
         <Tab
@@ -58,6 +72,10 @@ export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
             loading={loading}
             navigation={navigation}
             myData={myData}
+            modlaOutMember={modlaOutMember}
+            setmodlaOutMember={setmodlaOutMember}
+            onOutMember={onOutMember}
+            Groupid={Groupid}
           />
         </Tab>
         <Tab
@@ -80,6 +98,10 @@ export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
             loading={loading}
             navigation={navigation}
             myData={myData}
+            modlaOutMember={modlaOutMember}
+            setmodlaOutMember={setmodlaOutMember}
+            onOutMember={onOutMember}
+            Groupid={Groupid}
           />
         </Tab>
       </Tabs>

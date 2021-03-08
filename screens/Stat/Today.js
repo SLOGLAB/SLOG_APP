@@ -453,8 +453,6 @@ const Today = ({
   if (!loading) {
     todaySchedule_calculate()
     todayGraph_calculate()
-    // console.log(self_percentT, "1")
-    // console.log(lecture_percentT, "2")
   }
   const [modalVisible, setModalVisible] = useState(false)
 

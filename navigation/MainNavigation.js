@@ -1,9 +1,5 @@
-// import { createStackNavigator, createAppContainer } from "react-navigation"
-
 import { createStackNavigator } from "react-navigation-stack"
 import { createAppContainer } from "react-navigation"
-// import React from "react"
-
 import TabNavigation from "./TabNavigation"
 import MenuNavigation from "./MenuNavigation"
 import TimetableNavi from "./TimetableNavi"
@@ -17,6 +13,7 @@ import Timecontrol from "../screens/TimeTable/Timecontrol"
 import PhotoNavigation from "./PhotoNavigation"
 import Userdetail from "../screens/UserDetail/UserDetail"
 import OneGroupContainer from "../screens/Group/OneGroup/OneGroupContainer"
+import EditGroup from "../screens/Group/Edit/EditGroup"
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -29,6 +26,7 @@ const MainNavigation = createStackNavigator(
     Userdetail,
     Timecontrol,
     OneGroupContainer,
+    EditGroup,
   },
   {
     defaultNavigationOptions: {

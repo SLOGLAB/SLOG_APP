@@ -286,6 +286,7 @@ const UserDetailPresenter = ({
   unFollowMuation,
   refetch,
   myname,
+  bool,
 }) => {
   let existTime_sec = 0
   data.seeUser.times.forEach((time) => {
@@ -340,13 +341,23 @@ const UserDetailPresenter = ({
           <StatusBar barStyle="light-content" />
         )}
         <Setting>
-          <TouchableOpacity onPress={() => navigation.navigate("TabNavigation")}>
-            <Icon
-              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-              color={"#000000"}
-              size={40}
-            />
-          </TouchableOpacity>
+          {bool ? (
+            <TouchableOpacity onPress={() => navigation.navigate("OneGroupContainer")}>
+              <Icon
+                name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+                color={"#000000"}
+                size={40}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => navigation.navigate("TabNavigation")}>
+              <Icon
+                name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+                color={"#000000"}
+                size={40}
+              />
+            </TouchableOpacity>
+          )}
         </Setting>
 
         <MainView>

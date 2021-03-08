@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { Alert } from "react-native"
-import { TouchableOpacity, ScrollView } from "react-native-gesture-handler"
+import { TouchableOpacity, ScrollView, Dimensions } from "react-native-gesture-handler"
 import styled from "styled-components"
 import Icon from "../../../components/Icon"
+import AuthButton from "../../../components/AuthButton"
+import LastWidth from "../../../components/LastWidth"
 import GroupSwiperBase from "../GroupStat/GroupSwiperBase"
+import Modal from "react-native-modal"
+
 const MainView = styled.View`
   justify-content: center;
   align-items: center;
@@ -40,9 +44,11 @@ const GroupText = styled.Text`
 const BoxTopView = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   padding-left: 10;
-  padding-top: 5;
+  padding-top: 10;
   width: 100%;
+  margin-top: 20;
 `
 const BoxTopView2 = styled.View`
   flex-direction: row;
@@ -50,18 +56,119 @@ const BoxTopView2 = styled.View`
   padding-right: 10;
   width: 100%;
 `
-export default ({ groupData, navigation, myData, groupRefetch, loading }) => {
+const BoxinView = styled.View`
+  flex-direction: row;
+  justify-content: center;
+`
+const BoxinButtonView = styled.View`
+  margin-right: 15px;
+`
+const StyledPlayModalContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.4;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const ModalView = styled.View`
+  flex: 1;
+  justify-content: center;
+`
+const Container = styled.TouchableOpacity`
+  /* padding-right: 20px; */
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`
+export default ({
+  groupData,
+  navigation,
+  myData,
+  Groupid,
+  groupRefetch,
+  loading,
+  clearintervalrefetch,
+  onDelete,
+  onOut,
+  modalPlayVisible,
+  setModalPlayVisible,
+  modlaOutMember,
+  setmodlaOutMember,
+  onOutMember,
+  onBookmark,
+}) => {
   useEffect(() => {}, [])
   return (
     <MainView>
       <BoxTopView>
-        <TouchableOpacity onPress={() => navigation.navigate("TabNavigation")}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("TabNavigation")
+            clearintervalrefetch()
+          }}
+        >
           <Icon
             name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
             color={"#000000"}
             size={40}
           />
         </TouchableOpacity>
+        <BoxinView>
+          <BoxinButtonView>
+            <TouchableOpacity
+              onPress={() => {
+                groupRefetch()
+              }}
+            >
+              <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={30} />
+            </TouchableOpacity>
+          </BoxinButtonView>
+          <BoxinButtonView>
+            {groupData.imManager ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setModalPlayVisible(!modalPlayVisible)
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => {}}>
+                <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
+              </TouchableOpacity>
+            )}
+          </BoxinButtonView>
+          <BoxinButtonView>
+            {groupData.imManager ? (
+              <TouchableOpacity
+                onPress={() => {
+                  onDelete(groupData.id)
+                  onBookmark(Groupid, false)
+                  clearintervalrefetch()
+
+                  navigation.navigate("TabNavigation")
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-trash" : "md-trash"} size={30} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  onOut(groupData.id)
+                  onBookmark(Groupid, false)
+                  clearintervalrefetch()
+
+                  navigation.navigate("TabNavigation")
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-log-out" : "md-log-out"} size={30} />
+              </TouchableOpacity>
+            )}
+          </BoxinButtonView>
+        </BoxinView>
       </BoxTopView>
       <GroupBox>
         <BoxTopView2>
@@ -79,7 +186,39 @@ export default ({ groupData, navigation, myData, groupRefetch, loading }) => {
         loading={loading}
         navigation={navigation}
         myData={myData}
+        modlaOutMember={modlaOutMember}
+        setmodlaOutMember={setmodlaOutMember}
+        onOutMember={onOutMember}
+        Groupid={Groupid}
       />
+      <Modal
+        isVisible={modalPlayVisible}
+        onBackdropPress={() => setModalPlayVisible(false)}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <StyledPlayModalContainer>
+          <ModalView>
+            <Container>
+              {groupData.imManager ? (
+                <AuthButton
+                  onPress={() => {
+                    navigation.navigate("EditGroup", { id: groupData.id })
+                    setModalPlayVisible(false)
+                  }}
+                  text="그룹 정보 수정"
+                  color="white"
+                  bgColor={"#7BA9EB"}
+                  widthRatio={LastWidth(1, 2, 10)}
+                />
+              ) : null}
+            </Container>
+          </ModalView>
+        </StyledPlayModalContainer>
+      </Modal>
     </MainView>
   )
 }

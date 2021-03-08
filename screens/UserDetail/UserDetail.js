@@ -122,6 +122,7 @@ export default ({ navigation }) => {
   const [modalVisible2, setModalVisible2] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const myname = navigation.getParam("myname")
+  const bool = navigation.getParam("bool")
   const onRefresh = async () => {
     try {
       setRefreshing(true)
@@ -156,6 +157,7 @@ export default ({ navigation }) => {
             unFollowMuation={unFollowMuation}
             refetch={refetch}
             myname={myname}
+            bool={bool}
           />
         )
       )}

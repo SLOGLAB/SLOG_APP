@@ -4,7 +4,17 @@ import GroupToday from "./GroupToday"
 import { useQuery } from "@apollo/react-hooks"
 import Loader from "../../../components/Loader"
 
-export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
+export default ({
+  groupData,
+  groupRefetch,
+  loading,
+  navigation,
+  myData,
+  modlaOutMember,
+  setmodlaOutMember,
+  onOutMember,
+  Groupid,
+}) => {
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
   var todayyear = new Date().getFullYear() //Current Year
@@ -79,6 +89,10 @@ export default ({ groupData, groupRefetch, loading, navigation, myData }) => {
           selectPercent2={selectPercent2}
           setSelectPercent2={setSelectPercent2}
           navigation={navigation}
+          modlaOutMember={modlaOutMember}
+          setmodlaOutMember={setmodlaOutMember}
+          onOutMember={onOutMember}
+          Groupid={Groupid}
         />
       )}
     </ScrollView>

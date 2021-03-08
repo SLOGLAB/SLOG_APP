@@ -66,17 +66,17 @@ export default ({
       }
     }
 
-    Alert.alert("", "해당 TASK이 기존 스케줄에서 삭제됩니다.\n그래도 삭제하시겠습니까?", [
-      {
-        text: "YES",
-        onPress: () => {
-          excMutation()
-        },
-      },
+    Alert.alert("", "해당 TASK가 기존 스케줄에서 삭제됩니다.\n그래도 삭제하시겠습니까?", [
       {
         text: "NO",
         onPress: () => {
           return
+        },
+      },
+      {
+        text: "YES",
+        onPress: () => {
+          excMutation()
         },
         style: "cancel",
       },

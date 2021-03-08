@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Alert } from "react-native"
+import { Alert, ScrollView, RefreshControl } from "react-native"
 import styled from "styled-components"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../../components/Loader"
@@ -10,9 +10,12 @@ const MainView = styled.View`
   align-items: center;
   flex: 1;
 `
+let playAlert = undefined
 
 export default ({ navigation }) => {
   const { loading, data, refetch } = useQuery(MY_GROUP)
+  const [refreshing, setRefreshing] = useState(false)
+
   const [bookmarkGroupMutation] = useMutation(BOOKMARK_GROUP)
   const onBookmark = async (groupId, orderBool) => {
     try {
@@ -34,6 +37,7 @@ export default ({ navigation }) => {
       Alert.alert("그룹 북마크는 1개만 가능합니다. ")
     }
   }
+
   return (
     <>
       {loading ? (

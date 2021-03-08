@@ -7,9 +7,30 @@ import Modal from "react-native-modal"
 import WeekRange from "../../../components/Date/WeekRange"
 import ObjectCopy from "../../../components/ObjectCopy"
 import HourMinCal from "../../../components/HourMinCal"
-
+import StackedGroupBar from "../../../graphs/StackedGroupBar"
+import constants from "../../../constants"
+import AuthButton from "../../../components/AuthButton"
+import LastWidth from "../../../components/LastWidth"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-
+const StyledPlayModalContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.3;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const ModalView = styled.View`
+  flex: 1;
+  justify-content: center;
+`
+const Container = styled.TouchableOpacity`
+  /* padding-right: 20px; */
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`
 const View = styled.View`
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10;
@@ -44,8 +65,8 @@ const IndiviList = styled.View`
   justify-content: center;
   align-items: center;
   margin-left: 18;
-  flex: 1;
-  width: ${WIDTH / 6.5};
+  width: ${constants.width / 5};
+  margin-top: 10;
   /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
 `
 const TextTimestyle = styled.Text`
@@ -56,7 +77,6 @@ const TextTimestyle = styled.Text`
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const AvartarView = styled.View`
-  flex: 0.75;
   /* background-color: rgba(196, 196, 196, 1); */
 `
 const FollowerName_Text = styled.Text`
@@ -65,16 +85,23 @@ const FollowerName_Text = styled.Text`
   /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
 `
 const AvatarView = styled.View`
-  height: ${HEIGHT / 8};
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   flex-direction: row;
+  width: ${constants.width / 1};
+  background-color: rgba(255, 255, 255, 1);
+  flex-wrap: wrap;
+  margin-top: 10;
+  border-radius: 10;
+  flex: 1;
 `
 let firstTime = 0
 let averageTime = 0
 let existTime_Array = []
 let selfIndex = -1
 let myTime = 0
+let name = ""
+
 const GroupWeeks = ({
   myData,
   groupData,
@@ -90,6 +117,10 @@ const GroupWeeks = ({
   selectPercent2,
   setSelectPercent2,
   navigation,
+  modlaOutMember,
+  setmodlaOutMember,
+  onOutMember,
+  Groupid,
 }) => {
   /////월요일부터 이번주 공부시간///////
   const [selectDay, setselectDay] = useState(targetToday)
@@ -243,10 +274,20 @@ const GroupWeeks = ({
       </TodayView>
       <View>
         <CenterView>
-          <SubText>1등 시간:{firstTime}초</SubText>
+          <StackedGroupBar
+            data_1={[averageTime / 60, myTime / 60, firstTime / 60]}
+            labels={["평균 시간", "나의 시간", "1등 시간"]}
+            data_2={["#8DE4AB", "#58A0F5", "#EA3223"]}
+            label_1={"학습"}
+            label_2={"목표"}
+            title={"과목별 학습 시간"}
+            title_x={"시간(분)"}
+            stepSize_x={60}
+          />
+          {/* <SubText>1등 시간:{firstTime}초</SubText>
           <SubText>평균 시간: {averageTime}초</SubText>
           <SubText>나의 시간: {myTime}초</SubText>
-          <SubText>그룹 최소 학습 시간: {groupData.targetTime}시간</SubText>
+          <SubText>그룹 최소 학습 시간: {groupData.targetTime}시간</SubText> */}
         </CenterView>
       </View>
       <AvatarView>
@@ -258,12 +299,12 @@ const GroupWeeks = ({
             </TextTimestyle>
             <AvartarView>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Userdetail", {
-                    username: list.username,
-                    myname: myData.username,
-                  })
-                }
+                onPress={() => {
+                  if (list.username !== myData.username) {
+                    name = list.username
+                    setmodlaOutMember(!modlaOutMember)
+                  }
+                }}
               >
                 <Image
                   style={{
@@ -285,6 +326,66 @@ const GroupWeeks = ({
             <FollowerName_Text>
               {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
             </FollowerName_Text>
+            <Modal
+              isVisible={modlaOutMember}
+              onBackdropPress={() => setmodlaOutMember(false)}
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StyledPlayModalContainer>
+                <ModalView>
+                  <Container>
+                    {groupData.imManager ? (
+                      <>
+                        <AuthButton
+                          onPress={() => {
+                            navigation.navigate("Userdetail", {
+                              username: name,
+                              myname: myData.username,
+                              bool: true,
+                            })
+                            setmodlaOutMember(false)
+                          }}
+                          text="프로필 이동"
+                          color="white"
+                          bgColor={"#7BA9EB"}
+                          widthRatio={LastWidth(1, 2, 10)}
+                        />
+
+                        <StyledPlayModalContainer />
+                        <AuthButton
+                          onPress={() => {
+                            onOutMember(Groupid, list.id)
+                          }}
+                          text="추방"
+                          color="white"
+                          bgColor={"#7BA9EB"}
+                          widthRatio={LastWidth(1, 2, 10)}
+                        />
+                      </>
+                    ) : (
+                      <AuthButton
+                        onPress={() => {
+                          navigation.navigate("Userdetail", {
+                            username: name,
+                            myname: myData.username,
+                            bool: true,
+                          })
+                          setmodlaOutMember(false)
+                        }}
+                        text="프로필 이동"
+                        color="white"
+                        bgColor={"#7BA9EB"}
+                        widthRatio={LastWidth(1, 2, 10)}
+                      />
+                    )}
+                  </Container>
+                </ModalView>
+              </StyledPlayModalContainer>
+            </Modal>
           </IndiviList>
         ))}
       </AvatarView>

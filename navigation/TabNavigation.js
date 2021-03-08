@@ -113,7 +113,6 @@ export default createBottomTabNavigator(
     // },
     TimetableWeek: {
       screen: TimetableWeek,
-
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
@@ -134,21 +133,21 @@ export default createBottomTabNavigator(
     //     ),
     //   },
     // },
-    // MyGroupContainer: {
-    //   screen: stackFactory(MyGroupContainer, {
-    //     // headerLeft: "DEEPTIME",
-    //     // headerRight: <ToDoButton />,
-    //     title: "나의 그룹",
-    //     headerTitleStyle: {
-    //       fontFamily: "GmarketBold",
-    //     },
-    //   }),
-    //   navigationOptions: {
-    //     tabBarIcon: ({ focused }) => (
-    //       <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-people" : "md-people"} />
-    //     ),
-    //   },
-    // },
+    MyGroupContainer: {
+      screen: stackFactory(MyGroupContainer, {
+        // headerLeft: "DEEPTIME",
+        // headerRight: <ToDoButton />,
+        title: "나의 그룹",
+        headerTitleStyle: {
+          fontFamily: "GmarketBold",
+        },
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-people" : "md-people"} />
+        ),
+      },
+    },
     ProfileNavi: {
       screen: ProfileNavi,
 

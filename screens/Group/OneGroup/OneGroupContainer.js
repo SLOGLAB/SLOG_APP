@@ -29,7 +29,15 @@ export const ME = gql`
     }
   }
 `
+export const BOOKMARK_GROUP = gql`
+  mutation bookmarkGroup($groupId: String!, $orderBool: Boolean!) {
+    bookmarkGroup(groupId: $groupId, orderBool: $orderBool)
+  }
+`
+let playAlert = undefined
 export default ({ navigation }) => {
+  const [modalPlayVisible, setModalPlayVisible] = useState(false)
+  const [modlaOutMember, setmodlaOutMember] = useState(false)
   const { loading, data: groupData, refetch: groupRefetch } = useQuery(SEEONE_GROUP, {
     variables: { groupId: navigation.getParam("id") },
   })
@@ -50,7 +58,166 @@ export default ({ navigation }) => {
   const [outMemberMutation] = useMutation(OUT_MEMBER, {
     refetchQueries: [{ query: SEE_GROUP }, { query: MY_GROUP }],
   })
-  useEffect(() => {}, [])
+  const [bookmarkGroupMutation] = useMutation(BOOKMARK_GROUP)
+  const onBookmark = async (groupId, orderBool) => {
+    try {
+      const {
+        data: { bookmarkGroup },
+      } = await bookmarkGroupMutation({
+        variables: {
+          groupId,
+          orderBool,
+        },
+      })
+      if (bookmarkGroup) {
+        await refetch()
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const onDelete = async (groupId) => {
+    Alert.alert("", "정말로 그룹을 삭제하시겠습니까?", [
+      {
+        text: "YES",
+        onPress: () => {
+          Delete(groupId)
+        },
+        style: "cancel",
+      },
+      {
+        text: "NO",
+        onPress: () => {
+          return
+        },
+      },
+    ])
+    const Delete = async (groupId) => {
+      try {
+        const {
+          data: { deleteGroup },
+        } = await deleteGroupMutation({
+          variables: {
+            groupId,
+          },
+        })
+        if (!deleteGroup) {
+          Alert.alert("그룹을 삭제할 수 없습니다.")
+        } else {
+          close()
+          Alert.alert("그룹을 삭제하였습니다.")
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+  const onOut = async (groupId) => {
+    Alert.alert("", "정말로 그룹을 떠나시겠습니까?", [
+      {
+        text: "YES",
+        onPress: () => {
+          Outgroup(groupId)
+        },
+        style: "cancel",
+      },
+      {
+        text: "NO",
+        onPress: () => {
+          return
+        },
+      },
+    ])
+    const Outgroup = async (groupId) => {
+      try {
+        const {
+          data: { outGroup },
+        } = await outGroupMutation({
+          variables: {
+            groupId,
+          },
+        })
+        if (!outGroup) {
+          Alert.alert("그룹을 떠날 수 없습니다.")
+        } else {
+          Alert.alert("그룹을 떠났습니다.")
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  const onOutMember = async (groupId, memberId) => {
+    Alert.alert("", "정말로 그룹원을 추방하시겠습니까?", [
+      {
+        text: "YES",
+        onPress: () => {
+          OutMember(groupId, memberId)
+        },
+        style: "cancel",
+      },
+      {
+        text: "NO",
+        onPress: () => {
+          return
+        },
+      },
+    ])
+    const OutMember = async (groupId, memberId) => {
+      try {
+        const {
+          data: { outMember },
+        } = await outMemberMutation({
+          variables: {
+            groupId,
+            memberId,
+          },
+        })
+        if (!outMember) {
+          alert("그룹원을 추방할 수 없습니다.")
+        } else {
+          await groupRefetch()
+          // inClose();
+          Alert.alert("그룹원을 추방하였습니다.")
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        setmodlaOutMember(false)
+      }
+    }
+  }
+  const onJoin = async (groupId) => {
+    try {
+      const {
+        data: { joinGroup },
+      } = await joinGroupMutation({
+        variables: {
+          groupId,
+        },
+      })
+      if (!joinGroup) {
+        Alert.alert("그룹을 가입할 수 없습니다.")
+      } else {
+        await groupRefetch()
+        Alert.alert("새로운 그룹에 가입하였습니다.")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    playAlert = setInterval(function () {
+      groupRefetch()
+    }, 60000)
+  }, [])
+  const clearintervalrefetch = () => {
+    clearInterval(playAlert)
+  }
+  useEffect(() => {
+    groupRefetch()
+  }, [])
   return (
     <>
       {loading || myLoading ? (
@@ -65,6 +232,15 @@ export default ({ navigation }) => {
           groupRefetch={groupRefetch}
           loading={loading}
           myData={myData.me}
+          clearintervalrefetch={clearintervalrefetch}
+          onDelete={onDelete}
+          onOut={onOut}
+          modalPlayVisible={modalPlayVisible}
+          setModalPlayVisible={setModalPlayVisible}
+          modlaOutMember={modlaOutMember}
+          setmodlaOutMember={setmodlaOutMember}
+          onOutMember={onOutMember}
+          onBookmark={onBookmark}
         />
       )}
     </>
