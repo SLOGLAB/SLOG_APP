@@ -20,6 +20,12 @@ const GroupBox = styled.View`
   border-color: rgba(196, 196, 196, 1);
   background-color: rgba(199, 199, 199, 1);
 `
+const BoxIn = styled.View`
+  flex: 1;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`
 const LineView = styled.View`
   width: 100%;
   height: 5%;
@@ -56,7 +62,21 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
   return (
     <MainView>
       {groupData.length < 1 ? (
-        <GroupBox></GroupBox>
+        <GroupBox>
+          <BoxIn>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SearchGroupContainer")
+              }}
+            >
+              <Icon
+                name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
+                size={45}
+                color={"#224C7E"}
+              />
+            </TouchableOpacity>
+          </BoxIn>
+        </GroupBox>
       ) : (
         <GroupBox>
           <BoxTopView>
@@ -99,7 +119,21 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       )}
       <LineView />
       {groupData.length < 2 ? (
-        <GroupBox></GroupBox>
+        <GroupBox>
+          <BoxIn>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SearchGroupContainer")
+              }}
+            >
+              <Icon
+                name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
+                size={45}
+                color={"#224C7E"}
+              />
+            </TouchableOpacity>
+          </BoxIn>
+        </GroupBox>
       ) : (
         <GroupBox>
           <BoxTopView>
@@ -141,7 +175,21 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       )}
       <LineView />
       {groupData.length < 3 ? (
-        <GroupBox></GroupBox>
+        <GroupBox>
+          <BoxIn>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SearchGroupContainer")
+              }}
+            >
+              <Icon
+                name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
+                size={45}
+                color={"#224C7E"}
+              />
+            </TouchableOpacity>
+          </BoxIn>
+        </GroupBox>
       ) : (
         <GroupBox>
           <BoxTopView>

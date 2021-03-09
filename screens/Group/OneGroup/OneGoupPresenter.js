@@ -48,7 +48,7 @@ const BoxTopView = styled.View`
   padding-left: 10;
   padding-top: 10;
   width: 100%;
-  margin-top: 20;
+  margin-top: 25;
 `
 const BoxTopView2 = styled.View`
   flex-direction: row;
@@ -99,75 +99,114 @@ export default ({
   setmodlaOutMember,
   onOutMember,
   onBookmark,
+  search,
+  onJoin,
+  MyGroupdata,
 }) => {
+  let list = []
+  for (var i = 0; i < MyGroupdata.myGroup.length; i += 1) {
+    var picked = MyGroupdata.myGroup[i].id
+    list.push(picked)
+  }
+  let findmygroup = list.findIndex((e) => e == groupData.id)
   useEffect(() => {}, [])
   return (
     <MainView>
       <BoxTopView>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("TabNavigation")
-            clearintervalrefetch()
-          }}
-        >
-          <Icon
-            name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-            color={"#000000"}
-            size={40}
-          />
-        </TouchableOpacity>
+        {search ? (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SearchGroupContainer")
+              clearintervalrefetch()
+            }}
+          >
+            <Icon
+              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+              color={"#000000"}
+              size={40}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("TabNavigation")
+              clearintervalrefetch()
+            }}
+          >
+            <Icon
+              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+              color={"#000000"}
+              size={40}
+            />
+          </TouchableOpacity>
+        )}
         <BoxinView>
-          <BoxinButtonView>
-            <TouchableOpacity
-              onPress={() => {
-                groupRefetch()
-              }}
-            >
-              <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={30} />
-            </TouchableOpacity>
-          </BoxinButtonView>
-          <BoxinButtonView>
-            {groupData.imManager ? (
-              <TouchableOpacity
+          {findmygroup == -1 ? (
+            <>
+              <AuthButton
                 onPress={() => {
-                  setModalPlayVisible(!modalPlayVisible)
-                }}
-              >
-                <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => {}}>
-                <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
-              </TouchableOpacity>
-            )}
-          </BoxinButtonView>
-          <BoxinButtonView>
-            {groupData.imManager ? (
-              <TouchableOpacity
-                onPress={() => {
-                  onDelete(groupData.id)
-                  onBookmark(Groupid, false)
-                  clearintervalrefetch()
-
+                  onJoin(groupData.id)
                   navigation.navigate("TabNavigation")
-                }}
-              >
-                <Icon name={Platform.OS === "ios" ? "ios-trash" : "md-trash"} size={30} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  onOut(groupData.id)
-                  onBookmark(Groupid, false)
                   clearintervalrefetch()
-
-                  navigation.navigate("TabNavigation")
                 }}
-              >
-                <Icon name={Platform.OS === "ios" ? "ios-log-out" : "md-log-out"} size={30} />
-              </TouchableOpacity>
-            )}
-          </BoxinButtonView>
+                text="가입하기"
+                color="white"
+                bgColor={"#CA5040"}
+                widthRatio={LastWidth(1, 2, 5)}
+              />
+              <BoxinButtonView></BoxinButtonView>
+            </>
+          ) : (
+            <>
+              <BoxinButtonView>
+                <TouchableOpacity
+                  onPress={() => {
+                    groupRefetch()
+                  }}
+                >
+                  <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={30} />
+                </TouchableOpacity>
+              </BoxinButtonView>
+              <BoxinButtonView>
+                {groupData.imManager ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalPlayVisible(!modalPlayVisible)
+                    }}
+                  >
+                    <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={() => {}}>
+                    <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
+                  </TouchableOpacity>
+                )}
+              </BoxinButtonView>
+              <BoxinButtonView>
+                {groupData.imManager ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onDelete(groupData.id)
+                      onBookmark(Groupid, false)
+                      clearintervalrefetch()
+                    }}
+                  >
+                    <Icon name={Platform.OS === "ios" ? "ios-trash" : "md-trash"} size={30} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onOut(groupData.id)
+                      onBookmark(Groupid, false)
+                      clearintervalrefetch()
+                    }}
+                  >
+                    <Icon name={Platform.OS === "ios" ? "ios-log-out" : "md-log-out"} size={30} />
+                  </TouchableOpacity>
+                )}
+              </BoxinButtonView>
+            </>
+          )}
         </BoxinView>
       </BoxTopView>
       <GroupBox>

@@ -14,6 +14,9 @@ import PhotoNavigation from "./PhotoNavigation"
 import Userdetail from "../screens/UserDetail/UserDetail"
 import OneGroupContainer from "../screens/Group/OneGroup/OneGroupContainer"
 import EditGroup from "../screens/Group/Edit/EditGroup"
+import CreateGroupContainer from "../screens/Group/CreateGroup/CreateGroupContainer"
+import SearchGroupContainer from "../screens/Group/SearchGroup/SearchGroupContainer"
+
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -27,6 +30,8 @@ const MainNavigation = createStackNavigator(
     Timecontrol,
     OneGroupContainer,
     EditGroup,
+    CreateGroupContainer,
+    SearchGroupContainer,
   },
   {
     defaultNavigationOptions: {

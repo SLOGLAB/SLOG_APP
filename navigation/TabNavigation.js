@@ -14,7 +14,7 @@ import SwiperBase from "../screens/Stat/SwiperBase"
 // import UserProfile from "../screens/Profile/UserProfile"
 import ToDoButton from "../screens/TodoList/ToDoButton"
 import MyGroupContainer from "../screens/Group/MyGoup/MyGroupContainer"
-
+import SearchGroupButton from "../screens/Group/SearchGroup/SearchGroupButton"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
     {
@@ -136,7 +136,7 @@ export default createBottomTabNavigator(
     MyGroupContainer: {
       screen: stackFactory(MyGroupContainer, {
         // headerLeft: "DEEPTIME",
-        // headerRight: <ToDoButton />,
+        headerRight: <SearchGroupButton />,
         title: "나의 그룹",
         headerTitleStyle: {
           fontFamily: "GmarketBold",

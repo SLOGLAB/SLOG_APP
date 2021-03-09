@@ -40,6 +40,7 @@ const ProfileHeader = styled.View`
   border-radius: 20;
   margin-left: 20;
   margin-right: 20;
+  margin-bottom: 45;
 `
 const MainView = styled.View`
   align-items: center;

@@ -121,6 +121,7 @@ const PoseCamera = ({
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [androidCam, setandroidCam] = useState(true)
   const [personOnoff, setpersonOnoff] = useState(true)
+  // const [androidTime, setandroidTime] = useState(1)
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
 
@@ -153,14 +154,16 @@ const PoseCamera = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setSetting((setting) => !setting)
-    }, 990)
+    }, 980)
+    setTimeout(function () {
+      setandroidCam(false)
+    }, 9000)
     setTimeout(function () {
       clearInterval(interval)
       if (Platform.OS !== "ios") {
         setSetting(true)
       }
-      setandroidCam(false)
-    }, 9900)
+    }, 9800)
   }, [])
   async function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))

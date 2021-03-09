@@ -6,31 +6,32 @@ import { Alert } from "react-native"
 
 import { studyOption_group } from "../../../components/LongArray"
 import useSelect from "../../../hooks/useSelect"
-import useSelect_dynamic from "../../../hooks/useSelect_dynamic"
-import useSelect_dynamic2 from "../../../hooks/useSelect_dynamic2"
-import EditGroupP from "./EditGroupP"
+import { CREATE_GROUP } from "../SearchGroup/SearchGroupQueries"
+import CreateGroupPresenter from "./CreateGroupPresenter"
+import { MY_GROUP } from "../MyGoup/MyGroupQueries"
 // studyOption_group
-const EditGroupC = ({ navigation, data, GroupId, onRefresh, loading, editGroupMutation }) => {
+const CreateGroupContainer = ({ navigation }) => {
+  const [createGroupMutation] = useMutation(CREATE_GROUP, {
+    refetchQueries: [{ query: MY_GROUP }],
+  })
   const maxLen_11 = (value) => value.length <= 12
   const minLen_6 = (value) => value.length < 6 && value.length > 0
   const minLen_300 = (value) => value.length < 301
 
-  const name = useInput(data.name, maxLen_11)
-  const bio = useInput(data.bio, minLen_300)
-  const password = useInput(data.password, "", minLen_6)
-  const studyGroup = useSelect(studyOption_group, data.category)
+  const name = useInput("", maxLen_11)
+  const bio = useInput("", minLen_300)
+  const password = useInput("", "", minLen_6)
+  const studyGroup = useSelect(studyOption_group)
   return (
-    <EditGroupP
+    <CreateGroupPresenter
       name={name}
       bio={bio}
       password={password}
       studyGroup={studyGroup}
-      data={data}
       navigation={navigation}
-      editGroupMutation={editGroupMutation}
-      GroupId={GroupId}
+      createGroupMutation={createGroupMutation}
     />
   )
 }
 
-export default EditGroupC
+export default CreateGroupContainer

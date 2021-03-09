@@ -26,11 +26,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import BackButton from "../../../components/BackButton"
 import NumericInput from "react-native-numeric-input"
 
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`
 const EmptyView = styled.View`
   /* flex: 1; */
   align-items: center;
@@ -46,31 +41,12 @@ const View2 = styled.View`
   flex: 0.25;
   /* background-color: "rgba(123, 169, 234, 1)"; */
 `
-const AndroidView2 = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  flex: 0.2;
-  /* background-color: "rgba(123, 169, 234, 1)"; */
-`
+
 const ColorView = styled.View`
   padding: 20px;
   border-radius: 10;
   border-width: 1;
 `
-const View22 = styled.View`
-  justify-content: flex-end;
-  align-items: flex-end;
-  flex: 1;
-`
-const ErrorView = styled.View`
-  margin-bottom: 10px;
-`
-
-const RowView = styled.View`
-  flex-direction: row;
-`
-
 const CheckWrap = styled.View`
   justify-content: center;
   align-items: center;
@@ -79,31 +55,13 @@ const CheckWrap = styled.View`
 
 const MarginR = styled.View``
 
-const StyledModalContainer = styled.View`
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* 모달창 크기 조절 */
-  flex: 0.35;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 10px;
-`
-
-const TitleText = styled.Text`
-  flex: 0.5;
-  font-size: 25;
-  font-family: "GmarketBold";
-`
 const Title = styled.Text`
   font-size: 18;
   font-family: "GmarketBold";
 
   margin-bottom: 15;
 `
-const Sub1 = styled.Text`
-  font-size: 13;
-  font-family: "GmarketMedium";
-`
+
 const Sub = styled.Text`
   font-size: 13;
   font-family: "GmarketMedium";
@@ -114,47 +72,7 @@ const SelectRowView = styled.View`
   align-items: center;
 `
 
-const FBContainer = styled.View`
-  margin-top: 25px;
-  padding-top: 25px;
-  border-top-width: 1px;
-  border-color: ${(props) => props.theme.lightGreyColor};
-  border-style: solid;
-`
-
-const GoogleContainer = styled.View`
-  margin-top: 20px;
-`
-
-const TouchBox = styled.TouchableOpacity`
-  align-items: center;
-  justify-content: center;
-  margin-left: 0;
-  height: 40;
-  width: 100;
-  border-radius: 10;
-  background-color: ${(props) => props.Color};
-`
-const TouchText = styled.Text`
-  color: ${(props) => props.Color};
-  font-family: "GmarketMedium";
-`
-// const BioArea = styled(Textarea)`
-//   width: 100%;
-//   height: 100px;
-//   margin-bottom: 10px;
-// `
-
-export default ({
-  navigation,
-  name,
-  bio,
-  password,
-  studyGroup,
-  data,
-  editGroupMutation,
-  GroupId,
-}) => {
+export default ({ navigation, name, bio, password, studyGroup, createGroupMutation }) => {
   const style_tmp = {
     ...pickerSelectStyles,
     iconContainer: {
@@ -168,11 +86,11 @@ export default ({
     },
   }
 
-  const [startScheduleTerm, setstartScheduleTerm] = useState(data.maxMember)
-  const [extensionTerm, setextensionTerm] = useState(data.targetTime)
+  const [startScheduleTerm, setstartScheduleTerm] = useState(2)
+  const [extensionTerm, setextensionTerm] = useState(1)
   const [acLoading, setAcLoading] = useState(false)
 
-  const onEditGroup = async (e) => {
+  const onCreateGroup = async (e) => {
     if (startScheduleTerm < 2 || startScheduleTerm > 50) {
       Alert.alert("수용인원을 2~50명 이내로 설정하세요.")
       return
@@ -180,13 +98,16 @@ export default ({
       Alert.alert("최소 학습 시간을 1~18시간 이내로 설정하세요.")
       return
     }
+    if (studyGroup.value == "카테고리...") {
+      Alert.alert("카테고리 설정하세요.")
+      return
+    }
+    setAcLoading(true)
     try {
-      setAcLoading(true)
       const {
-        data: { editGroup },
-      } = await editGroupMutation({
+        data: { createGroup },
+      } = await createGroupMutation({
         variables: {
-          groupId: GroupId,
           name: name.value,
           maxMember: startScheduleTerm,
           category: studyGroup.value,
@@ -195,14 +116,14 @@ export default ({
           bio: bio.value,
         },
       })
-      if (!editGroup) {
-        Alert.alert("그룹을 수정할 수 없습니다.")
+      if (!createGroup) {
+        Alert.alert("그룹을 생성할 수 없습니다.")
       }
     } catch (e) {
       console.log(e)
     } finally {
       setAcLoading(false)
-      navigation.navigate("OneGroupContainer")
+      navigation.navigate("TabNavigation")
     }
   }
   return (
@@ -212,7 +133,7 @@ export default ({
     >
       <EmptyView>
         <View2>
-          <Title>그룹 수정</Title>
+          <Title>그룹 만들기</Title>
         </View2>
         <ColorView>
           <SelectRowView style={{ width: constants.width / 1.3 }}>
@@ -236,7 +157,7 @@ export default ({
               iconSize={25}
               rounded
               type="up-down"
-              minValue={0}
+              minValue={2}
               maxValue={50}
               step={1}
               valueType="real"
@@ -314,9 +235,9 @@ export default ({
               bgColor={"#0f4c82"}
               loading={acLoading}
               onPress={() => {
-                onEditGroup()
+                onCreateGroup()
               }}
-              text="수정"
+              text="만들기"
               widthRatio={LastWidth(1, 2, 5)}
             />
             <MarginR style={{ width: constants.width / 10 }} />
@@ -326,7 +247,7 @@ export default ({
               bgColor={"#0f4c82"}
               //  loading={acLoading}
               onPress={() => {
-                navigation.navigate("OneGroupContainer")
+                navigation.navigate("TabNavigation")
               }}
               text="돌아가기"
               widthRatio={LastWidth(1, 2, 5)}

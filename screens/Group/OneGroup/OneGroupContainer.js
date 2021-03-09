@@ -37,10 +37,13 @@ export const BOOKMARK_GROUP = gql`
 let playAlert = undefined
 export default ({ navigation }) => {
   const [modalPlayVisible, setModalPlayVisible] = useState(false)
+  const { loading: MyLoading, data: MyGroupdata, refetch: MyRefetch } = useQuery(MY_GROUP)
+
   const [modlaOutMember, setmodlaOutMember] = useState(false)
   const { loading, data: groupData, refetch: groupRefetch } = useQuery(SEEONE_GROUP, {
     variables: { groupId: navigation.getParam("id") },
   })
+  const search = navigation.getParam("search")
   const { loading: myLoading, data: myData, refetch: myRefetch } = useQuery(ME, {})
   const Groupid = navigation.getParam("id")
   const [joinGroupMutation] = useMutation(JOIN_GROUP, {
@@ -70,7 +73,7 @@ export default ({ navigation }) => {
         },
       })
       if (bookmarkGroup) {
-        await refetch()
+        await MyGroupdata()
       }
     } catch (e) {
       console.log(e)
@@ -104,11 +107,11 @@ export default ({ navigation }) => {
         if (!deleteGroup) {
           Alert.alert("그룹을 삭제할 수 없습니다.")
         } else {
-          close()
-          Alert.alert("그룹을 삭제하였습니다.")
         }
       } catch (e) {
         console.log(e)
+      } finally {
+        navigation.navigate("TabNavigation")
       }
     }
   }
@@ -140,10 +143,11 @@ export default ({ navigation }) => {
         if (!outGroup) {
           Alert.alert("그룹을 떠날 수 없습니다.")
         } else {
-          Alert.alert("그룹을 떠났습니다.")
         }
       } catch (e) {
         console.log(e)
+      } finally {
+        navigation.navigate("TabNavigation")
       }
     }
   }
@@ -201,7 +205,6 @@ export default ({ navigation }) => {
         Alert.alert("그룹을 가입할 수 없습니다.")
       } else {
         await groupRefetch()
-        Alert.alert("새로운 그룹에 가입하였습니다.")
       }
     } catch (e) {
       console.log(e)
@@ -220,7 +223,7 @@ export default ({ navigation }) => {
   }, [])
   return (
     <>
-      {loading || myLoading ? (
+      {loading || myLoading || MyLoading ? (
         <MainView>
           <Loader />
         </MainView>
@@ -241,6 +244,9 @@ export default ({ navigation }) => {
           setmodlaOutMember={setmodlaOutMember}
           onOutMember={onOutMember}
           onBookmark={onBookmark}
+          search={search}
+          onJoin={onJoin}
+          MyGroupdata={MyGroupdata}
         />
       )}
     </>

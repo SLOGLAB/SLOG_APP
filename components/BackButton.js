@@ -7,7 +7,7 @@ import * as ScreenOrientation from "expo-screen-orientation"
 
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
-  margin-left: 20;
+  margin-left: 10;
 `
 
 export default withNavigation(({ navigation }) => (
