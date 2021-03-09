@@ -5,16 +5,13 @@ import { ScrollView, TouchableOpacity, Alert, AsyncStorage } from "react-native"
 
 const DdayText = styled.Text`
   font-family: "GmarketMedium";
-
   margin-left: 10;
-  margin-top: 10;
-  font-size: 15;
+  font-size: 18;
 `
 const DdayText1 = styled.Text`
-  font-weight: normal;
+  font-family: "GmarketMedium";
   margin-left: 10;
-  margin-top: 10;
-  font-size: 13;
+  font-size: 18;
 `
 const Dday = ({ nowTime, myData, dDate }) => {
   const [Ddays, setDdays] = useState(0)

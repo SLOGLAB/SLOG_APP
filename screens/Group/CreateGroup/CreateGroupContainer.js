@@ -16,10 +16,10 @@ const CreateGroupContainer = ({ navigation }) => {
   })
   const maxLen_11 = (value) => value.length <= 12
   const minLen_6 = (value) => value.length < 6 && value.length > 0
-  const minLen_300 = (value) => value.length < 301
+  const minLen_1000 = (value) => value.length < 1001
 
   const name = useInput("", maxLen_11)
-  const bio = useInput("", minLen_300)
+  const bio = useInput("", minLen_1000)
   const password = useInput("", "", minLen_6)
   const studyGroup = useSelect(studyOption_group)
   return (

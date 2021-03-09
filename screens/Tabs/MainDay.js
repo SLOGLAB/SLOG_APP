@@ -40,7 +40,8 @@ const ChartView = styled.View`
   border-color: rgba(233, 236, 243, 1);
   margin-left: 5;
   margin-right: 5;
-  margin-top: 10;
+  margin-top: 5;
+  flex-direction: row;
   /* height: 48%; */
 `
 const TextView = styled.View`
@@ -58,6 +59,7 @@ const TextView = styled.View`
 const ProgressView = styled.View`
   align-items: center;
   justify-content: center;
+
   background-color: rgba(255, 255, 255, 1);
 `
 const TextCenter = styled.View`
@@ -80,11 +82,11 @@ const TimeView = styled.View`
   border-color: rgba(233, 236, 243, 1);
 `
 const ChartTextView = styled.View`
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10;
+  padding-top: 20;
 `
 
 const CoText = styled.Text`
@@ -105,13 +107,18 @@ const SubText2 = styled.Text`
 `
 const ExistTimeText = styled.Text`
   color: rgba(34, 76, 126, 1);
-  font-size: 20;
+  font-size: 28;
   font-family: "GmarketBold";
 `
 const ExistText = styled.Text`
   color: grey;
-  font-size: 20;
+  font-size: 23;
   font-family: "GmarketBold";
+`
+const ExistTextblack = styled.Text`
+  color: black;
+  font-size: 15;
+  font-family: "GmarketMedium";
 `
 const TargetText = styled.Text`
   color: grey;
@@ -124,7 +131,13 @@ const MainView = styled.View`
   align-items: center;
   flex-direction: row;
 `
-
+const MainView2 = styled.View`
+  background-color: rgba(255, 255, 255, 1);
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 5;
+`
 const SubView = styled.View`
   flex: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -712,31 +725,41 @@ const MainDay = ({
             </ModalView>
           </StyledPlayModalContainer>
         </Modal>
+        <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} />
+
         <ChartView>
           <ProgressView>
             <TouchableOpacity onPress={onRefresh}>
               <VdayProgress number={donutPercent} />
             </TouchableOpacity>
           </ProgressView>
-          <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} />
 
           <ChartTextView>
-            <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
-            <ExistText>시간 </ExistText>
-            <ExistTimeText>
-              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
-            </ExistTimeText>
-            <ExistText>분 </ExistText>
-            <ExistText>/</ExistText>
-
-            <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
-            <TargetText>시간 </TargetText>
-            <TargetText>
-              {targetminutes - targethour * 60 < 10
-                ? `0${targetminutes - targethour * 60}`
-                : targetminutes - targethour * 60}
-            </TargetText>
-            <TargetText>분 </TargetText>
+            <ExistTextblack>학습 시간</ExistTextblack>
+            <MainView2>
+              <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
+              <ExistText>시간 </ExistText>
+              <ExistTimeText>
+                {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+              </ExistTimeText>
+              <ExistText>분 </ExistText>
+            </MainView2>
+            <MainView2 />
+            <MainView2 />
+            <MainView2>
+              <ExistTextblack>목표시간</ExistTextblack>
+            </MainView2>
+            <MainView2>
+              <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
+              <TargetText>시간 </TargetText>
+              <TargetText>
+                {targetminutes - targethour * 60 < 10
+                  ? `0${targetminutes - targethour * 60}`
+                  : targetminutes - targethour * 60}
+              </TargetText>
+              <TargetText>분 </TargetText>
+            </MainView2>
+            {/* <D_day myData={myData.studyDefaultSet} editStudySetMutation={editStudySetMutation} /> */}
           </ChartTextView>
         </ChartView>
 

@@ -308,7 +308,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
       Alert.alert("과목을 선택하세요.")
       return
     } else if (titleInput.value === "") {
-      Alert.alert("To Do List를 입력하세요.")
+      Alert.alert("제목을 입력하세요.")
       return
     } else if (startTime >= endTime) {
       Alert.alert("시작 시간이 끝나는 시간보다 늦거나 같을 수 없습니다.")
@@ -562,7 +562,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
           <AuthInput
             {...titleInput}
             // value={name}
-            placeholder={"To Do List"}
+            placeholder={"(필수) 제목"}
             keyboardType="default"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}
@@ -572,7 +572,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
           <AuthInput
             {...locationInput}
             // value={name}
-            placeholder={"위치"}
+            placeholder={"(선택) 위치"}
             keyboardType="default"
             returnKeyType="done"
             // onSubmitEditing={handleLogin}

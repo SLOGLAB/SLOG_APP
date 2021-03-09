@@ -379,7 +379,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
 
   const updateSchedule = async () => {
     if (titleInput.value === "") {
-      Alert.alert("To Do List를 입력하세요.")
+      Alert.alert("제목을 입력하세요.")
       return
     }
     let overlap = false
@@ -1022,7 +1022,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               </ModalView>
               <AuthInput
                 {...titleInput}
-                placeholder={"To Do List"}
+                placeholder={"(필수) 제목"}
                 keyboardType="default"
                 returnKeyType="done"
                 // onSubmitEditing={handleLogin}
@@ -1031,7 +1031,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               <LineView />
               <AuthInput
                 {...locationInput}
-                placeholder={"위치"}
+                placeholder={"(선택) 위치"}
                 keyboardType="default"
                 returnKeyType="done"
                 // onSubmitEditing={}

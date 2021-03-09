@@ -121,6 +121,7 @@ const GroupWeeks = ({
   setmodlaOutMember,
   onOutMember,
   Groupid,
+  search,
 }) => {
   /////월요일부터 이번주 공부시간///////
   const [selectDay, setselectDay] = useState(targetToday)
@@ -247,9 +248,13 @@ const GroupWeeks = ({
   return (
     <DayView>
       <TodayView>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-          <Text>{selectDay}</Text>
-        </TouchableOpacity>
+        {search ? null : (
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Text>
+              {thisy[0]}.{thism[0]}.{thisd[0]}~{thisy[6]}.{thism[6]}.{thisd[6]}
+            </Text>
+          </TouchableOpacity>
+        )}
         <Modal
           animationType="slide"
           transparent={true}
@@ -274,20 +279,29 @@ const GroupWeeks = ({
       </TodayView>
       <View>
         <CenterView>
-          <StackedGroupBar
-            data_1={[averageTime / 60, myTime / 60, firstTime / 60]}
-            labels={["평균 시간", "나의 시간", "1등 시간"]}
-            data_2={["#8DE4AB", "#58A0F5", "#EA3223"]}
-            label_1={"학습"}
-            label_2={"목표"}
-            title={"과목별 학습 시간"}
-            title_x={"시간(분)"}
-            stepSize_x={60}
-          />
-          {/* <SubText>1등 시간:{firstTime}초</SubText>
-          <SubText>평균 시간: {averageTime}초</SubText>
-          <SubText>나의 시간: {myTime}초</SubText>
-          <SubText>그룹 최소 학습 시간: {groupData.targetTime}시간</SubText> */}
+          {search && myTime == 0 ? (
+            <StackedGroupBar
+              data_1={[averageTime / 60, firstTime / 60]}
+              labels={["평균 시간", "1등 시간"]}
+              data_2={["#8DE4AB", "#EA3223"]}
+              label_1={"학습"}
+              label_2={"목표"}
+              title={"과목별 학습 시간"}
+              title_x={"시간(분)"}
+              stepSize_x={60}
+            />
+          ) : (
+            <StackedGroupBar
+              data_1={[averageTime / 60, myTime / 60, firstTime / 60]}
+              labels={["평균 시간", "나의 시간", "1등 시간"]}
+              data_2={["#8DE4AB", "#58A0F5", "#EA3223"]}
+              label_1={"학습"}
+              label_2={"목표"}
+              title={"과목별 학습 시간"}
+              title_x={"시간(분)"}
+              stepSize_x={60}
+            />
+          )}
         </CenterView>
       </View>
       <AvatarView>

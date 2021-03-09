@@ -13,10 +13,10 @@ import EditGroupP from "./EditGroupP"
 const EditGroupC = ({ navigation, data, GroupId, onRefresh, loading, editGroupMutation }) => {
   const maxLen_11 = (value) => value.length <= 12
   const minLen_6 = (value) => value.length < 6 && value.length > 0
-  const minLen_300 = (value) => value.length < 301
+  const minLen_1000 = (value) => value.length < 1001
 
   const name = useInput(data.name, maxLen_11)
-  const bio = useInput(data.bio, minLen_300)
+  const bio = useInput(data.bio, minLen_1000)
   const password = useInput(data.password, "", minLen_6)
   const studyGroup = useSelect(studyOption_group, data.category)
   return (

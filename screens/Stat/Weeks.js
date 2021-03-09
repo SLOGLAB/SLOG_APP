@@ -574,11 +574,7 @@ const Weeks = ({
       ) : (
         <View>
           <CenterView>
-            {Math.max.apply(null, taskArray_week) < 60 ? (
-              <SubText>요일별 학습 시간(분) </SubText>
-            ) : (
-              <SubText>요일별 학습 시간(시) </SubText>
-            )}
+            <SubText>요일별 학습 시간(시) </SubText>
             <ChartView1>
               <Box selectColor={"rgba(123, 169, 234, 1)"} />
               <BoxText>이번주 </BoxText>
@@ -588,18 +584,20 @@ const Weeks = ({
           </CenterView>
           <VweekBar
             taskArray_week={
-              Math.max.apply(null, taskArray_week) < 60
-                ? taskArray_week.map((v) => {
-                    return 60 * v
-                  })
-                : taskArray_week
+              // Math.max.apply(null, taskArray_week) < 60
+              //   ? taskArray_week.map((v) => {
+              //       return 60 * v
+              //     })
+              //   :
+              taskArray_week
             }
             taskArray_week_pre={
-              Math.max.apply(null, taskArray_week_pre) < 60
-                ? taskArray_week_pre.map((v) => {
-                    return 60 * v
-                  })
-                : taskArray_week_pre
+              // Math.max.apply(null, taskArray_week_pre) < 60
+              //   ? taskArray_week_pre.map((v) => {
+              //       return 60 * v
+              //     })
+              //   :
+              taskArray_week_pre
             }
             ylength={
               Math.max.apply(null, taskArray_week) < Math.max.apply(null, taskArray_week_pre)
@@ -608,8 +606,8 @@ const Weeks = ({
             }
             title={"요일별 학습 시간"}
             title_y={"학습 시간(분)"}
-            weekHMsosu={Math.max.apply(null, taskArray_week) < 60 ? 0 : 1}
-            weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 60 ? 0 : 1}
+            weekHMsosu={Math.max.apply(null, taskArray_week) < 1 ? 0 : 1}
+            weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 1 ? 0 : 1}
           />
         </View>
       )}

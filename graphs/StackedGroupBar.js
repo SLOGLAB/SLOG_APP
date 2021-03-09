@@ -54,13 +54,13 @@ const StackedGroupBar = ({ data_1, labels, data_2 }) => {
         x: [0, labels.length + 1],
         // y: [0, data_2.length === 0 ? 1 : Math.max.apply(null, data_2)],
       }}
-      height={200}
-      padding={{ top: 10, bottom: 40, left: 75, right: 56 }}
+      height={100}
+      padding={{ top: 10, bottom: 10, left: 75, right: 56 }}
       domainPadding={{ x: 5, y: 10 }}
     >
       <VictoryAxis style={{ labels: { fontSize: 10 } }} />
 
-      <VictoryAxis dependentAxis tickFormat={(tick) => `${tick}`} />
+      {/* <VictoryAxis dependentAxis tickFormat={(tick) => `${tick}`} /> */}
 
       {/* ,"#58A0F5" */}
       <VictoryBar

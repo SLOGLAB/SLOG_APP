@@ -1,4 +1,4 @@
 export const stackStyles = {
   backgroundColor: "#FAFAFA",
-  marginTop: 15,
+  marginTop: 5,
 }

@@ -11,10 +11,14 @@ import AuthButton from "../components/AuthButton"
 import Icon from "../components/Icon"
 
 const MainView = styled.View`
-  justify-content: flex-start;
-  position: absolute;
-  margin-top: 15;
-  margin-left: 5;
+  justify-content: center;
+  align-items: flex-start;
+  /* position: absolute; */
+  /* height: 100%; */
+  width: 100%;
+  /* padding-bottom: 10; */
+  margin-top: 20;
+  padding-left: 10;
 `
 
 const MainView1 = styled.View`
@@ -39,7 +43,7 @@ const DdayText = styled.Text`
 
   margin-left: 10;
   margin-top: 10;
-  font-size: 15;
+  font-size: 10;
 `
 
 const D_day = ({ myData, editStudySetMutation }) => {

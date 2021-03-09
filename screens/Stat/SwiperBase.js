@@ -5,6 +5,7 @@ import TodayController from "./TodayController"
 import WeekController from "./WeekController"
 import MonthController from "./MonthController"
 import { StatusBar } from "react-native"
+import { color } from "react-native-reanimated"
 
 export default () => {
   return (
@@ -22,6 +23,7 @@ export default () => {
               <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Today</Text>
             </TabHeading>
           }
+          textStyle={{ color: "#ffffff" }}
           // heading="Today"
           tabStyle={
             Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }

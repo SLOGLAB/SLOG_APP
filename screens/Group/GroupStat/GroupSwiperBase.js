@@ -16,6 +16,7 @@ export default ({
   setmodlaOutMember,
   onOutMember,
   Groupid,
+  search,
 }) => {
   return (
     <Container>
@@ -50,6 +51,7 @@ export default ({
             setmodlaOutMember={setmodlaOutMember}
             onOutMember={onOutMember}
             Groupid={Groupid}
+            search={search}
           />
         </Tab>
         <Tab
@@ -76,6 +78,7 @@ export default ({
             setmodlaOutMember={setmodlaOutMember}
             onOutMember={onOutMember}
             Groupid={Groupid}
+            search={search}
           />
         </Tab>
         <Tab
@@ -102,6 +105,7 @@ export default ({
             setmodlaOutMember={setmodlaOutMember}
             onOutMember={onOutMember}
             Groupid={Groupid}
+            search={search}
           />
         </Tab>
       </Tabs>

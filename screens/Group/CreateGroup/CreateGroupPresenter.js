@@ -223,7 +223,7 @@ export default ({ navigation, name, bio, password, studyGroup, createGroupMutati
             paddingArray={[0, 0, 10, 5]}
             numberOfLines={3}
             {...bio}
-            placeholder="그룹소개 (300자 이내)"
+            placeholder="그룹소개"
             returnKeyType="done"
             autoCorrect={false}
             widthRatio={1.3}

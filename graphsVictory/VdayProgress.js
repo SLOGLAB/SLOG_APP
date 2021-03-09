@@ -11,7 +11,7 @@ const VdayProgress = ({ number }) => {
   const xTime = 100 - existTime
 
   return (
-    <VictoryChart width={320} height={320}>
+    <VictoryChart width={200} height={200}>
       <VictoryPie
         standalone={false}
         // animate={{ duration: 750 }}
@@ -20,7 +20,7 @@ const VdayProgress = ({ number }) => {
           { x: 1, y: existTime },
           { x: 2, y: xTime },
         ]}
-        innerRadius={80}
+        innerRadius={70}
         cornerRadius={30}
         labels={() => null}
         // style={{
@@ -40,10 +40,10 @@ const VdayProgress = ({ number }) => {
       <VictoryLabel
         textAnchor="middle"
         verticalAnchor="middle"
-        x={160}
-        y={160}
+        x={100}
+        y={100}
         text={`${existTime}%`}
-        style={{ fontSize: 55 }}
+        style={{ fontSize: 40 }}
       />
     </VictoryChart>
   )

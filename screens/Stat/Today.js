@@ -498,7 +498,7 @@ const Today = ({
       <View>
         <CenterView>
           {/* <Icon name={Platform.OS === "ios" ? "ios-time" : "md-time"} color={"black"} size={15} /> */}
-          <SubText>시간대별 학습 시간 </SubText>
+          <SubText>시간대별 학습 시간(분)</SubText>
           <ChartView1>
             <Box selectColor={"rgba(123, 169, 234, 1)"} />
             <BoxText>오늘</BoxText>

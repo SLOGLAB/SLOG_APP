@@ -16,7 +16,7 @@ const MainView = styled.View`
   border-width: 1;
 `
 const GroupBox = styled.View`
-  flex: 0.2;
+  flex: 0.25;
   width: 100%;
   border-width: 1;
   justify-content: center;
@@ -215,6 +215,7 @@ export default ({
           <GroupText>멤버 {groupData.memberCount}</GroupText>
         </BoxTopView2>
         <GroupName>{groupData.name}</GroupName>
+        <GroupText>최소 학습 시간 : {groupData.targetTime}시간</GroupText>
         <ScrollView>
           <GroupText>{groupData.bio}</GroupText>
         </ScrollView>
@@ -229,6 +230,7 @@ export default ({
         setmodlaOutMember={setmodlaOutMember}
         onOutMember={onOutMember}
         Groupid={Groupid}
+        search={search}
       />
       <Modal
         isVisible={modalPlayVisible}

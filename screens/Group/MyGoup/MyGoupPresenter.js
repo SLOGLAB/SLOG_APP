@@ -15,10 +15,17 @@ const GroupBox = styled.View`
   width: 90%;
   border-width: 1;
   justify-content: center;
+  flex-direction: row;
   border-radius: 10;
   padding: 10px;
   border-color: rgba(196, 196, 196, 1);
   background-color: rgba(199, 199, 199, 1);
+`
+const Groupup = styled.View`
+  flex: 0.1;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
 `
 const BoxIn = styled.View`
   flex: 1;
@@ -46,7 +53,15 @@ const GroupText = styled.Text`
 const BoxTopView = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-right: 10;
+  /* position: absolute; */
+  height: 30%;
+  width: 10%;
+`
+const BoxLView = styled.View`
+  /* position: absolute; */
+  height: 100%;
+  width: 90%;
+  justify-content: center;
 `
 export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
   groupData.sort(function (a, b) {
@@ -61,6 +76,19 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
   }, [])
   return (
     <MainView>
+      <Groupup>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SearchGroupContainer")
+          }}
+        >
+          <Icon
+            name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
+            size={25}
+            color={"#224C7E"}
+          />
+        </TouchableOpacity>
+      </Groupup>
       {groupData.length < 1 ? (
         <GroupBox>
           <BoxIn>
@@ -79,8 +107,23 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
         </GroupBox>
       ) : (
         <GroupBox>
+          <BoxLView>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("OneGroupContainer", { id: groupData[0].id })
+              }}
+            >
+              <GroupCate>{groupData[0].category}</GroupCate>
+              <GroupName>{groupData[0].name}</GroupName>
+              <GroupText>최소 학습 시간 : {groupData[0].targetTime}</GroupText>
+              <GroupText>
+                인원 : {groupData[0].memberCount}/{groupData[0].maxMember}
+              </GroupText>
+              <GroupText>방장 : {groupData[0].manager.username}</GroupText>
+              <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText>
+            </TouchableOpacity>
+          </BoxLView>
           <BoxTopView>
-            <GroupCate>{groupData[0].category}</GroupCate>
             <TouchableOpacity
               onPress={() => {
                 onBookmark(groupData[0].id, !groupData[0].bookmark)
@@ -101,20 +144,6 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               )}
             </TouchableOpacity>
           </BoxTopView>
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("OneGroupContainer", { id: groupData[0].id })
-            }}
-          >
-            <GroupName>{groupData[0].name}</GroupName>
-            <GroupText>최소 학습 시간 : {groupData[0].targetTime}</GroupText>
-            <GroupText>
-              인원 : {groupData[0].memberCount}/{groupData[0].maxMember}
-            </GroupText>
-            <GroupText>방장 : {groupData[0].manager.username}</GroupText>
-            <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText>
-          </TouchableOpacity>
         </GroupBox>
       )}
       <LineView />
@@ -136,8 +165,23 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
         </GroupBox>
       ) : (
         <GroupBox>
+          <BoxLView>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("OneGroupContainer", { id: groupData[1].id })
+              }}
+            >
+              <GroupCate>{groupData[1].category}</GroupCate>
+              <GroupName>{groupData[1].name}</GroupName>
+              <GroupText>최소 학습 시간 : {groupData[1].targetTime}</GroupText>
+              <GroupText>
+                인원 : {groupData[1].memberCount}/{groupData[1].maxMember}
+              </GroupText>
+              <GroupText>방장 : {groupData[1].manager.username}</GroupText>
+              <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText>
+            </TouchableOpacity>
+          </BoxLView>
           <BoxTopView>
-            <GroupCate>{groupData[1].category}</GroupCate>
             <TouchableOpacity
               onPress={() => {
                 onBookmark(groupData[1].id, !groupData[1].bookmark)
@@ -158,19 +202,6 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               )}
             </TouchableOpacity>
           </BoxTopView>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("OneGroupContainer", { id: groupData[1].id })
-            }}
-          >
-            <GroupName>{groupData[1].name}</GroupName>
-            <GroupText>최소 학습 시간 : {groupData[1].targetTime}</GroupText>
-            <GroupText>
-              인원 : {groupData[1].memberCount}/{groupData[1].maxMember}
-            </GroupText>
-            <GroupText>방장 : {groupData[1].manager.username}</GroupText>
-            <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText>
-          </TouchableOpacity>
         </GroupBox>
       )}
       <LineView />
@@ -192,8 +223,23 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
         </GroupBox>
       ) : (
         <GroupBox>
+          <BoxLView>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("OneGroupContainer", { id: groupData[2].id })
+              }}
+            >
+              <GroupCate>{groupData[2].category}</GroupCate>
+              <GroupName>{groupData[2].name}</GroupName>
+              <GroupText>최소 학습 시간 : {groupData[2].targetTime}</GroupText>
+              <GroupText>
+                인원 : {groupData[2].memberCount}/{groupData[2].maxMember}
+              </GroupText>
+              <GroupText>방장 : {groupData[2].manager.username}</GroupText>
+              <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText>
+            </TouchableOpacity>
+          </BoxLView>
           <BoxTopView>
-            <GroupCate>{groupData[2].category}</GroupCate>
             <TouchableOpacity
               onPress={() => {
                 onBookmark(groupData[2].id, !groupData[2].bookmark)
@@ -214,19 +260,6 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               )}
             </TouchableOpacity>
           </BoxTopView>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("OneGroupContainer", { id: groupData[2].id })
-            }}
-          >
-            <GroupName>{groupData[2].name}</GroupName>
-            <GroupText>최소 학습 시간 : {groupData[2].targetTime}</GroupText>
-            <GroupText>
-              인원 : {groupData[2].memberCount}/{groupData[2].maxMember}
-            </GroupText>
-            <GroupText>방장 : {groupData[2].manager.username}</GroupText>
-            <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText>
-          </TouchableOpacity>
         </GroupBox>
       )}
       <LineView />

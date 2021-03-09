@@ -119,6 +119,7 @@ const GroupMonths = ({
   setmodlaOutMember,
   onOutMember,
   Groupid,
+  search,
 }) => {
   const [selectDay, setselectDay] = useState(targetToday)
   const myState = myData.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
@@ -248,9 +249,15 @@ const GroupMonths = ({
   return (
     <DayView>
       <TodayView>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-          <Text>{selectDay}</Text>
-        </TouchableOpacity>
+        {search ? null : (
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Text>
+              {/* {selectDay} */}
+              {theYear}년{theMonth}월
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -262,9 +269,15 @@ const GroupMonths = ({
             current={selectDay}
             minDate={"2012-05-10"}
             maxDate={"2050-05-30"}
-            onDayPress={(day) => {
-              setSelectDate(new Date(day.timestamp))
-              setselectDay(day.dateString)
+            // onDayPress={(day) => {
+            //   setSelectDate(new Date(day.timestamp))
+            //   setselectDay(day.dateString)
+            //   setModalVisible(!modalVisible)
+            // }}
+            onMonthChange={(month) => {
+              // console.log(month)
+              setSelectDate(new Date(month.timestamp))
+              setselectDay(month.timestamp)
               setModalVisible(!modalVisible)
             }}
             monthFormat={"yyyy MM"}
@@ -275,20 +288,29 @@ const GroupMonths = ({
       </TodayView>
       <View>
         <CenterView>
-          <StackedGroupBar
-            data_1={[averageTime / 60, myTime / 60, firstTime / 60]}
-            data_2={["#8DE4AB", "#58A0F5", "#EA3223"]}
-            labels={["평균 시간", "나의 시간", "1등 시간"]}
-            label_1={"학습"}
-            label_2={"목표"}
-            title={"과목별 학습 시간"}
-            title_x={"시간(분)"}
-            stepSize_x={60}
-          />
-          {/* <SubText>1등 시간:{firstTime}초</SubText>
-          <SubText>평균 시간: {averageTime}초</SubText>
-          <SubText>나의 시간: {myTime}초</SubText>
-          <SubText>그룹 최소 학습 시간: {groupData.targetTime}시간</SubText> */}
+          {search && myTime == 0 ? (
+            <StackedGroupBar
+              data_1={[averageTime / 60, firstTime / 60]}
+              labels={["평균 시간", "1등 시간"]}
+              data_2={["#8DE4AB", "#EA3223"]}
+              label_1={"학습"}
+              label_2={"목표"}
+              title={"과목별 학습 시간"}
+              title_x={"시간(분)"}
+              stepSize_x={60}
+            />
+          ) : (
+            <StackedGroupBar
+              data_1={[averageTime / 60, myTime / 60, firstTime / 60]}
+              labels={["평균 시간", "나의 시간", "1등 시간"]}
+              data_2={["#8DE4AB", "#58A0F5", "#EA3223"]}
+              label_1={"학습"}
+              label_2={"목표"}
+              title={"과목별 학습 시간"}
+              title_x={"시간(분)"}
+              stepSize_x={60}
+            />
+          )}
         </CenterView>
       </View>
       <AvatarView>

@@ -15,6 +15,7 @@ export default ({
   setmodlaOutMember,
   onOutMember,
   Groupid,
+  search,
 }) => {
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
@@ -90,6 +91,7 @@ export default ({
           setmodlaOutMember={setmodlaOutMember}
           onOutMember={onOutMember}
           Groupid={Groupid}
+          search={search}
         />
       )}
     </ScrollView>

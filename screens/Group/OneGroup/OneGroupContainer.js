@@ -3,14 +3,7 @@ import { Alert } from "react-native"
 import styled from "styled-components"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../../components/Loader"
-import {
-  SEEONE_GROUP,
-  JOIN_GROUP,
-  DELETE_GROUP,
-  OUT_GROUP,
-  OUT_MEMBER,
-  EDIT_GROUP,
-} from "./OneGroupQueries"
+import { SEEONE_GROUP, JOIN_GROUP, DELETE_GROUP, OUT_GROUP, OUT_MEMBER } from "./OneGroupQueries"
 import OneGoupPresenter from "./OneGoupPresenter"
 import { SEE_GROUP } from "../SearchGroup/SearchGroupQueries"
 import { MY_GROUP } from "../MyGoup/MyGroupQueries"
@@ -26,6 +19,12 @@ export const ME = gql`
     me {
       id
       username
+      times {
+        id
+        existTime
+        time_24
+        createdAt
+      }
     }
   }
 `
@@ -55,9 +54,7 @@ export default ({ navigation }) => {
   const [outGroupMutation] = useMutation(OUT_GROUP, {
     refetchQueries: [{ query: SEE_GROUP }, { query: MY_GROUP }],
   })
-  const [editGroupMutation] = useMutation(EDIT_GROUP, {
-    refetchQueries: [{ query: SEE_GROUP }, { query: MY_GROUP }],
-  })
+
   const [outMemberMutation] = useMutation(OUT_MEMBER, {
     refetchQueries: [{ query: SEE_GROUP }, { query: MY_GROUP }],
   })
@@ -73,7 +70,7 @@ export default ({ navigation }) => {
         },
       })
       if (bookmarkGroup) {
-        await MyGroupdata()
+        await MyRefetch()
       }
     } catch (e) {
       console.log(e)
@@ -235,6 +232,7 @@ export default ({ navigation }) => {
           groupRefetch={groupRefetch}
           loading={loading}
           myData={myData.me}
+          myTimes={myData.me.times}
           clearintervalrefetch={clearintervalrefetch}
           onDelete={onDelete}
           onOut={onOut}

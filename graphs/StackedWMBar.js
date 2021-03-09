@@ -74,13 +74,13 @@ const StackedWMBar = ({ data_1, data_2, labels, label_1, label_2, title, title_x
         y: [0, data_2.length === 0 ? 1 : Math.max.apply(null, data_2)],
       }}
       height={200}
-      padding={{ top: 10, bottom: 40, left: 75, right: 56 }}
+      padding={{ top: 10, bottom: 20, left: 75, right: 56 }}
       domainPadding={{ x: 5, y: 10 }}
     >
       {/* <VictoryAxis tickFormat={labels} /> */}
       <VictoryAxis style={{ labels: { fontSize: 10 } }} />
 
-      <VictoryAxis dependentAxis tickFormat={(tick) => `${tick}`} />
+      <VictoryAxis />
       {/* <VictoryAxis tickValues={[0, 6, 12, 18, 24]} /> */}
       <VictoryStack
         colorScale={["rgba(123, 169, 234, 1)", "rgba(233, 237, 244, 1)"]}

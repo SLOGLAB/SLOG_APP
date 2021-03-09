@@ -24,7 +24,7 @@ const VweekBar = ({ taskArray_week, taskArray_week_pre, weekHMsosu_pre, ylength,
       <VictoryChart
         domain={{ x: [0, 8], y: [0, ylength] }}
         height={150}
-        padding={{ top: 25, bottom: 30, left: 45, right: 30 }}
+        padding={{ top: 25, bottom: 30, left: -1, right: 15 }}
         theme={themeWithSystemFont}
       >
         <VictoryGroup offset={15} style={{ data: { width: 9, strokeWidth: 1, fillOpacity: 1 } }}>
@@ -49,7 +49,11 @@ const VweekBar = ({ taskArray_week, taskArray_week_pre, weekHMsosu_pre, ylength,
               { x: "토", y: taskArray_week[6] / 60 },
               // { x: "", y: 0 },
             ]}
-            labels={({ datum }) => datum.y.toFixed(weekHMsosu)}
+            labels={({ datum }) =>
+              datum.y * 60 > 60
+                ? Math.floor(Math.floor(datum.y * 60) / 60) + "시간" + ((datum.y * 60) % 60) + "분"
+                : datum.y * 60 + "분"
+            }
           />
           <VictoryBar
             // barWidth={20}
@@ -72,7 +76,11 @@ const VweekBar = ({ taskArray_week, taskArray_week_pre, weekHMsosu_pre, ylength,
               { x: "토", y: taskArray_week_pre[6] / 60 },
               // { x: "", y: 0 },
             ]}
-            labels={({ datum }) => datum.y.toFixed(weekHMsosu_pre)}
+            labels={({ datum }) =>
+              datum.y * 60 > 60
+                ? Math.floor(Math.floor(datum.y * 60) / 60) + "시간" + ((datum.y * 60) % 60) + "분"
+                : datum.y * 60 + "분"
+            }
           />
         </VictoryGroup>
       </VictoryChart>
