@@ -7,6 +7,7 @@ import AuthButton from "../../../components/AuthButton"
 import LastWidth from "../../../components/LastWidth"
 import GroupSwiperBase from "../GroupStat/GroupSwiperBase"
 import Modal from "react-native-modal"
+import { not } from "react-native-reanimated"
 
 const MainView = styled.View`
   justify-content: center;
@@ -16,7 +17,7 @@ const MainView = styled.View`
   border-width: 1;
 `
 const GroupBox = styled.View`
-  flex: 0.25;
+  flex: ${(props) => (props.not ? 0.6 : 0.3)};
   width: 100%;
   border-width: 1;
   justify-content: center;
@@ -30,7 +31,7 @@ const LineView = styled.View`
 `
 const GroupName = styled.Text`
   font-family: "GmarketMedium";
-  font-size: 20;
+  font-size: 18;
   /* margin-top: 5; */
   margin-bottom: 5;
 `
@@ -83,6 +84,12 @@ const Container = styled.TouchableOpacity`
   align-items: center;
   flex: 1;
 `
+const CaretView = styled.View`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`
+
 export default ({
   groupData,
   navigation,
@@ -109,6 +116,7 @@ export default ({
     list.push(picked)
   }
   let findmygroup = list.findIndex((e) => e == groupData.id)
+  const [noti, setnoti] = useState(false)
   useEffect(() => {}, [])
   return (
     <MainView>
@@ -209,7 +217,7 @@ export default ({
           )}
         </BoxinView>
       </BoxTopView>
-      <GroupBox>
+      <GroupBox not={noti}>
         <BoxTopView2>
           <GroupCate>{groupData.category} </GroupCate>
           <GroupText>멤버 {groupData.memberCount}</GroupText>
@@ -219,6 +227,19 @@ export default ({
         <ScrollView>
           <GroupText>{groupData.bio}</GroupText>
         </ScrollView>
+        <CaretView>
+          <TouchableOpacity
+            onPress={() => {
+              setnoti(!noti)
+            }}
+          >
+            {noti ? (
+              <Icon name={Platform.OS === "ios" ? "ios-arrow-up" : "md-arrow-up"} size={20} />
+            ) : (
+              <Icon name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"} size={20} />
+            )}
+          </TouchableOpacity>
+        </CaretView>
       </GroupBox>
       <GroupSwiperBase
         groupData={groupData}

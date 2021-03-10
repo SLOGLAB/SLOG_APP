@@ -29,23 +29,25 @@ import NumericInput from "react-native-numeric-input"
 const EmptyView = styled.View`
   /* flex: 1; */
   align-items: center;
-  justify-content: center;
-  height: ${constants.height / 1};
+  /* justify-content: center; */
+  /* height: ${constants.height / 1}; */
+  flex: 1;
   /* background-color: rgba(196, 196, 196, 1); */
 `
 
 const View2 = styled.View`
+  height: 11%;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: row;
-  flex: 0.25;
   /* background-color: "rgba(123, 169, 234, 1)"; */
 `
 
 const ColorView = styled.View`
-  padding: 20px;
+  padding: 40px;
   border-radius: 10;
-  border-width: 1;
+  border-width: 0;
+  width: 100%;
 `
 const CheckWrap = styled.View`
   justify-content: center;
@@ -127,14 +129,11 @@ export default ({ navigation, name, bio, password, studyGroup, createGroupMutati
     }
   }
   return (
-    <KeyboardAwareScrollView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <EmptyView>
-        <View2>
-          <Title>그룹 만들기</Title>
-        </View2>
+    <EmptyView>
+      <View2>
+        <Title>그룹 만들기</Title>
+      </View2>
+      <KeyboardAwareScrollView behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <ColorView>
           <SelectRowView style={{ width: constants.width / 1.3 }}>
             <AuthInput
@@ -247,16 +246,15 @@ export default ({ navigation, name, bio, password, studyGroup, createGroupMutati
               bgColor={"#0f4c82"}
               //  loading={acLoading}
               onPress={() => {
-                navigation.navigate("TabNavigation")
+                navigation.navigate("SearchGroupContainer")
               }}
               text="돌아가기"
               widthRatio={LastWidth(1, 2, 5)}
             />
           </CheckWrap>
         </ColorView>
-        <View2></View2>
-      </EmptyView>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </EmptyView>
   )
 }
 

@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import styled from "styled-components"
 import Icon from "../../../components/Icon"
 import Modal from "react-native-modal"
-
+import SearchGroupButton from "./SearchGroupButton"
 const MainView = styled.View`
   align-items: center;
   flex: 1;
@@ -13,15 +13,28 @@ const MainView = styled.View`
 `
 const TopView = styled.View`
   width: 100%;
-  height: 15%;
+  height: 6%;
   flex-direction: row;
-  justify-content: center;
+  border-bottom-width: 1;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+`
+const TopEm = styled.View`
+  width: 100%;
+  height: 5%;
 `
 const FlexBox = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
+`
+const FlexTouchBox = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 `
 const FlexBox2 = styled.View`
   flex: 1;
@@ -29,12 +42,11 @@ const FlexBox2 = styled.View`
   padding-left: 10;
 `
 const GroupBox = styled.View`
-  flex: 0.15;
   width: 100%;
   border-width: 1;
   justify-content: center;
   border-radius: 10;
-  padding: 15px;
+  padding: 10px;
   border-color: rgba(196, 196, 196, 1);
   background-color: rgba(199, 199, 199, 1);
   margin-bottom: 10px;
@@ -45,9 +57,16 @@ const LineView = styled.View`
 `
 const GroupName = styled.Text`
   font-family: "GmarketMedium";
-  font-size: 20;
+  font-size: 18;
+  /* margin-top: 5; */
+  margin-bottom: 1;
+`
+const GrouptopName = styled.Text`
+  font-family: "GmarketMedium";
+  font-size: 18;
   /* margin-top: 5; */
   margin-bottom: 5;
+  color: rgba(34, 76, 126, 1);
 `
 const GroupCate = styled.Text`
   font-family: "GmarketMedium";
@@ -85,7 +104,12 @@ const GroupBox2 = styled.View`
   border-color: rgba(196, 196, 196, 1);
   background-color: rgba(255, 255, 255, 1);
 `
-
+const ButtonText = styled.Text`
+  font-size: 15;
+  margin-left: 5;
+  margin-bottom: 3;
+  font-family: "GmarketMedium";
+`
 const Box = styled.View``
 export default ({
   groupData,
@@ -116,6 +140,7 @@ export default ({
   }, [])
   return (
     <MainView>
+      <TopEm />
       <TopView>
         <FlexBox2>
           <TouchableOpacity
@@ -131,11 +156,16 @@ export default ({
           </TouchableOpacity>
         </FlexBox2>
         <FlexBox>
-          <GroupName>그룹 검색</GroupName>
+          <GrouptopName>그룹 검색</GrouptopName>
         </FlexBox>
-        <FlexBox>
-          <GroupName></GroupName>
-        </FlexBox>
+        <FlexTouchBox
+          onPress={() => {
+            navigation.navigate("CreateGroupContainer")
+          }}
+        >
+          <Icon name={Platform.OS === "ios" ? "ios-add" : "md-add"} color={"#000000"} size={30} />
+          <ButtonText>그룹 만들기</ButtonText>
+        </FlexTouchBox>
       </TopView>
       <ScrollView
         style={{ backgroundColor: "#FFFFFF" }}

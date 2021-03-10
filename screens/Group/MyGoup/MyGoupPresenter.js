@@ -22,7 +22,7 @@ const GroupBox = styled.View`
   background-color: rgba(199, 199, 199, 1);
 `
 const Groupup = styled.View`
-  flex: 0.1;
+  flex: 0.05;
   width: 90%;
   justify-content: center;
   align-items: center;
@@ -39,9 +39,8 @@ const LineView = styled.View`
 `
 const GroupName = styled.Text`
   font-family: "GmarketMedium";
-  font-size: 20;
+  font-size: 18;
   /* margin-top: 5; */
-  margin-bottom: 5;
 `
 const GroupCate = styled.Text`
   font-family: "GmarketMedium";
@@ -76,19 +75,7 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
   }, [])
   return (
     <MainView>
-      <Groupup>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("SearchGroupContainer")
-          }}
-        >
-          <Icon
-            name={Platform.OS === "ios" ? "ios-add-circle" : "md-add-circle"}
-            size={25}
-            color={"#224C7E"}
-          />
-        </TouchableOpacity>
-      </Groupup>
+      <Groupup></Groupup>
       {groupData.length < 1 ? (
         <GroupBox>
           <BoxIn>

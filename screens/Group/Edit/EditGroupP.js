@@ -26,24 +26,20 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import BackButton from "../../../components/BackButton"
 import NumericInput from "react-native-numeric-input"
 
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`
 const EmptyView = styled.View`
   /* flex: 1; */
   align-items: center;
-  justify-content: center;
-  height: ${constants.height / 1};
+  /* justify-content: center; */
+  /* height: ${constants.height / 1}; */
+  flex: 1;
   /* background-color: rgba(196, 196, 196, 1); */
 `
 
 const View2 = styled.View`
+  height: 11%;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: row;
-  flex: 0.25;
   /* background-color: "rgba(123, 169, 234, 1)"; */
 `
 const AndroidView2 = styled.View`
@@ -54,21 +50,10 @@ const AndroidView2 = styled.View`
   /* background-color: "rgba(123, 169, 234, 1)"; */
 `
 const ColorView = styled.View`
-  padding: 20px;
+  padding: 40px;
   border-radius: 10;
-  border-width: 1;
-`
-const View22 = styled.View`
-  justify-content: flex-end;
-  align-items: flex-end;
-  flex: 1;
-`
-const ErrorView = styled.View`
-  margin-bottom: 10px;
-`
-
-const RowView = styled.View`
-  flex-direction: row;
+  border-width: 0;
+  width: 100%;
 `
 
 const CheckWrap = styled.View`
@@ -79,31 +64,13 @@ const CheckWrap = styled.View`
 
 const MarginR = styled.View``
 
-const StyledModalContainer = styled.View`
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* 모달창 크기 조절 */
-  flex: 0.35;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 10px;
-`
-
-const TitleText = styled.Text`
-  flex: 0.5;
-  font-size: 25;
-  font-family: "GmarketBold";
-`
 const Title = styled.Text`
   font-size: 18;
   font-family: "GmarketBold";
 
   margin-bottom: 15;
 `
-const Sub1 = styled.Text`
-  font-size: 13;
-  font-family: "GmarketMedium";
-`
+
 const Sub = styled.Text`
   font-size: 13;
   font-family: "GmarketMedium";
@@ -113,37 +80,6 @@ const SelectRowView = styled.View`
   flex-direction: row;
   align-items: center;
 `
-
-const FBContainer = styled.View`
-  margin-top: 25px;
-  padding-top: 25px;
-  border-top-width: 1px;
-  border-color: ${(props) => props.theme.lightGreyColor};
-  border-style: solid;
-`
-
-const GoogleContainer = styled.View`
-  margin-top: 20px;
-`
-
-const TouchBox = styled.TouchableOpacity`
-  align-items: center;
-  justify-content: center;
-  margin-left: 0;
-  height: 40;
-  width: 100;
-  border-radius: 10;
-  background-color: ${(props) => props.Color};
-`
-const TouchText = styled.Text`
-  color: ${(props) => props.Color};
-  font-family: "GmarketMedium";
-`
-// const BioArea = styled(Textarea)`
-//   width: 100%;
-//   height: 100px;
-//   margin-bottom: 10px;
-// `
 
 export default ({
   navigation,
@@ -206,14 +142,11 @@ export default ({
     }
   }
   return (
-    <KeyboardAwareScrollView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <EmptyView>
-        <View2>
-          <Title>그룹 수정</Title>
-        </View2>
+    <EmptyView>
+      <View2>
+        <Title>그룹 수정</Title>
+      </View2>
+      <KeyboardAwareScrollView behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <ColorView>
           <SelectRowView style={{ width: constants.width / 1.3 }}>
             <AuthInput
@@ -297,15 +230,17 @@ export default ({
             widthRatio={1.3}
           />
           <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
-
           <AuthInputline
             paddingArray={[0, 0, 10, 5]}
-            numberOfLines={3}
+            numberOfLines={1}
             {...bio}
             placeholder="그룹소개 "
             returnKeyType="done"
             autoCorrect={false}
             widthRatio={1.3}
+            style={{ height: 100 }}
+
+            // textAlignVertical: "top"
           />
           {/* </SelectView> */}
           <CheckWrap>
@@ -333,9 +268,8 @@ export default ({
             />
           </CheckWrap>
         </ColorView>
-        <View2></View2>
-      </EmptyView>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </EmptyView>
   )
 }
 

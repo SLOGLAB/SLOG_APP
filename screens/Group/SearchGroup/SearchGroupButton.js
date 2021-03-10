@@ -22,10 +22,10 @@ const ButtonText = styled.Text`
 export default withNavigation(({ navigation }) => (
   <Container
     onPress={() => {
-      navigation.navigate("CreateGroupContainer")
+      navigation.navigate("SearchGroupContainer")
     }}
   >
-    <Icon name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={30} color={"#224C7E"} />
-    <ButtonText>그룹 만들기</ButtonText>
+    <Icon name={Platform.OS === "ios" ? "ios-search" : "md-search"} size={30} color={"#224C7E"} />
+    <ButtonText>그룹 검색</ButtonText>
   </Container>
 ))

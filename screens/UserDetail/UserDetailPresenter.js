@@ -89,6 +89,15 @@ const LineView = styled.View`
   margin-bottom: 5px;
   background-color: grey;
 `
+const LineView11 = styled.View`
+  /* margin-bottom: 15px; */
+  /* margin-top: 0px; */
+  width: ${constants.width / 1.1};
+  height: 0.5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: grey;
+`
 const Stat3 = styled.View`
   flex-direction: row;
   flex: 1;
@@ -511,7 +520,7 @@ const UserDetailPresenter = ({
             <ModalSubView>
               <CoText>팔로워</CoText>
             </ModalSubView>
-            <LineView />
+            <LineView11 />
             <ModalSubView2>
               <ScrollView
                 style={{ backgroundColor: "#ffffff" }}
@@ -603,7 +612,7 @@ const UserDetailPresenter = ({
             <ModalSubView>
               <CoText>팔로잉</CoText>
             </ModalSubView>
-            <LineView />
+            <LineView11 />
             <ModalSubView2>
               <ScrollView
                 style={{ backgroundColor: "#ffffff" }}

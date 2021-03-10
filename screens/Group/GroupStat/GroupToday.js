@@ -297,6 +297,7 @@ const GroupToday = ({
             <FollowerName_Text>
               {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
             </FollowerName_Text>
+
             <Modal
               isVisible={modlaOutMember}
               onBackdropPress={() => setmodlaOutMember(false)}

@@ -59,8 +59,16 @@ const TextView = styled.View`
 const ProgressView = styled.View`
   align-items: center;
   justify-content: center;
-
   background-color: rgba(255, 255, 255, 1);
+  flex: 1;
+`
+const ChartTextView = styled.View`
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+  margin-bottom: 0;
+  padding-top: 0;
+  flex: 1;
 `
 const TextCenter = styled.View`
   align-items: center;
@@ -80,13 +88,6 @@ const TimeView = styled.View`
   border: 2px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
-`
-const ChartTextView = styled.View`
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 255, 255, 1);
-  margin-bottom: 10;
-  padding-top: 20;
 `
 
 const CoText = styled.Text`
@@ -112,7 +113,7 @@ const ExistTimeText = styled.Text`
 `
 const ExistText = styled.Text`
   color: grey;
-  font-size: 23;
+  font-size: 20;
   font-family: "GmarketBold";
 `
 const ExistTextblack = styled.Text`

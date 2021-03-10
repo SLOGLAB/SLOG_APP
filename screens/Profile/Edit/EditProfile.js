@@ -126,6 +126,7 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
       key: emailKey.value,
     },
   })
+  //개인 데이터 공개 범위 선택
   pubOfFeedBool = data.me.pubOfFeed
   pubOfStatisticBool = data.me.pubOfStatistic
   pubOfScheduleBool = data.me.pubOfSchedule

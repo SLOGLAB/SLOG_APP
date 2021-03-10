@@ -22,9 +22,9 @@ const VweekBar = ({ taskArray_week, taskArray_week_pre, weekHMsosu_pre, ylength,
   return (
     <>
       <VictoryChart
-        domain={{ x: [0, 8], y: [0, ylength] }}
+        domain={{ x: [0, 7], y: [0, ylength] }}
         height={150}
-        padding={{ top: 25, bottom: 30, left: -1, right: 15 }}
+        padding={{ top: 30, bottom: 30, left: -30, right: 20 }}
         theme={themeWithSystemFont}
       >
         <VictoryGroup offset={15} style={{ data: { width: 9, strokeWidth: 1, fillOpacity: 1 } }}>
