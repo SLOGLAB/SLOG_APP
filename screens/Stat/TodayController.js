@@ -35,6 +35,36 @@ export const ME = gql`
     }
   }
 `
+const GET_USER = gql`
+  query seeUser($username: String!) {
+    seeUser(username: $username) {
+      id
+      studyPurpose
+
+      times {
+        existTime
+        time_24
+        createdAt
+      }
+      schedules {
+        id
+        isAllDay
+        isPrivate
+        title
+        location
+        state
+        start
+        end
+        totalTime
+        subject {
+          id
+          name
+          bgColor
+        }
+      }
+    }
+  }
+`
 export default () => {
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month

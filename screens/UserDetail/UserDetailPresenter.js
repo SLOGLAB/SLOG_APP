@@ -21,6 +21,7 @@ import LastWidth from "../../components/LastWidth"
 import AuthButton from "../../components/AuthButton"
 import { Container, Header, Content, Button, Text, Row } from "native-base"
 import constants from "../../constants"
+import UserSchedule from "./UserSwiper/UserSchedule"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 const ProfileHeader2 = styled.View`
@@ -123,8 +124,7 @@ const QrView = styled.View`
   justify-content: center;
 `
 const Stat4 = styled.View`
-  flex: 1.5;
-  justify-content: center;
+  width: 100%;
 `
 const Stat5 = styled.View`
   flex: 1;
@@ -450,6 +450,9 @@ const UserDetailPresenter = ({
           </ProfileHeader>
 
           <View />
+          {/* <Stat4>
+            <UserSchedule userId={data.seeUser.id}></UserSchedule>
+          </Stat4> */}
           {/* 내 포스트 !!!!!!!!!! */}
           {/* <PostView>
             {data.seeUser.posts.map((list) => (

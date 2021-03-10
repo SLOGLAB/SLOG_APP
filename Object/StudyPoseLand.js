@@ -98,6 +98,7 @@ const TensorCamera = cameraWithTensors(Camera)
 let studyInterval = undefined
 let studyArray = []
 let heigt = 812 / HEIGHT
+let studySetInterval = undefined
 
 const PoseCamera = ({
   navigation,
@@ -121,7 +122,7 @@ const PoseCamera = ({
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [androidCam, setandroidCam] = useState(true)
   const [personOnoff, setpersonOnoff] = useState(true)
-  // const [androidTime, setandroidTime] = useState(1)
+  const [androidTime, setandroidTime] = useState(true)
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
 
@@ -157,6 +158,7 @@ const PoseCamera = ({
     }, 980)
     setTimeout(function () {
       setandroidCam(false)
+      setSetting(true)
     }, 9000)
     setTimeout(function () {
       clearInterval(interval)
@@ -165,11 +167,32 @@ const PoseCamera = ({
       }
     }, 9800)
   }, [])
+
   async function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
+
+  const isFirstRun = useRef(true)
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
+    if (Platform.OS !== "ios") {
+      studySetInterval = setInterval(async () => {
+        if (!AUTORENDER && !button) {
+          updatePreview()
+        }
+        const imageTensor = images.next().value
+        tf.dispose([imageTensor])
+        setandroidTime(false)
+        if (!AUTORENDER) {
+          gl.endFrameEXP()
+        }
+      }, 100)
+    }
     studyInterval = setInterval(async () => {
+      if (isFirstRun.current) {
+        clearInterval(studySetInterval)
+        isFirstRun.current = false
+        return
+      }
       if (!AUTORENDER && !button) {
         updatePreview()
       }
@@ -179,7 +202,6 @@ const PoseCamera = ({
         flipHorizontal,
       })
       setPose(pose)
-
       let sub = tf.sub(imageTensor, imageTensor)
       let temp = sub.norm(2).sum()
       let norm = await temp.array(1)
@@ -241,7 +263,9 @@ const PoseCamera = ({
         <TouchableOpacity
           onPress={() => {
             clearInterval(studyInterval)
+            clearInterval(studySetInterval)
             Brightness.setBrightnessAsync(Bright)
+            // setandroidCam(true)
             // setSetting(false)
             // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
             navigation.navigate("TabNavigation")
@@ -399,9 +423,9 @@ const PoseCamera = ({
               />
             ) : (
               <>
-                {androidCam ? (
+                {/* {androidCam ? (
                   <Camera
-                    ref={camRef}
+                    ref={rafId}
                     type={Camera.Constants.Type.front}
                     style={{
                       justifyContent: "flex-end",
@@ -409,23 +433,23 @@ const PoseCamera = ({
                       width: Dimensions.get("window").width / 2.16 / heigt,
                       height: Dimensions.get("window").height / 2.64,
                     }}
-                  ></Camera>
-                ) : (
-                  <TensorCamera
-                    ref={camRef}
-                    style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
-                    type={Camera.Constants.Type.front}
-                    zoom={0}
-                    cameraTextureHeight={textureDims.height}
-                    cameraTextureWidth={textureDims.width}
-                    resizeHeight={200}
-                    resizeWidth={152}
-                    resizeDepth={3}
-                    onReady={handleImageTensorReady}
-                    autorender={false}
-                    // rotation={90} // or -90 for landscape right
                   />
-                )}
+                ) : ( */}
+                <TensorCamera
+                  ref={camRef}
+                  style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
+                  type={Camera.Constants.Type.front}
+                  zoom={0}
+                  cameraTextureHeight={textureDims.height}
+                  cameraTextureWidth={textureDims.width}
+                  resizeHeight={200}
+                  resizeWidth={152}
+                  resizeDepth={3}
+                  onReady={handleImageTensorReady}
+                  autorender={false}
+                  // rotation={90} // or -90 for landscape right
+                />
+                {/* )} */}
               </>
             )}
           </View>

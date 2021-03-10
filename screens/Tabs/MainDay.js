@@ -471,20 +471,7 @@ const MainDay = ({
       setModalPlayVisible(false)
     }
   }
-  // const pushToken = async () => {
-  //   await sendPushNotification(expoPushToken)
-  // }
-  // const noti = () => {
-  //   Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "슬로그 알람!",
-  //       body: "IAM!",
-  //     },
-  //     trigger: {
-  //       seconds: 1,
-  //     },
-  //   })
-  // }
+
   // 팔로우한 각 유저 데이터에 알맞은 createdAt 넣어주기(내가가 언제 팔로우 했는지)
   for (let i = 0; i < myData.followDates.length; i++) {
     const findUser = (a) => a.id === myData.followDates[i].followId
@@ -527,15 +514,6 @@ const MainDay = ({
       console.log(e)
     }
   }
-  const [studyBool, setStudyBool] = useState(false)
-  // if (nowEnd == moment(now).format("hh:mma")) {
-  //   noti()
-  // }
-  // setInterval(() => {
-  //   if (nowEnd === moment(new Date().format("hh:mma"))) {
-  //     noti()
-  //   }
-  // }, 60000)
   let brightness
   const getAndSetSystemBrightnessAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS)
@@ -544,8 +522,23 @@ const MainDay = ({
     }
     navigation.navigate("StudyContainer", { Bright: brightness })
   }
+
+  // const pushToken = async () => {
+  //   await sendPushNotification(expoPushToken)
+  // }
+  // const Callnotification = () => {
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "슬로그 알람!",
+  //       body: "IAM!",
+  //     },
+  //     trigger: {
+  //       seconds: 1,
+  //     },
+  //   })
+  // }
   // useEffect(() => {
-  //   getAndSetSystemBrightnessAsync()
+  //   // Callnotification()
   // }, [])
   return (
     <>
@@ -644,9 +637,7 @@ const MainDay = ({
             <IndiviList></IndiviList>
           </ScrollView>
         </AvatarView>
-        {/* <AvartarView1> */}
-        {/* {studyBool ? <Apps studyBool={studyBool} setStudyBool={setStudyBool} /> : null} */}
-        {/* </AvartarView1> */}
+
         <PlayView>
           <Flex1View />
           <Container
@@ -659,11 +650,6 @@ const MainDay = ({
               // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
             }}
           >
-            {/* <Icon
-      name={Platform.OS === "ios" ? "ios-play-circle" : "md-play-circle"}
-      size={30}
-      color={"#0F4C82"}
-    /> */}
             <Image source={require("../../assets/Group1.png")} style={{ height: 30, width: 30 }} />
             <ButtonText>PLAY</ButtonText>
           </Container>
@@ -780,7 +766,8 @@ const MainDay = ({
           )}
         </TimeView>
         <MainView>
-          {/* <SubView>
+          {/*  //휴식시간 
+          <SubView>
             <Text>{break_title}</Text>
             {break_countdown == 0 ? (
               <Text1 />
@@ -899,6 +886,8 @@ const MainDay = ({
 }
 
 export default MainDay
+
+//push notification
 async function sendPushNotification(expoPushToken) {
   const message = {
     to: expoPushToken,
@@ -948,25 +937,4 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
-}
-{
-  /* <DayText>
-          <MainView>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 20 }}
-              source={{ uri: data.me.avatar }}
-            />
-          </MainView>
-
-          <MainNameView>
-            {data.me.existToggle ? (
-              <CircleView style={{ backgroundColor: "#56BB37" }} />
-            ) : (
-              <CircleView style={{ backgroundColor: "black" }} />
-            )}
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "black", marginLeft: 5 }}>
-              {data.me.username}
-            </Text>
-          </MainNameView>
-        </DayText> */
 }
