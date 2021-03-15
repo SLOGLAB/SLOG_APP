@@ -173,7 +173,7 @@ const Main = ({
       nowScheduleTimeT = 0
       nowScheduleColor = "rgba(123, 169, 235, 1)"
       nowTitle1 = "현재 스케줄 없음"
-      nowTitle2 = "X"
+      nowTitle2 = "스케줄을 만들어 보세요"
     }
     // nextSchedule 계산
     if (nextScheduleIndex !== -1) {
@@ -186,7 +186,7 @@ const Main = ({
         moment(startPoint_next).format("hh:mma") + "~" + moment(endPoint_next).format("hh:mma")
     } else {
       nextTitle1 = "다음 스케줄 없음"
-      nextTitle2 = "X"
+      nextTitle2 = "스케줄을 만들어 보세요"
       next_TimeText = ""
     }
     // breakTime 계산

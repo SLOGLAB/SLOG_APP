@@ -430,20 +430,6 @@ const MainDay = ({
   const [isEnabled, setIsEnabled] = useState(myData.studyDefaultSet.nonScheduleRecord)
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-  //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-  //     setNotification(notification)
-  //   })
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(
-  //     (response) => {}
-  //   )
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener)
-  //     Notifications.removeNotificationSubscription(responseListener)
-  //   }
-  // }, [])
   const onSaveSet = async () => {
     try {
       const {
@@ -522,23 +508,45 @@ const MainDay = ({
     }
     navigation.navigate("StudyContainer", { Bright: brightness })
   }
-
-  // const pushToken = async () => {
-  //   await sendPushNotification(expoPushToken)
-  // }
-  // const Callnotification = () => {
-  //   Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "슬로그 알람!",
-  //       body: "IAM!",
-  //     },
-  //     trigger: {
-  //       seconds: 1,
-  //     },
-  //   })
-  // }
   // useEffect(() => {
-  //   // Callnotification()
+  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+  //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+  //     setNotification(notification)
+  //   })
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(
+  //     (response) => {}
+  //   )
+
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notificationListener)
+  //     Notifications.removeNotificationSubscription(responseListener)
+  //   }
+  // }, [])
+  const pushToken = async () => {
+    await sendPushNotification(expoPushToken)
+  }
+  const Callnotification = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "슬로그 알람!",
+        body: "IAM!",
+      },
+      trigger: {
+        seconds: 1,
+      },
+    })
+  }
+  // Notifications.scheduleNotificationAsync({
+  //   content: {
+  //     title: "슬로그 알람!",
+  //     body: "IAM!",
+  //   },
+  //   trigger: {
+  //     seconds: 10,
+  //   },
+  // })
+  // useEffect(() => {
+  //   Callnotification()
   // }, [])
   return (
     <>

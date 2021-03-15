@@ -6,34 +6,6 @@ import { useQuery } from "@apollo/react-hooks"
 import UserScheduleP from "./UserScheduleP"
 import Loader from "../../../components/Loader"
 
-export const SCHEDULE_USER = gql`
-  {
-    me {
-      id
-      studyPurpose
-      schedules {
-        id
-        start
-        end
-        totalTime
-        state
-        subjectId
-        subjectName
-        location
-        title
-        isPrivate
-        isAllDay
-      }
-    }
-    mySubject {
-      id
-      name
-      color
-      bgColor
-      bookMark
-    }
-  }
-`
 export const USER_SCHEDULE = gql`
   query userSchedule($userId: String!) {
     userSchedule(userId: $userId) {
@@ -78,22 +50,23 @@ const ScheView = styled.View`
 const ScheView2 = styled.View`
   height: 10%;
 `
-export default UserSchedule = ({ userId }) => {
+export default UserSchedule = ({ navigation }) => {
   var timetableRef
 
   const { loading, data: scheduledata, refetch } = useQuery(USER_SCHEDULE, {
-    variables: { userId: userId },
+    variables: { userId: navigation.getParam("userId") },
   })
   const { loading: Subjectloading, data: subjectdata, refetch: Subjectrefetch } = useQuery(
     USER_SUBJECT,
     {
-      variables: { userId: userId },
+      variables: { userId: navigation.getParam("userId") },
     }
   )
 
   const onRefresh = async () => {
     try {
       await refetch()
+      await Subjectrefetch()
     } catch (e) {
       console.log(e)
     }
@@ -106,7 +79,9 @@ export default UserSchedule = ({ userId }) => {
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    onRefresh()
+  }, [])
   if (loading || Subjectloading) {
     return (
       <LoaderWrapper style={{ minHeight: Math.round(Dimensions.get("window").height) }}>
@@ -123,6 +98,8 @@ export default UserSchedule = ({ userId }) => {
         loading={loading}
         targetToday={targetToday}
         Subjectdata={subjectdata}
+        navigation={navigation}
+        username={navigation.getParam("username")}
       />
     )
   }

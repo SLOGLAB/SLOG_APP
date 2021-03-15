@@ -55,9 +55,12 @@ const ModalView04 = styled.View`
 `
 const EmptyView1 = styled.View`
   flex: 1;
+  position: absolute;
+  justify-content: flex-start;
   align-items: flex-end;
   margin-right: 10;
-  margin-top: 10;
+  width: 100%;
+  height: 90%;
 `
 const ModalView = styled.View`
   flex: 1;
@@ -91,12 +94,16 @@ const ButtonModalView = styled.View`
 
 const StyledModalContainer = styled.View`
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 10px;
   /* 모달창 크기 조절 */
-  flex: 0.8;
-  width: 300;
+  flex: 0.25;
+  /* width: 300; */
   background-color: rgba(255, 255, 255, 1);
-  border-radius: 10px;
+  border-radius: 5px;
+  border-top-color: ${(props) => props.color};
+  border-top-width: 8px;
 `
 const StyledModalSetContainer = styled.View`
   flex-direction: column;
@@ -113,8 +120,7 @@ const View1 = styled.View`
   margin-top: 5;
 `
 const SetdayTopView = styled.View`
-  flex: 0.5;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 `
 
@@ -158,7 +164,13 @@ const View3 = styled.View`
 `
 const RowText = styled.Text`
   font-size: 15;
+  color: ${(props) => props.color};
   font-family: "GmarketMedium";
+`
+const RowBoldText = styled.Text`
+  font-size: 20;
+  color: ${(props) => props.color};
+  font-family: "GmarketBold";
 `
 const CopyText = styled.Text`
   font-size: 17;
@@ -193,6 +205,8 @@ const UserScheduleP = ({
   loading,
   onRefresh,
   targetToday,
+  navigation,
+  username,
 }) => {
   const dayList = ["일", "월", "화", "수", "목", "금", "토"]
   const SubjectList_tmp = Subjectdata.userSubject.map((file) => {
@@ -209,146 +223,53 @@ const UserScheduleP = ({
     return el != undefined
   })
 
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalCopyVisible, setModalCopyVisible] = useState(false)
-
-  const [calVisibleStart, setCalVisibleStart] = useState(false)
-  const [calVisibleEnd, setCalVisibleEnd] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
-  const [scheduleId, setScheduleId] = useState("")
   const [startTime, setstartTime] = useState(new Date())
   const [endTime, setendTime] = useState(new Date())
   const [startTimeText, setstartTimeText] = useState(moment(new Date()).format("hh:mm a"))
   const [endTimeText, setendTimeText] = useState(moment(new Date()).format("hh:mm a"))
   const [isModalVisible, issetModalVisible] = useState(false)
-  const [subjectId, setSubjectId] = useState("")
+
+  const [subjectMain, setsubjectMain] = useState("")
+
+  const [subjectName, setsubjectName] = useState("")
   const [modalVisibleEnd, setModalVisibleEnd] = useState(false)
-  const [isPrivate, setPrivate] = useState(false)
-  const [isAllDay, setAllDay] = useState(false)
-  const [selectIndex, setSelectIndex] = useState(0)
-  const [modifyLoading, setModifyLoading] = useState(false)
-  const [delLoading, setDelLoading] = useState(false)
+  const [state, setstate] = useState("")
+  const [color, setcolor] = useState("#114074")
+
   const [dateStr, setDateStr] = useState(moment(new Date()).format("YYYY-MM-DD"))
-  //하루 스케줄
-  const [copyDayModal, setCopyDayModal] = useState(false)
-  const [copyStartDay, setCopyStartDay] = useState(new Date())
-  const [copyDaySetMdal, setCopydaySetMdal] = useState(false)
-  const [copySetDay, setCopySetDay] = useState(new Date())
-  const [copyDayLoading, setcopyDayLoading] = useState(false)
 
-  //주간 스케줄
-  const [selectDay, setselectDay] = useState(targetToday)
-  const [CalmodalVisible, setCalModalVisible] = useState(false)
-  const [selectSetDay, setselectSetDay] = useState(targetToday)
-  const [CalmodalWeekVisible, setCalModalWeekVisible] = useState(false)
-  const [copyWeekLoading, setcopyWeekLoading] = useState(false)
-
-  //
   const dateMark = new Object()
   dateMark[dateStr] = { selected: true }
-
-  const locationInput = useInput("")
-  const titleInput = useInput("")
-
-  const [scheduleMutation] = useMutation(SAVE_SCHEDULE, {
-    variables: {
-      scheduleArray: newScheduleArray,
-    },
-    refetchQueries: () => [{ query: SCHEDULE_USER }],
-  })
-
-  //copy 모달
-  var currentDay = new Date(selectDay)
-  var theYear = currentDay.getFullYear()
-  var theMonth = currentDay.getMonth()
-  var theDate = currentDay.getDate()
-  var theDayOfWeek = currentDay.getDay() //요일
-  var thisWeek = []
-  var thism = []
-  var thisd = []
-  var thisy = []
-  for (var i = 0; i < 7; i++) {
-    var resultDay = new Date(theYear, theMonth, theDate + (i - theDayOfWeek))
-    var yyyy = resultDay.getFullYear()
-    var mm = Number(resultDay.getMonth()) + 1
-    var dd = resultDay.getDate()
-
-    mm = String(mm).length === 1 ? "0" + mm : mm
-    dd = String(dd).length === 1 ? "0" + dd : dd
-
-    thisWeek[i] = yyyy + "-" + mm + "-" + dd
-    thisy[i] = yyyy
-    thism[i] = mm
-    thisd[i] = dd
-  }
-  var currentSetDay = new Date(selectSetDay)
-  var theSetYear = currentSetDay.getFullYear()
-  var theSetMonth = currentSetDay.getMonth()
-  var theSetDate = currentSetDay.getDate()
-  var theSetDayOfWeek = currentSetDay.getDay() //요일
-  var thisSetWeek = []
-  var thisSetm = []
-  var thisSetd = []
-  var thisSety = []
-  for (var i = 0; i < 7; i++) {
-    var resultDay = new Date(theSetYear, theSetMonth, theSetDate + (i - theSetDayOfWeek))
-    var yyyy = resultDay.getFullYear()
-    var mm = Number(resultDay.getMonth()) + 1
-    var dd = resultDay.getDate()
-
-    mm = String(mm).length === 1 ? "0" + mm : mm
-    dd = String(dd).length === 1 ? "0" + dd : dd
-
-    thisSetWeek[i] = yyyy + "-" + mm + "-" + dd
-    thisSety[i] = yyyy
-    thisSetm[i] = mm
-    thisSetd[i] = dd
-  }
-  ///
 
   const settingData = async () => {
     try {
       events_data = scheduledata.userSchedule.map((List) => {
-        // if (new Date(List.start).getDate() === 1) {
-        //   console.log(List);
-        // }
-        const findSubject = (a) => a.value === List.subjectId
-        const subjectIndex = SubjectList.findIndex(findSubject)
         const startDate = new Date(List.start)
         const endDate = new Date(List.end)
         endDate.setTime(endDate.getTime() - 1000)
         return {
           id: List.id,
-          description: `[${List.subjectName}]\n${List.isPrivate ? "🔒\n" : ""}${List.title}`,
+          description:
+            List.subject === null
+              ? `${List.isPrivate ? "🔒\n" : ""}${List.title}`
+              : `[${List.subject.name}]\n${List.isPrivate ? "🔒\n" : ""}${List.title}`,
+          subjectMain: List.subject === null ? `` : `[${List.subject.name}]`,
           subjectName: `${List.title}`,
           location: List.location,
           startDate,
           endDate,
-          color: subjectIndex === -1 ? "#A1B56C" : SubjectList[subjectIndex].bgColor,
-          // color: List.subject.bgColor,
-
+          color: List.subject === null ? "#A1B56C" : List.subject.bgColor,
           totalTime: List.totalTime,
-          subjectId: List.subjectId,
           state: List.state,
-          isPrivate: List.isPrivate,
-          isAllDay: List.isAllDay,
         }
       })
     } catch (e) {
       console.log(e)
+    } finally {
     }
   }
 
-  const startPicker = (event, selectedDate) => {
-    const currentTime = new Date(selectedDate)
-    setstartTime(currentTime)
-    setstartTimeText(moment(currentTime).format("hh:mm a"))
-  }
-  const endPicker = (event, selectedendTime) => {
-    const currentTime = new Date(selectedendTime)
-    setendTime(currentTime)
-    setendTimeText(moment(currentTime).format("hh:mm a"))
-  }
   const onEventPress = (evt) => {
     issetModalVisible(true)
     evt.endDate.setTime(evt.endDate.getTime() + 1000)
@@ -358,49 +279,18 @@ const UserScheduleP = ({
       const tmpString = evt.description.split("🔒\n")
       evt.description = tmpString[1]
     }
-
-    setSubjectId(evt.subjectId)
-    setScheduleId(evt.id)
-    setPrivate(evt.isPrivate)
-    setAllDay(evt.isAllDay)
-    titleInput.setValue(evt.subjectName)
-    locationInput.setValue(evt.location)
+    setsubjectName(evt.subjectName)
+    setsubjectMain(evt.subjectMain)
+    setstate(evt.state)
+    setcolor(evt.color)
     setstartTime(evt.startDate)
     setendTime(evt.endDate)
     setstartTimeText(moment(evt.startDate).format("hh:mm a"))
     setendTimeText(moment(evt.endDate).format("hh:mm a"))
-
-    // 선택한 TASK 인덱스 찾기
-    const findSubject = (a) => a.id === evt.subjectId
-    const tmpIndex = scheduledata.seeUser.subject.findIndex(findSubject)
-    setSelectIndex(tmpIndex)
   }
-
-  const showMode = () => {
-    setModalVisible(!modalVisible)
-  }
-  const showModeEnd = () => {
-    setModalVisibleEnd(!modalVisibleEnd)
-  }
-  const offMode = () => {
-    setModalVisible(!modalVisible)
-    var timestartText = moment(startTime).format("hh:mm a")
-    // var timeEndText = moment(endTime).format("hh:mm a")
-    setstartTimeText(timestartText)
-    // setendTimeText(timeEndText)
-  }
-  const offModeEnd = () => {
-    setModalVisibleEnd(!modalVisibleEnd)
-    // var timestartText = moment(startTime).format("hh:mm a")
-    var timeEndText = moment(endTime).format("hh:mm a")
-    // setstartTimeText(timestartText)
-    setendTimeText(timeEndText)
-  }
-
   if (!loading) {
     settingData()
   }
-
   return (
     <>
       {Platform.OS == "ios" ? (
@@ -424,21 +314,24 @@ const UserScheduleP = ({
             <View
               style={{
                 // position: "absolute",
-                width: "15%",
-                alignItems: "center",
+                width: "10%",
+                alignItems: "flex-start",
+                paddingLeft: 15,
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  onRefresh()
-                }}
-              >
-                <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={25} />
+              <TouchableOpacity onPress={() => navigation.navigate("Userdetail")}>
+                <Icon
+                  name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+                  color={"#000000"}
+                  size={40}
+                />
               </TouchableOpacity>
             </View>
-            <View style={{ width: "55%", alignItems: "center" }}>
+            <View style={{ width: "80%", alignItems: "center" }}>
               <TouchableOpacity onPress={() => setModalVisible2(!modalVisible2)}>
-                <Text style={{ fontSize: 17, fontWeight: "bold" }}>스케줄 ({dateStr})</Text>
+                <Text style={{ fontSize: 17, fontWeight: "bold" }}>
+                  {username}({dateStr})
+                </Text>
               </TouchableOpacity>
               <Modal
                 animationType="slide"
@@ -466,6 +359,21 @@ const UserScheduleP = ({
                   markedDates={dateMark}
                 />
               </Modal>
+            </View>
+            <View
+              style={{
+                // position: "absolute",
+                width: "10%",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  onRefresh()
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-refresh" : "md-refresh"} size={25} />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -499,27 +407,28 @@ const UserScheduleP = ({
               minHeight: Math.round(Dimensions.get("window").height),
             }}
           >
-            <StyledModalContainer style={{ width: constants.width / 1.1 }}>
-              <ModalRow>
-                <EmptyView1>
-                  <TouchableOpacity
-                    onPress={() => {
-                      issetModalVisible(false)
-                    }}
-                  >
-                    <Icon
-                      name={
-                        Platform.OS === "ios"
-                          ? "ios-close-circle-outline"
-                          : "md-close-circle-outline"
-                      }
-                      size={23}
-                    />
-                  </TouchableOpacity>
-                </EmptyView1>
-              </ModalRow>
+            <StyledModalContainer style={{ width: constants.width / 1.1 }} color={color}>
+              <EmptyView1>
+                <TouchableOpacity
+                  onPress={() => {
+                    issetModalVisible(false)
+                  }}
+                >
+                  <Icon
+                    name={
+                      Platform.OS === "ios" ? "ios-close-circle-outline" : "md-close-circle-outline"
+                    }
+                    size={23}
+                  />
+                </TouchableOpacity>
+              </EmptyView1>
               <SetdayTopView>
-                <ScheduleText>스케줄 정보</ScheduleText>
+                <RowBoldText color={color}>{subjectMain}</RowBoldText>
+                <RowBoldText color={"#000000"}>{subjectName}</RowBoldText>
+                <RowText color={"#000000"}>
+                  {startTimeText} - {endTimeText}
+                </RowText>
+                <RowText color={"#CACACA"}>{state}</RowText>
               </SetdayTopView>
             </StyledModalContainer>
           </Modal>

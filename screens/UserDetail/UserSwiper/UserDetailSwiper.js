@@ -1,35 +1,48 @@
-import React, { useEffect, useState, useRef } from "react"
-import { View, Dimensions, StyleSheet, Platform, StatusBar } from "react-native"
-import styled from "styled-components"
-import constants from "../../constants"
-import BackButton from "../../components/BackButton"
+import React, { useState, useEffect, useRef } from "react"
+import { Platform, TouchableOpacity } from "react-native"
+import {
+  Container,
+  TabHeading,
+  Text,
+  Tab,
+  Tabs,
+  ScrollView,
+  RefreshControl,
+  Header,
+} from "native-base"
+import Today from "../../Stat/Today"
+import Weeks from "../../Stat/Weeks"
+import Months from "../../Stat/Months"
+import { StatusBar } from "react-native"
+import Icon from "../../../components/Icon"
+import { color } from "react-native-reanimated"
 import { gql } from "apollo-boost"
-import { useQuery, useMutation } from "@apollo/react-hooks"
-import Loader from "../../components/Loader"
-import useInput from "../../hooks/useInput"
+import { useQuery } from "@apollo/react-hooks"
+import styled from "styled-components"
 
-import { Container, Header, TabHeading, Tab, Tabs, Text } from "native-base"
-
-import { withNavigationFocus } from "react-navigation"
-import { useKeepAwake } from "expo-keep-awake"
-import UserSchedule from "./UserSchedule"
-import UserStatistics from "./UserStatistics"
-export const ME = gql`
-  {
-    me {
+const GET_USER = gql`
+  query seeUser($username: String!) {
+    seeUser(username: $username) {
       id
-      username
-      fullName
       avatar
+      username
+      bio
+      fullName
+      isSelf
       email
-      existToggle
       studyPurpose
-      todayTime {
-        attendanceStatus
-        absenceReason
-      }
+      studyGroup
+      studyGroup2
+      studyGroup3
+      pubOfFeed
+      pubOfStatistic
+      pubOfSchedule
+      postsCount
+      followingCount
+      followersCount
+      isFollowing
+      isFollowed
       times {
-        id
         existTime
         time_24
         createdAt
@@ -51,6 +64,7 @@ export const ME = gql`
         }
       }
       studyDefaultSet {
+        timelapseRecord
         nonScheduleRecord
         autoRefresh
         autoRefreshTerm
@@ -65,81 +79,61 @@ export const ME = gql`
       followDates {
         id
         followId
-        goWith
         createdAt
-      }
-      withFollowing {
-        id
-        avatar
-        username
-        existToggle
-        todayTime {
-          existTime
-        }
       }
       following {
         id
         avatar
         email
         username
+        isFollowing
+        isSelf
+      }
+      followers {
+        id
+        avatar
+        email
+        username
+        isFollowing
+        isSelf
+        followDates {
+          id
+          followId
+          createdAt
+        }
+      }
+      posts {
+        id
+        files {
+          id
+          url
+          key
+        }
+        likeCount
+        commentCount
       }
     }
   }
 `
-const ContainerLandscape = styled.View`
-  /* background-color: rgba(0, 0, 0, 1); */
-  /* align-items: center;
-  justify-content: center; */
-  /* height: ${(constants.height / 13) * 12}; */
+const TopView = styled.View`
+  width: 100%;
+  height: 10%;
+  background-color: rgba(233, 237, 244, 1);
+  flex-direction: row;
 `
-const RowView = styled.View`
-  /* flex-direction: row; */
-  height: ${(constants.height / 13) * 13};
-  /* background-color: rgba(65, 129, 247, 1); */
-`
-const SideView = styled.View`
-  width: ${constants.width / 1};
+const FlexLeft = styled.View`
+  justify-content: center;
+  align-items: flex-start;
   flex: 1;
+  margin-top: 25;
+  padding-left: 15;
 `
-const SideView1 = styled.View`
-  flex: 1.3;
-  width: ${constants.width / 1};
-  /* background-color: rgba(65, 129, 247, 1); */
-`
-const SideView11 = styled.View`
-  flex: 1;
-  width: ${constants.width / 1};
+const FlexCenter = styled.View`
   justify-content: center;
   align-items: center;
+  flex: 1;
 `
-const SideView2 = styled.View`
-  width: ${constants.width / 1};
-  flex: 0.1;
-`
-const useScreenDimensions = () => {
-  const [screenData, setScreenData] = useState(Dimensions.get("screen"))
-
-  useEffect(() => {
-    const onChange = (result) => {
-      setScreenData(result.screen)
-    }
-
-    Dimensions.addEventListener("change", onChange)
-
-    return () => Dimensions.removeEventListener("change", onChange)
-  })
-
-  return {
-    ...screenData,
-    isLandscape: screenData.width > screenData.height,
-  }
-}
-
-const StudyContainer = ({ navigation }) => {
-  const Bright = navigation.getParam("Bright")
-
-  const screenData = useScreenDimensions()
-  const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
+export default ({ navigation }) => {
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
   var todayyear = new Date().getFullYear() //Current Year
@@ -147,12 +141,19 @@ const StudyContainer = ({ navigation }) => {
   var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
-  useKeepAwake() //화면 안꺼지게 expo
-  ///
-  const minValue_10 = (value) => value >= 10
 
+  ///
+  const StaTabContents = ["Today", "Week", "Month"]
+
+  const [refreshing, setRefreshing] = useState(false)
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())
+
+  const [selectPercent, setSelectPercent] = useState(false)
+  const [selectPercent2, setSelectPercent2] = useState(false)
+
+  const oneDayHours_tmp = Array.from(Array(24).keys())
+  const oneDayHours = oneDayHours_tmp.map(String)
 
   const isFirstRun = useRef(true)
   useEffect(() => {
@@ -165,85 +166,135 @@ const StudyContainer = ({ navigation }) => {
     nextDate.setDate(nextDate.getDate() + 1)
   }, [selectDate])
 
-  useEffect(() => {
-    myInfoRefetch()
-  }, [])
-
+  const { loading, data, refetch } = useQuery(GET_USER, {
+    variables: { username: navigation.getParam("username") },
+  })
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true)
+      await refetch()
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setRefreshing(false)
+    }
+  }
   return (
-    // <View style={[styles.container, screenData.isLandscape && styles.containerLandscape]}>
-    //   <View style={[styles.box, { width: screenData.width / 2 }]} />
-    // </View>
-    <>
-      {loading ? (
-        <Loader />
+    <Container>
+      {Platform.OS == "ios" ? (
+        <StatusBar barStyle="dark-content" />
       ) : (
-        <>
-          {Platform.OS == "ios" ? (
-            <StatusBar barStyle="dark-content" />
-          ) : (
-            <StatusBar barStyle="light-content" />
-          )}
-          <>
-            <SideView1>
-              <Container>
-                <Tabs>
-                  <Tab
-                    heading={
-                      <TabHeading>
-                        <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Deep Time</Text>
-                      </TabHeading>
-                    }
-                    tabStyle={
-                      Platform.OS === "ios"
-                        ? { backgroundColor: "#ffffff" }
-                        : { backgroundColor: "#0f4c82" }
-                    }
-                    activeTabStyle={
-                      Platform.OS === "ios"
-                        ? { backgroundColor: "#ffffff" }
-                        : { backgroundColor: "#0f4c82" }
-                    }
-                  >
-                    <UserSchedule
-                      myData={myInfoData.me}
-                      loading={loading}
-                      selectDate={selectDate}
-                      nextDate={nextDate}
-                      myInfoRefetch={myInfoRefetch}
-                    />
-                  </Tab>
-                  <Tab
-                    heading={
-                      <TabHeading>
-                        <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Todo List</Text>
-                      </TabHeading>
-                    }
-                    tabStyle={
-                      Platform.OS === "ios"
-                        ? { backgroundColor: "#ffffff" }
-                        : { backgroundColor: "#0f4c82" }
-                    }
-                    activeTabStyle={
-                      Platform.OS === "ios"
-                        ? { backgroundColor: "#ffffff" }
-                        : { backgroundColor: "#0f4c82" }
-                    }
-                  >
-                    <UserStatistics />
-                  </Tab>
-                </Tabs>
-              </Container>
-            </SideView1>
-          </>
-        </>
+        <StatusBar barStyle="light-content" />
       )}
-    </>
+      <TopView>
+        <FlexLeft>
+          <TouchableOpacity onPress={() => navigation.navigate("Userdetail")}>
+            <Icon
+              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+              color={"#000000"}
+              size={40}
+            />
+          </TouchableOpacity>
+        </FlexLeft>
+        <FlexCenter></FlexCenter>
+        <FlexLeft></FlexLeft>
+      </TopView>
+      <Tabs>
+        <Tab
+          heading={
+            <TabHeading>
+              <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Today</Text>
+            </TabHeading>
+          }
+          textStyle={{ color: "#ffffff" }}
+          // heading="Today"
+          tabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+          activeTabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+        >
+          <Today
+            myData={data.seeUser}
+            onRefresh={onRefresh}
+            selectDate={selectDate}
+            nextDate={nextDate}
+            setSelectDate={setSelectDate}
+            oneDayHours={oneDayHours}
+            loading={loading}
+            targetToday={targetToday}
+            //
+            selectPercent={selectPercent}
+            setSelectPercent={setSelectPercent}
+            selectPercent2={selectPercent2}
+            setSelectPercent2={setSelectPercent2}
+            refreshing={refreshing}
+          />
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading>
+              <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Week</Text>
+            </TabHeading>
+          }
+          // heading="Week"
+          tabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+          activeTabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+        >
+          <Weeks
+            myData={data.seeUser}
+            onRefresh={onRefresh}
+            selectDate={selectDate}
+            nextDate={nextDate}
+            setSelectDate={setSelectDate}
+            oneDayHours={oneDayHours}
+            loading={loading}
+            targetToday={targetToday}
+            //
+            selectPercent={selectPercent}
+            setSelectPercent={setSelectPercent}
+            selectPercent2={selectPercent2}
+            setSelectPercent2={setSelectPercent2}
+            refreshing={refreshing}
+          />
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading>
+              <Text style={{ fontSize: 15, fontFamily: "GmarketMedium" }}>Month</Text>
+            </TabHeading>
+          }
+          // heading="Month"
+          tabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+          activeTabStyle={
+            Platform.OS === "ios" ? { backgroundColor: "#ffffff" } : { backgroundColor: "#0f4c82" }
+          }
+        >
+          <Months
+            myData={data.seeUser}
+            onRefresh={onRefresh}
+            selectDate={selectDate}
+            nextDate={nextDate}
+            setSelectDate={setSelectDate}
+            oneDayHours={oneDayHours}
+            loading={loading}
+            targetToday={targetToday}
+            //
+            selectPercent={selectPercent}
+            setSelectPercent={setSelectPercent}
+            selectPercent2={selectPercent2}
+            setSelectPercent2={setSelectPercent2}
+            refreshing={refreshing}
+          />
+        </Tab>
+      </Tabs>
+    </Container>
   )
 }
-const styles = StyleSheet.create({
-  slide1: {
-    // flex: 1,
-  },
-})
-
-export default withNavigationFocus(StudyContainer)

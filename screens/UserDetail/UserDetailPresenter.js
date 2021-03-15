@@ -22,6 +22,7 @@ import AuthButton from "../../components/AuthButton"
 import { Container, Header, Content, Button, Text, Row } from "native-base"
 import constants from "../../constants"
 import UserSchedule from "./UserSwiper/UserSchedule"
+import UserDetailSwiper from "./UserSwiper/UserDetailSwiper"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 const ProfileHeader2 = styled.View`
@@ -63,24 +64,13 @@ const ProfileHeader = styled.View`
 `
 const MainView = styled.View`
   align-items: center;
-  /* background-color: rgba(255, 255, 255, 1); */
+  /* background-color: rgba(233, 237, 244, 1); */
 `
-const MainView2 = styled.View`
+const MainView1 = styled.View`
   background-color: rgba(233, 237, 244, 1);
+  height: 100%;
 `
-const MainView21 = styled.View`
-  flex: 1;
-  background-color: rgba(255, 255, 255, 1);
-`
-const Stat2 = styled.View`
-  width: ${constants.width / 5};
-  align-items: center;
-  /* margin-left: 30;
-  margin-right: 10;
-  margin-top: 10;
-  margin-bottom: 10; */
-  /* background-color: rgba(255, 255, 255, 1); */
-`
+
 const LineView = styled.View`
   /* margin-bottom: 15px; */
   /* margin-top: 0px; */
@@ -99,15 +89,17 @@ const LineView11 = styled.View`
   margin-bottom: 5px;
   background-color: grey;
 `
-const Stat3 = styled.View`
+const ButtonView = styled.View`
   flex-direction: row;
   flex: 1;
   justify-content: center;
+  border-color: rgba(255, 255, 255, 1);
 `
 const AdView = styled.View`
   flex-direction: row;
   justify-content: center;
   /* margin-top: 15; */
+  /* border-width: 1; */
   width: ${constants.width / 1.5};
   height: ${constants.height / 25};
 `
@@ -167,11 +159,7 @@ const Setting = styled.View`
   justify-content: center;
   align-items: flex-start;
 `
-const ProfileMeta2 = styled.View``
-const BlueView = styled.View`
-  background-color: rgba(34, 76, 126, 1);
-  height: 2;
-`
+
 const View = styled.View`
   background-color: rgba(237, 237, 239, 1);
   height: 1;
@@ -266,21 +254,24 @@ const TaskFlagView = styled.View`
   justify-content: center;
   align-items: center;
 `
-const PostView = styled.View`
-  flex-direction: row;
-  margin-top: 10;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: ${constants.width / 1};
-`
-const PostStyle = styled.View`
-  margin-left: 5;
-`
+
 const ModalView = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+`
+const TouchBox = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  margin-left: 0;
+  height: 40;
+  width: 100;
+  border-radius: 10;
+  background-color: "rgba(123, 169, 234, 1)";
+`
+const TouchText = styled.Text`
+  color: "rgba(255, 255, 255, 1)";
+  font-family: "GmarketMedium";
 `
 const UserDetailPresenter = ({
   data,
@@ -343,7 +334,7 @@ const UserDetailPresenter = ({
   }, [])
   return (
     <>
-      <MainView2>
+      <MainView1>
         {Platform.OS == "ios" ? (
           <StatusBar barStyle="dark-content" />
         ) : (
@@ -447,12 +438,36 @@ const UserDetailPresenter = ({
                 </TouchableOpacity>
               </Stat5>
             </AdView>
+            <LineView />
+
+            <View />
+            <ButtonView>
+              <ModalView>
+                <TouchBox
+                  onPress={() => {
+                    navigation.navigate("UserDetailSwiper", { username: data.seeUser.username })
+                  }}
+                >
+                  {/* <UserSchedule userId={data.seeUser.id}></UserSchedule> */}
+
+                  <TouchText>통계</TouchText>
+                </TouchBox>
+              </ModalView>
+              <ModalView>
+                <TouchBox
+                  onPress={() => {
+                    navigation.navigate("UserSchedule", {
+                      userId: data.seeUser.id,
+                      username: data.seeUser.username,
+                    })
+                  }}
+                >
+                  <TouchText>스케줄</TouchText>
+                </TouchBox>
+              </ModalView>
+            </ButtonView>
           </ProfileHeader>
 
-          <View />
-          {/* <Stat4>
-            <UserSchedule userId={data.seeUser.id}></UserSchedule>
-          </Stat4> */}
           {/* 내 포스트 !!!!!!!!!! */}
           {/* <PostView>
             {data.seeUser.posts.map((list) => (
@@ -507,7 +522,7 @@ const UserDetailPresenter = ({
             <StatName>QR코드 </StatName>
           </TouchableOpacity>
         </Stat2> */}
-      </MainView2>
+      </MainView1>
       <Modal
         isVisible={modalVisible}
         onBackdropPress={() => setModalVisible(false)}

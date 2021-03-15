@@ -15,6 +15,7 @@ import SwiperBase from "../screens/Stat/SwiperBase"
 import ToDoButton from "../screens/TodoList/ToDoButton"
 import MyGroupContainer from "../screens/Group/MyGoup/MyGroupContainer"
 import SearchGroupButton from "../screens/Group/SearchGroup/SearchGroupButton"
+import MenuButton from "../components/MenuButton"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
     {
@@ -37,7 +38,7 @@ export default createBottomTabNavigator(
   {
     MainController: {
       screen: stackFactory(MainController, {
-        // headerLeft: "DEEPTIME",
+        // headerLeft: <MenuButton />,
         headerRight: <ToDoButton />,
         title: "DEEPTIME",
         headerTitleStyle: {
@@ -67,7 +68,7 @@ export default createBottomTabNavigator(
         headerTitleStyle: {
           fontFamily: "GmarketBold",
         },
-        // headerLeft: <Iam />
+        // headerLeft: <MenuButton />,
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (

@@ -78,8 +78,11 @@ const VweekBar = ({ taskArray_week, taskArray_week_pre, weekHMsosu_pre, ylength,
             ]}
             labels={({ datum }) =>
               datum.y * 60 > 60
-                ? Math.floor(Math.floor(datum.y * 60) / 60) + "시간" + ((datum.y * 60) % 60) + "분"
-                : datum.y * 60 + "분"
+                ? Math.floor(Math.floor(datum.y * 60) / 60) +
+                  "시간" +
+                  Math.floor((datum.y * 60) % 60) +
+                  "분"
+                : Math.floor(datum.y * 60) + "분"
             }
           />
         </VictoryGroup>

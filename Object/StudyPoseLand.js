@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
   Image,
+  Switch,
 } from "react-native"
 import * as Permissions from "expo-permissions"
 import * as posenet from "@tensorflow-models/posenet"
@@ -20,6 +21,8 @@ import Icon from "../components/Icon"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import styled from "styled-components"
+import AsyncStorage from "@react-native-community/async-storage"
+
 import * as mobilenet from "@tensorflow-models/mobilenet"
 import { PoseNet } from "@tensorflow-models/posenet"
 import { ExpoWebGLRenderingContext } from "expo-gl"
@@ -99,7 +102,8 @@ let studyInterval = undefined
 let studyArray = []
 let heigt = 812 / HEIGHT
 let studySetInterval = undefined
-
+let brighttime = undefined
+let isEnabledTime = undefined
 const PoseCamera = ({
   navigation,
   myInfoData,
@@ -116,13 +120,24 @@ const PoseCamera = ({
   const [pose, setPose] = useState(null)
   const rafId = useRef(null)
   const camRef = useRef(null)
-  const [button, setButton] = useState(false)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
-  const [setting, setSetting] = useState(true)
+  const [setting, setSetting] = useState(false)
   const [brightnessButton, setbrightnessButton] = useState(true)
   const [androidCam, setandroidCam] = useState(true)
   const [personOnoff, setpersonOnoff] = useState(true)
-  const [androidTime, setandroidTime] = useState(true)
+  const [settingTime, setsettingTime] = useState(60000)
+  const [isEnabled, setIsEnabled] = useState(false)
+
+  const toggleSwitch = async () => {
+    setIsEnabled((previousState) => !previousState)
+    if (!isEnabled) {
+      isEnabledTime = setTimeout(function () {
+        getAndSetSystemBrightnessAsync()
+      }, settingTime)
+    } else {
+      clearTimeout(brighttime)
+    }
+  }
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
 
@@ -142,30 +157,31 @@ const PoseCamera = ({
       console.error("System brightness permission not granted")
     }
   }
-  // useEffect(() => {
-  //     // Ask for system brightness permission
-  //     console.log(brightnessButton,"brightnessButton")
-  //   if(brightnessButton)
-  //   {
-  //     console.log(brightnessButton,"brightnessButton true")
-  //     getAndSetSystemBrightnessAsync();
-  //   }
-  // }, [brightnessButton]);
+  useEffect(() => {
+    if (brightnessButton) {
+      brighttime = setTimeout(function () {
+        if (isEnabled) {
+          getAndSetSystemBrightnessAsync()
+        }
+      }, settingTime)
+    } else {
+      clearTimeout(brighttime)
+    }
+  }, [brightnessButton])
+
   //blinking 1초마다 10동안
   useEffect(() => {
     const interval = setInterval(() => {
       setSetting((setting) => !setting)
-    }, 980)
+    }, 990)
+
     setTimeout(function () {
       setandroidCam(false)
-      setSetting(true)
-    }, 9000)
-    setTimeout(function () {
       clearInterval(interval)
       if (Platform.OS !== "ios") {
         setSetting(true)
       }
-    }, 9800)
+    }, 9900)
   }, [])
 
   async function sleep(ms) {
@@ -176,12 +192,10 @@ const PoseCamera = ({
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     if (Platform.OS !== "ios") {
       studySetInterval = setInterval(async () => {
-        if (!AUTORENDER && !button) {
-          updatePreview()
-        }
+        updatePreview()
+
         const imageTensor = images.next().value
         tf.dispose([imageTensor])
-        setandroidTime(false)
         if (!AUTORENDER) {
           gl.endFrameEXP()
         }
@@ -191,9 +205,8 @@ const PoseCamera = ({
       if (isFirstRun.current) {
         clearInterval(studySetInterval)
         isFirstRun.current = false
-        return
       }
-      if (!AUTORENDER && !button) {
+      if (Platform.OS !== "ios") {
         updatePreview()
       }
       const imageTensor = images.next().value
@@ -259,76 +272,48 @@ const PoseCamera = ({
 
   return (
     <>
-      <View style={styles.peopleLand}>
-        <TouchableOpacity
-          onPress={() => {
-            clearInterval(studyInterval)
-            clearInterval(studySetInterval)
-            Brightness.setBrightnessAsync(Bright)
-            // setandroidCam(true)
-            // setSetting(false)
-            // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
-            navigation.navigate("TabNavigation")
-          }}
-        >
-          <Icon
-            name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-            color={"#000000"}
-            size={40}
-          />
-        </TouchableOpacity>
-        <ScrollView
-          style={{ backgroundColor: "#ffffff", width: (WIDTH / 5) * 4 }}
-          horizontal={true}
-        >
-          <View style={styles.indiviList}>
-            <Text style={styles.textTimestyle}>
-              {Math.floor(nexistTime / 3600) < 10
-                ? `0${Math.floor(nexistTime / 3600)}`
-                : Math.floor(nexistTime / 3600)}
-              :
-              {Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60 < 10
-                ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
-                : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
-            </Text>
-            <Image
-              style={{
-                height: HEIGHT / 17,
-                width: HEIGHT / 17,
-                borderRadius: 25,
-                marginTop: 0,
-                marginBottom: 0,
-                borderWidth: 4,
-                // borderColor: myInfoData.me.existToggle
-                borderColor: setting ? "rgba(107, 152, 247, 1)" : "rgba(133, 133, 133, 1)",
-              }}
-              source={{ uri: myInfoData.me.avatar }}
+      <TouchableOpacity
+        disabled={brightnessButton}
+        onPressIn={() => {
+          if (!brightnessButton) {
+            getAndSetSystemBrightnessAsync()
+          }
+        }}
+      >
+        <View style={styles.peopleLand}>
+          <TouchableOpacity
+            onPress={() => {
+              clearInterval(studyInterval)
+              clearInterval(studySetInterval)
+              clearTimeout(brighttime)
+              clearTimeout(isEnabledTime)
+              Brightness.setBrightnessAsync(Bright)
+              // setandroidCam(true)
+              // setSetting(false)
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+              navigation.navigate("TabNavigation")
+            }}
+          >
+            <Icon
+              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+              color={"#000000"}
+              size={40}
             />
-            <Text style={styles.textstyle}>
-              {myInfoData.me.username.length > 6
-                ? myInfoData.me.username.substr(0, 5) + ".."
-                : myInfoData.me.username}
-            </Text>
-          </View>
-
-          {myInfoData.me.withFollowing.map((list) => (
-            <View style={styles.indiviList} key={list.id}>
+          </TouchableOpacity>
+          <ScrollView
+            style={{ backgroundColor: "#ffffff", width: (WIDTH / 5) * 4 }}
+            horizontal={true}
+          >
+            <View style={styles.indiviList}>
               <Text style={styles.textTimestyle}>
-                {Math.floor(list.todayTime.existTime / 3600) < 10
-                  ? `0${Math.floor(list.todayTime.existTime / 3600)}`
-                  : Math.floor(list.todayTime.existTime / 3600)}
+                {Math.floor(nexistTime / 3600) < 10
+                  ? `0${Math.floor(nexistTime / 3600)}`
+                  : Math.floor(nexistTime / 3600)}
                 :
-                {Math.floor(list.todayTime.existTime / 60) -
-                  Math.floor(list.todayTime.existTime / 3600) * 60 <
-                10
-                  ? `0${
-                      Math.floor(list.todayTime.existTime / 60) -
-                      Math.floor(list.todayTime.existTime / 3600) * 60
-                    }`
-                  : Math.floor(list.todayTime.existTime / 60) -
-                    Math.floor(list.todayTime.existTime / 3600) * 60}
+                {Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60 < 10
+                  ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
+                  : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
               </Text>
-
               <Image
                 style={{
                   height: HEIGHT / 17,
@@ -337,76 +322,122 @@ const PoseCamera = ({
                   marginTop: 0,
                   marginBottom: 0,
                   borderWidth: 4,
-                  borderColor: list.existToggle
-                    ? "rgba(107, 152, 247, 1)"
-                    : "rgba(133, 133, 133, 1)",
+                  // borderColor: myInfoData.me.existToggle
+                  borderColor: setting ? "rgba(107, 152, 247, 1)" : "rgba(133, 133, 133, 1)",
                 }}
-                source={{ uri: list.avatar }}
+                source={{ uri: myInfoData.me.avatar }}
               />
               <Text style={styles.textstyle}>
-                {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
+                {myInfoData.me.username.length > 6
+                  ? myInfoData.me.username.substr(0, 5) + ".."
+                  : myInfoData.me.username}
               </Text>
             </View>
-          ))}
-        </ScrollView>
-      </View>
-      <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
-        <View style={styles.moon}>
-          <View style={styles.moon2}>
-            <TouchableOpacity
-              onPress={() => {
-                getAndSetSystemBrightnessAsync()
-                // setbrightnessButton(!brightnessButton)
-              }}
-              style={styles.round}
-            >
-              {brightnessButton ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
-                  color={"#fff"}
-                  size={40}
+
+            {myInfoData.me.withFollowing.map((list) => (
+              <View style={styles.indiviList} key={list.id}>
+                <Text style={styles.textTimestyle}>
+                  {Math.floor(list.todayTime.existTime / 3600) < 10
+                    ? `0${Math.floor(list.todayTime.existTime / 3600)}`
+                    : Math.floor(list.todayTime.existTime / 3600)}
+                  :
+                  {Math.floor(list.todayTime.existTime / 60) -
+                    Math.floor(list.todayTime.existTime / 3600) * 60 <
+                  10
+                    ? `0${
+                        Math.floor(list.todayTime.existTime / 60) -
+                        Math.floor(list.todayTime.existTime / 3600) * 60
+                      }`
+                    : Math.floor(list.todayTime.existTime / 60) -
+                      Math.floor(list.todayTime.existTime / 3600) * 60}
+                </Text>
+
+                <Image
+                  style={{
+                    height: HEIGHT / 17,
+                    width: HEIGHT / 17,
+                    borderRadius: 25,
+                    marginTop: 0,
+                    marginBottom: 0,
+                    borderWidth: 4,
+                    borderColor: list.existToggle
+                      ? "rgba(107, 152, 247, 1)"
+                      : "rgba(133, 133, 133, 1)",
+                  }}
+                  source={{ uri: list.avatar }}
                 />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
-                  color={"#fff"}
-                  size={40}
-                />
-              )}
-            </TouchableOpacity>
-            <View style={styles.posebutton}>
+                <Text style={styles.textstyle}>
+                  {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+        <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
+          <View style={styles.moon}>
+            <View style={styles.moon2}>
+              <View style={styles.posebutton}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setpersonOnoff(!personOnoff)
+                  }}
+                >
+                  {personOnoff ? (
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
+                      color={"#ffffff"}
+                      size={45}
+                    />
+                  ) : (
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-square" : "md-square"}
+                      color={"#224C7E"}
+                      size={45}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.moon3}>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={isEnabled ? "#f5dd4b" : "#767577"}
+                ios_backgroundColor="#F4F3F4"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
               <TouchableOpacity
                 onPress={() => {
-                  setpersonOnoff(!personOnoff)
+                  getAndSetSystemBrightnessAsync()
                 }}
+                style={styles.round}
               >
-                {personOnoff ? (
+                {brightnessButton ? (
                   <Icon
-                    name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
-                    color={"#ffffff"}
-                    size={45}
+                    name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
+                    color={"#fff"}
+                    size={40}
                   />
                 ) : (
                   <Icon
-                    name={Platform.OS === "ios" ? "ios-square" : "md-square"}
-                    color={"#224C7E"}
-                    size={45}
+                    name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
+                    color={"#fff"}
+                    size={40}
                   />
                 )}
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <>
-          <View
-            style={[
-              styles.cameraContainer,
-              {
-                transform: [{ rotate: "0deg" }],
-              },
-            ]}
-          >
-            {Platform.OS == "ios" ? (
+          <>
+            <View
+              style={[
+                styles.cameraContainer,
+                {
+                  transform: [{ rotate: "0deg" }],
+                },
+              ]}
+            >
               <TensorCamera
                 ref={camRef}
                 style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
@@ -421,47 +452,18 @@ const PoseCamera = ({
                 autorender={false}
                 // rotation={90} // or -90 for landscape right
               />
-            ) : (
-              <>
-                {/* {androidCam ? (
-                  <Camera
-                    ref={rafId}
-                    type={Camera.Constants.Type.front}
-                    style={{
-                      justifyContent: "flex-end",
-                      padding: 15,
-                      width: Dimensions.get("window").width / 2.16 / heigt,
-                      height: Dimensions.get("window").height / 2.64,
-                    }}
-                  />
-                ) : ( */}
-                <TensorCamera
-                  ref={camRef}
-                  style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
-                  type={Camera.Constants.Type.front}
-                  zoom={0}
-                  cameraTextureHeight={textureDims.height}
-                  cameraTextureWidth={textureDims.width}
-                  resizeHeight={200}
-                  resizeWidth={152}
-                  resizeDepth={3}
-                  onReady={handleImageTensorReady}
-                  autorender={false}
-                  // rotation={90} // or -90 for landscape right
-                />
-                {/* )} */}
-              </>
-            )}
-          </View>
-          {personOnoff ? null : (
-            <View style={styles.cameraAbsolute}>
-              {androidCam ? null : (
-                <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
-              )}
             </View>
-          )}
-        </>
-      </View>
+            {personOnoff ? null : (
+              <View style={styles.cameraAbsolute}>
+                {androidCam ? null : (
+                  <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+                )}
+              </View>
+            )}
+            {/* <View style={[styles.modelResults]}>{<Pose pose={pose} />}</View> */}
+          </>
+        </View>
+      </TouchableOpacity>
     </>
   )
 }
@@ -644,6 +646,13 @@ const styles = StyleSheet.create({
   },
   moon2: {
     height: "100%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
+  },
+  moon3: {
+    height: "80%",
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "flex-end",

@@ -16,6 +16,8 @@ import OneGroupContainer from "../screens/Group/OneGroup/OneGroupContainer"
 import EditGroup from "../screens/Group/Edit/EditGroup"
 import CreateGroupContainer from "../screens/Group/CreateGroup/CreateGroupContainer"
 import SearchGroupContainer from "../screens/Group/SearchGroup/SearchGroupContainer"
+import UserDetailSwiper from "../screens/UserDetail/UserSwiper/UserDetailSwiper"
+import UserSchedule from "../screens/UserDetail/UserSwiper/UserSchedule"
 
 const MainNavigation = createStackNavigator(
   {
@@ -32,6 +34,8 @@ const MainNavigation = createStackNavigator(
     EditGroup,
     CreateGroupContainer,
     SearchGroupContainer,
+    UserDetailSwiper,
+    UserSchedule,
   },
   {
     defaultNavigationOptions: {

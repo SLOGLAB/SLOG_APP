@@ -314,9 +314,6 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
   const settingData = async () => {
     try {
       events_data = scheduledata.me.schedules.map((List) => {
-        // if (new Date(List.start).getDate() === 1) {
-        //   console.log(List);
-        // }
         const findSubject = (a) => a.value === List.subjectId
         const subjectIndex = SubjectList.findIndex(findSubject)
         const startDate = new Date(List.start)
@@ -444,13 +441,11 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
   const onEventPress = (evt) => {
     issetModalVisible(true)
     evt.endDate.setTime(evt.endDate.getTime() + 1000)
-
     // title에 좌물쇠 빼주기
     if (evt.description.includes("🔒")) {
       const tmpString = evt.description.split("🔒\n")
       evt.description = tmpString[1]
     }
-
     setSubjectId(evt.subjectId)
     setScheduleId(evt.id)
     setsubstate(evt.state)
@@ -462,7 +457,6 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
     setendTime(evt.endDate)
     setstartTimeText(moment(evt.startDate).format("hh:mm a"))
     setendTimeText(moment(evt.endDate).format("hh:mm a"))
-
     // 선택한 TASK 인덱스 찾기
     const findSubject = (a) => a.id === evt.subjectId
     const tmpIndex = scheduledata.mySubject.findIndex(findSubject)

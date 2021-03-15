@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { TouchableOpacity } from "react-native"
+import { TouchableOpacity, ScrollView, RefreshControl } from "react-native"
 
 import Day from "../Day"
 import VweekBar from "../../graphsVictory/VweekBar"
@@ -175,6 +175,7 @@ const Weeks = ({
   setSelectPercent,
   selectPercent2,
   setSelectPercent2,
+  refreshing,
 }) => {
   /////월요일부터 이번주 공부시간///////
   const [selectDay, setselectDay] = useState(targetToday)
@@ -503,229 +504,244 @@ const Weeks = ({
   const [modalVisible, setModalVisible] = useState(false)
 
   return (
-    <DayView>
-      <WeekView>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-          <Text>
-            {/* {month}월 {weekOfMonth(nowDate)}주차 */}
-            {thisy[0]}.{thism[0]}.{thisd[0]}~{thisy[6]}.{thism[6]}.{thisd[6]}
-          </Text>
-        </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          isVisible={modalVisible}
-          onBackdropPress={() => setModalVisible(false)}
-          backdropColor={"black"}
-        >
-          <Calendar
-            current={selectDay}
-            minDate={"2012-05-10"}
-            maxDate={"2030-05-30"}
-            onDayPress={(day) => {
-              // console.log(day.dateString)
-              setSelectDate(new Date(day.timestamp))
-
-              setselectDay(day.timestamp)
-              setModalVisible(!modalVisible)
-            }}
-            monthFormat={"yyyy MM"}
-            onPressArrowLeft={(subtractMonth) => subtractMonth()}
-            onPressArrowRight={(addMonth) => addMonth()}
-          />
-        </Modal>
-      </WeekView>
-
-      <TouchableOpacity style={{ flex: 1 }} onPress={onRefresh}>
-        <ChartView>
-          <Day
-            existTime={Math.floor(donutData_1)}
-            nowtarget={Math.floor(donutData_2)}
-            donutPercent={donutPercent}
-          />
-        </ChartView>
-      </TouchableOpacity>
-      <Line />
-      {SumArray(taskArray_week) === 0 && SumArray(taskArray_week_pre) === 0 ? (
-        <View>
-          <CenterView>
-            <SubText>요일별 학습 시간(시) </SubText>
-            <ChartView1>
-              <Box selectColor={"rgba(123, 169, 234, 1)"} />
-              <BoxText>이번주 </BoxText>
-              <Box selectColor={"rgba(199, 233, 248, 1)"} />
-              <BoxText>저번주</BoxText>
-            </ChartView1>
-          </CenterView>
-          <VweekBar
-            taskArray_week={taskArray_week}
-            taskArray_week_pre={
-              Math.max.apply(null, taskArray_week_pre) < 60
-                ? taskArray_week_pre.map((v) => {
-                    return 60 * v
-                  })
-                : taskArray_week_pre
-            }
-            ylength={1}
-            weekHMsosu={Math.max.apply(null, taskArray_week) < 60 ? 0 : 1}
-            weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 60 ? 0 : 1}
-          />
-        </View>
-      ) : (
-        <View>
-          <CenterView>
-            <SubText>요일별 학습 시간(시) </SubText>
-            <ChartView1>
-              <Box selectColor={"rgba(123, 169, 234, 1)"} />
-              <BoxText>이번주 </BoxText>
-              <Box selectColor={"rgba(199, 233, 248, 1)"} />
-              <BoxText>저번주</BoxText>
-            </ChartView1>
-          </CenterView>
-          <VweekBar
-            taskArray_week={
-              // Math.max.apply(null, taskArray_week) < 60
-              //   ? taskArray_week.map((v) => {
-              //       return 60 * v
-              //     })
-              //   :
-              taskArray_week
-            }
-            taskArray_week_pre={
-              // Math.max.apply(null, taskArray_week_pre) < 60
-              //   ? taskArray_week_pre.map((v) => {
-              //       return 60 * v
-              //     })
-              //   :
-              taskArray_week_pre
-            }
-            ylength={
-              Math.max.apply(null, taskArray_week) < Math.max.apply(null, taskArray_week_pre)
-                ? Math.max.apply(null, taskArray_week_pre) / 60
-                : Math.max.apply(null, taskArray_week) / 60
-            }
-            title={"요일별 학습 시간"}
-            title_y={"학습 시간(분)"}
-            weekHMsosu={Math.max.apply(null, taskArray_week) < 1 ? 0 : 1}
-            weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 1 ? 0 : 1}
-          />
-        </View>
-      )}
-
-      <Line />
-      <View>
-        <CenterView>
-          <SubText>과목별 학습 시간(시)</SubText>
-          <ChartView1>
-            <Box selectColor={"rgba(123, 169, 234, 1)"} />
-            <BoxText>학습 </BoxText>
-            <Box selectColor={"rgba(233, 237, 244, 1)"} />
-            <BoxText>목표</BoxText>
-          </ChartView1>
-        </CenterView>
-        <StackedWMBar
-          data_1={taskArray_schedule_week}
-          data_2={taskArray_scheduleT_week}
-          labels={schedule_label}
-          label_1={"학습"}
-          label_2={"목표"}
-          title={"과목별 시간"}
-          title_x={"시간(분)"}
-          stepSize_x={60}
+    <ScrollView
+      style={{ backgroundColor: "#E9EDF4" }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          style={{ backgroundColor: "#E9EDF4" }}
         />
-      </View>
-      <Line />
-      <View>
-        <CenterView>
-          <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
-          <BoxView1>
-            {schedule_label.map((name, index) => (
-              <RowView key={name} multiline={true}>
-                <Box selectColor={schedule_color[index]} />
-                <BoxText>{name}</BoxText>
-              </RowView>
-            ))}
-          </BoxView1>
-        </CenterView>
-        <RowView>
-          <FlexView2>
-            <TouchBox
-              Color={selectPercent ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
-              onPress={() => {
-                setSelectPercent(false)
-              }}
+      }
+    >
+      {loading ? (
+        <Loader />
+      ) : (
+        <DayView>
+          <WeekView>
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+              <Text>
+                {/* {month}월 {weekOfMonth(nowDate)}주차 */}
+                {thisy[0]}.{thism[0]}.{thisd[0]}~{thisy[6]}.{thism[6]}.{thisd[6]}
+              </Text>
+            </TouchableOpacity>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              isVisible={modalVisible}
+              onBackdropPress={() => setModalVisible(false)}
+              backdropColor={"black"}
             >
-              <TouchText Color={selectPercent ? "black" : "white"}>학습</TouchText>
-            </TouchBox>
-          </FlexView2>
-          <FlexView>
-            <SubPieChart
-              data={selectPercent ? taskArray_percentT : taskArray_percent}
-              dataColor={schedule_color}
+              <Calendar
+                current={selectDay}
+                minDate={"2012-05-10"}
+                maxDate={"2030-05-30"}
+                onDayPress={(day) => {
+                  // console.log(day.dateString)
+                  setSelectDate(new Date(day.timestamp))
+
+                  setselectDay(day.timestamp)
+                  setModalVisible(!modalVisible)
+                }}
+                monthFormat={"yyyy MM"}
+                onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                onPressArrowRight={(addMonth) => addMonth()}
+              />
+            </Modal>
+          </WeekView>
+
+          <TouchableOpacity style={{ flex: 1 }} onPress={onRefresh}>
+            <ChartView>
+              <Day
+                existTime={Math.floor(donutData_1)}
+                nowtarget={Math.floor(donutData_2)}
+                donutPercent={donutPercent}
+              />
+            </ChartView>
+          </TouchableOpacity>
+          <Line />
+          {SumArray(taskArray_week) === 0 && SumArray(taskArray_week_pre) === 0 ? (
+            <View>
+              <CenterView>
+                <SubText>요일별 학습 시간(시) </SubText>
+                <ChartView1>
+                  <Box selectColor={"rgba(123, 169, 234, 1)"} />
+                  <BoxText>이번주 </BoxText>
+                  <Box selectColor={"rgba(199, 233, 248, 1)"} />
+                  <BoxText>저번주</BoxText>
+                </ChartView1>
+              </CenterView>
+              <VweekBar
+                taskArray_week={taskArray_week}
+                taskArray_week_pre={
+                  Math.max.apply(null, taskArray_week_pre) < 60
+                    ? taskArray_week_pre.map((v) => {
+                        return 60 * v
+                      })
+                    : taskArray_week_pre
+                }
+                ylength={1}
+                weekHMsosu={Math.max.apply(null, taskArray_week) < 60 ? 0 : 1}
+                weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 60 ? 0 : 1}
+              />
+            </View>
+          ) : (
+            <View>
+              <CenterView>
+                <SubText>요일별 학습 시간(시) </SubText>
+                <ChartView1>
+                  <Box selectColor={"rgba(123, 169, 234, 1)"} />
+                  <BoxText>이번주 </BoxText>
+                  <Box selectColor={"rgba(199, 233, 248, 1)"} />
+                  <BoxText>저번주</BoxText>
+                </ChartView1>
+              </CenterView>
+              <VweekBar
+                taskArray_week={
+                  // Math.max.apply(null, taskArray_week) < 60
+                  //   ? taskArray_week.map((v) => {
+                  //       return 60 * v
+                  //     })
+                  //   :
+                  taskArray_week
+                }
+                taskArray_week_pre={
+                  // Math.max.apply(null, taskArray_week_pre) < 60
+                  //   ? taskArray_week_pre.map((v) => {
+                  //       return 60 * v
+                  //     })
+                  //   :
+                  taskArray_week_pre
+                }
+                ylength={
+                  Math.max.apply(null, taskArray_week) < Math.max.apply(null, taskArray_week_pre)
+                    ? Math.max.apply(null, taskArray_week_pre) / 60
+                    : Math.max.apply(null, taskArray_week) / 60
+                }
+                title={"요일별 학습 시간"}
+                title_y={"학습 시간(분)"}
+                weekHMsosu={Math.max.apply(null, taskArray_week) < 1 ? 0 : 1}
+                weekHMsosu_pre={Math.max.apply(null, taskArray_week_pre) < 1 ? 0 : 1}
+              />
+            </View>
+          )}
+
+          <Line />
+          <View>
+            <CenterView>
+              <SubText>과목별 학습 시간(시)</SubText>
+              <ChartView1>
+                <Box selectColor={"rgba(123, 169, 234, 1)"} />
+                <BoxText>학습 </BoxText>
+                <Box selectColor={"rgba(233, 237, 244, 1)"} />
+                <BoxText>목표</BoxText>
+              </ChartView1>
+            </CenterView>
+            <StackedWMBar
+              data_1={taskArray_schedule_week}
+              data_2={taskArray_scheduleT_week}
               labels={schedule_label}
-              title={selectPercent ? "과목별 목표 Time 비율" : "과목별 시간 비율"}
-              updateBoolean={selectPercent}
+              label_1={"학습"}
+              label_2={"목표"}
+              title={"과목별 시간"}
+              title_x={"시간(분)"}
+              stepSize_x={60}
             />
-          </FlexView>
-          <FlexView2>
-            <TouchBox
-              Color={selectPercent ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
-              onPress={() => {
-                setSelectPercent(true)
-              }}
-            >
-              <TouchText Color={selectPercent ? "white" : "black"}>목표</TouchText>
-            </TouchBox>
-          </FlexView2>
-        </RowView>
-      </View>
-      <Line />
-      <View>
-        <CenterView>
-          <SubText>
-            {selectPercent2
-              ? `목표 시간 ${myState[0]}&${myState[1]} 비율`
-              : `학습 시간 ${myState[0]}&${myState[1]} 비율`}
-          </SubText>
-          <ChartView1>
-            <Box selectColor={"rgba(123, 169, 234, 1)"} />
-            <BoxText>{myState[0]} </BoxText>
-            <Box selectColor={"rgba(255, 104, 109, 1)"} />
-            <BoxText>{myState[1]}</BoxText>
-          </ChartView1>
-        </CenterView>
-        <RowView>
-          <FlexView2>
-            <TouchBox
-              Color={selectPercent2 ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
-              onPress={() => {
-                setSelectPercent2(false)
-              }}
-            >
-              <TouchText Color={selectPercent2 ? "black" : "white"}>학습</TouchText>
-            </TouchBox>
-          </FlexView2>
-          <FlexView></FlexView>
-          <FlexView2>
-            <TouchBox
-              Color={selectPercent2 ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
-              onPress={() => {
-                setSelectPercent2(true)
-              }}
-            >
-              <TouchText Color={selectPercent2 ? "white" : "black"}>목표</TouchText>
-            </TouchBox>
-          </FlexView2>
-        </RowView>
-        <FlexViewAb>
-          <StackedBar
-            data_1={selectPercent2 ? self_percentT : self_percent}
-            data_2={selectPercent2 ? lecture_percentT : lecture_percent}
-          />
-        </FlexViewAb>
-      </View>
-      <Line />
-    </DayView>
+          </View>
+          <Line />
+          <View>
+            <CenterView>
+              <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
+              <BoxView1>
+                {schedule_label.map((name, index) => (
+                  <RowView key={name} multiline={true}>
+                    <Box selectColor={schedule_color[index]} />
+                    <BoxText>{name}</BoxText>
+                  </RowView>
+                ))}
+              </BoxView1>
+            </CenterView>
+            <RowView>
+              <FlexView2>
+                <TouchBox
+                  Color={selectPercent ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
+                  onPress={() => {
+                    setSelectPercent(false)
+                  }}
+                >
+                  <TouchText Color={selectPercent ? "black" : "white"}>학습</TouchText>
+                </TouchBox>
+              </FlexView2>
+              <FlexView>
+                <SubPieChart
+                  data={selectPercent ? taskArray_percentT : taskArray_percent}
+                  dataColor={schedule_color}
+                  labels={schedule_label}
+                  title={selectPercent ? "과목별 목표 Time 비율" : "과목별 시간 비율"}
+                  updateBoolean={selectPercent}
+                />
+              </FlexView>
+              <FlexView2>
+                <TouchBox
+                  Color={selectPercent ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
+                  onPress={() => {
+                    setSelectPercent(true)
+                  }}
+                >
+                  <TouchText Color={selectPercent ? "white" : "black"}>목표</TouchText>
+                </TouchBox>
+              </FlexView2>
+            </RowView>
+          </View>
+          <Line />
+          <View>
+            <CenterView>
+              <SubText>
+                {selectPercent2
+                  ? `목표 시간 ${myState[0]}&${myState[1]} 비율`
+                  : `학습 시간 ${myState[0]}&${myState[1]} 비율`}
+              </SubText>
+              <ChartView1>
+                <Box selectColor={"rgba(123, 169, 234, 1)"} />
+                <BoxText>{myState[0]} </BoxText>
+                <Box selectColor={"rgba(255, 104, 109, 1)"} />
+                <BoxText>{myState[1]}</BoxText>
+              </ChartView1>
+            </CenterView>
+            <RowView>
+              <FlexView2>
+                <TouchBox
+                  Color={selectPercent2 ? "rgba(233, 237, 244, 1)" : "rgba(123, 169, 234, 1)"}
+                  onPress={() => {
+                    setSelectPercent2(false)
+                  }}
+                >
+                  <TouchText Color={selectPercent2 ? "black" : "white"}>학습</TouchText>
+                </TouchBox>
+              </FlexView2>
+              <FlexView></FlexView>
+              <FlexView2>
+                <TouchBox
+                  Color={selectPercent2 ? "rgba(123, 169, 234, 1)" : "rgba(233, 237, 244, 1)"}
+                  onPress={() => {
+                    setSelectPercent2(true)
+                  }}
+                >
+                  <TouchText Color={selectPercent2 ? "white" : "black"}>목표</TouchText>
+                </TouchBox>
+              </FlexView2>
+            </RowView>
+            <FlexViewAb>
+              <StackedBar
+                data_1={selectPercent2 ? self_percentT : self_percent}
+                data_2={selectPercent2 ? lecture_percentT : lecture_percent}
+              />
+            </FlexViewAb>
+          </View>
+          <Line />
+        </DayView>
+      )}
+    </ScrollView>
   )
 }
 export default Weeks
