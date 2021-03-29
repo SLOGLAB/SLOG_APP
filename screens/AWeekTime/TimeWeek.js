@@ -28,10 +28,8 @@ import constants from "../../constants"
 import RNPickerSelect from "react-native-picker-select"
 import { Calendar } from "react-native-calendars"
 import AuthButton from "../../components/AuthButton"
-import { CheckBox } from "native-base"
 import ObjectCopy from "../../components/ObjectCopy"
 import { Ionicons } from "@expo/vector-icons"
-import { FloatingMenu } from "react-native-floating-action-menu"
 import ActionButton from "react-native-action-button"
 
 const EmptyView = styled.View``
