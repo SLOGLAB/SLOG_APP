@@ -552,7 +552,7 @@ const Today = ({
             />
           </View>
           <Line />
-          <View>
+          {/* <View>
             <CenterView>
               <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
               <BoxView1>
@@ -596,8 +596,8 @@ const Today = ({
               </FlexView2>
             </RowView>
           </View>
-          <Line />
-          <View>
+          <Line /> */}
+          {/* <View>
             <CenterView>
               <SubText>
                 {selectPercent2
@@ -640,7 +640,8 @@ const Today = ({
                 data_2={selectPercent2 ? lecture_percentT : lecture_percent}
               />
             </FlexViewAb>
-          </View>
+          </View> */}
+          <Line />
         </DayView>
       )}
     </ScrollView>

@@ -713,6 +713,17 @@ export const job_level = [
   { label: "비영리법인", value: "비영리법인" },
   { label: "기타", value: "기타" },
 ]
+export const studyOption_group0 = [
+  { label: "전체", value: "전체" },
+  { label: "중학생", value: "중학생" },
+  { label: "고등학생", value: "고등학생" },
+  { label: "재(N)수생", value: "재(N)수생" },
+  { label: "대학(원)생", value: "대학(원)생" },
+  { label: "공무원", value: "공무원" },
+  { label: "자격증", value: "자격증" },
+  { label: "취업", value: "취업" },
+  { label: "기타", value: "기타" },
+]
 export const studyOption_group = [
   { label: "중학생", value: "중학생" },
   { label: "고등학생", value: "고등학생" },

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -31,13 +31,15 @@ import AuthButton from "../../components/AuthButton"
 import { CheckBox } from "native-base"
 import ObjectCopy from "../../components/ObjectCopy"
 import { Ionicons } from "@expo/vector-icons"
+import { FloatingMenu } from "react-native-floating-action-menu"
+import ActionButton from "react-native-action-button"
 
 const EmptyView = styled.View``
 const EmptyView10 = styled.View`
-  flex: 0.1;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: ${constants.width / 1.4};
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: ${constants.width / 1};
+  margin-bottom: 0;
 `
 const EmptyView5 = styled.View`
   flex: 0.08;
@@ -93,7 +95,7 @@ const StyledModalContainer = styled.View`
   flex-direction: column;
   align-items: center;
   /* 모달창 크기 조절 */
-  flex: 0.8;
+  flex: 0.6;
   width: 300;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
@@ -186,7 +188,7 @@ export let events_data = []
 let newScheduleArray = []
 export let selectDate = [new Date()]
 
-const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday }) => {
+const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday, navigation }) => {
   const myState = scheduledata.me.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
 
   const lists = [
@@ -221,7 +223,9 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
   const [calVisibleEnd, setCalVisibleEnd] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
   const [scheduleId, setScheduleId] = useState("")
-  const [substate, setsubstate] = useState(`${myState[0]}`)
+  // const [substate, setsubstate] = useState(`${myState[0]}`)
+  const [substate, setsubstate] = useState("자습")
+
   const [startTime, setstartTime] = useState(new Date())
   const [endTime, setendTime] = useState(new Date())
   const [startTimeText, setstartTimeText] = useState(moment(new Date()).format("hh:mm a"))
@@ -410,6 +414,10 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
     newScheduleArray.push(updateSchedules)
 
     try {
+      if (subjectId === "") {
+        Alert.alert("과목을 선택하세요")
+        return
+      }
       setModifyLoading(true)
       const {
         data: { saveSchedule_my },
@@ -448,8 +456,8 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
     }
     setSubjectId(evt.subjectId)
     setScheduleId(evt.id)
-    setsubstate(evt.state)
-    setPrivate(evt.isPrivate)
+    // setsubstate(evt.state)
+    // setPrivate(evt.isPrivate)
     setAllDay(evt.isAllDay)
     titleInput.setValue(evt.subjectName)
     locationInput.setValue(evt.location)
@@ -606,6 +614,31 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
   if (!loading) {
     settingData()
   }
+  const items = [
+    {
+      label: "+ To do list",
+
+      onPress: () => {
+        navigation.navigate("TodoListSwiper")
+      },
+      icon: (
+        <Icon
+          name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+          size={24}
+          color="gray"
+        />
+      ),
+    },
+    {
+      label: "스케줄 만들기",
+      onPress: () => {
+        navigation.navigate("AddTimetable")
+      },
+    },
+  ]
+  const [isMenuOpen, setisMenuOpen] = useState(false)
+
+  const handleMenuToggle = () => setisMenuOpen(!isMenuOpen)
 
   return (
     <>
@@ -694,10 +727,16 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                 alignItems: "center",
               }}
             >
-              <Timetablecontrol />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("TimetableNavi")
+                }}
+              >
+                <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={25} />
+              </TouchableOpacity>
+              {/* <Timetablecontrol /> */}
             </View>
           </View>
-
           <WeekView
             events={events_data}
             selectedDate={selectDate[0]}
@@ -716,6 +755,34 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
               setDateStr(moment(new Date(date)).format("YYYY-MM-DD"))
             }}
           />
+          <ActionButton buttonColor="rgba(231,76,60,1)">
+            <ActionButton.Item
+              buttonColor="#114074"
+              title="스케줄 만들기"
+              onPress={() => navigation.navigate("AddTimetable")}
+            >
+              <Icon
+                name={Platform.OS === "ios" ? "ios-calendar" : "md-calendar"}
+                size={30}
+                color="white"
+              />
+            </ActionButton.Item>
+            <ActionButton.Item
+              buttonColor="#114074"
+              title="+ To do list"
+              onPress={() => navigation.navigate("TodoListSwiper")}
+            >
+              <Icon
+                name={
+                  Platform.OS === "ios"
+                    ? "ios-checkmark-circle-outline"
+                    : "md-checkmark-circle-outline"
+                }
+                size={30}
+                color="white"
+              />
+            </ActionButton.Item>
+          </ActionButton>
 
           <Modal
             isVisible={modalCopyVisible}
@@ -1023,14 +1090,14 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                 autoCorrect={false}
               />
               <LineView />
-              <AuthInput
+              {/* <AuthInput
                 {...locationInput}
                 placeholder={"(선택) 위치"}
                 keyboardType="default"
                 returnKeyType="done"
                 // onSubmitEditing={}
                 autoCorrect={false}
-              />
+              /> */}
               <View1 />
               {Platform.OS === "ios" ? (
                 <>
@@ -1227,7 +1294,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                   </View21>
                 </>
               )}
-              <ModalView_State style={{ width: constants.width / 4 }}>
+              {/* <ModalView_State style={{ width: constants.width / 4 }}>
                 <RNPickerSelect
                   onValueChange={(value) => {
                     if (value === null) {
@@ -1265,15 +1332,15 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     )
                   }}
                 />
-              </ModalView_State>
-              <ModalView_Private>
+              </ModalView_State> */}
+              {/* <ModalView_Private>
                 <CheckBox checked={!isPrivate} onPress={() => setPrivate(!isPrivate)} />
                 {isPrivate ? (
                   <Text style={styles.label}> 🔒(통계 미반영)</Text>
                 ) : (
                   <Text style={styles.label}> 🔓(통계 반영)</Text>
                 )}
-              </ModalView_Private>
+              </ModalView_Private> */}
               <ButtonModalView>
                 <View style={{ marginRight: 20 }}>
                   <AuthButton
@@ -1323,7 +1390,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     value={startTime}
                     mode={"time"}
                     is24Hour={true}
-                    display="spinner"
+                    display="clock"
                     onChange={androidstartPicker}
                     minuteInterval={5}
                   />
@@ -1334,7 +1401,7 @@ const TimeWeek = ({ SCHEDULE_USER, scheduledata, loading, onRefresh, targetToday
                     value={endTime}
                     mode={"time"}
                     is24Hour={true}
-                    display="spinner"
+                    display="clock"
                     onChange={androidendPicker}
                     minuteInterval={5}
                   />
@@ -1365,6 +1432,11 @@ const styles = StyleSheet.create({
   label: {
     margin: 8,
     fontFamily: "GmarketMedium",
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: "white",
   },
 })
 const pickerSelectStyles = StyleSheet.create({

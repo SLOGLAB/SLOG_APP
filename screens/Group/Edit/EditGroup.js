@@ -18,7 +18,6 @@ const EditGroup = ({ navigation }) => {
   //     variables: { groupId: navigation.getParam("id") },
   //   })
   const { loading, data, refetch } = useQuery(MY_GROUP, {})
-  const [refreshing, setRefreshing] = useState(false)
   const selectIndex = data.myGroup.findIndex((a) => a.id === navigation.getParam("id"))
   const GroupId = navigation.getParam("id")
   const [editGroupMutation] = useMutation(EDIT_GROUP, {
@@ -27,12 +26,10 @@ const EditGroup = ({ navigation }) => {
 
   const onRefresh = async () => {
     try {
-      setRefreshing(true)
       await refetch()
     } catch (e) {
       console.log(e)
     } finally {
-      setRefreshing(false)
     }
   }
   useEffect(() => {

@@ -66,6 +66,8 @@ export const EDIT_GROUP = gql`
     $targetTime: Int!
     $password: String!
     $bio: String!
+    $imgUrl: String!
+    $imgKey: String!
   ) {
     editGroup(
       groupId: $groupId
@@ -75,6 +77,8 @@ export const EDIT_GROUP = gql`
       targetTime: $targetTime
       password: $password
       bio: $bio
+      imgUrl: $imgUrl
+      imgKey: $imgKey
     )
   }
 `

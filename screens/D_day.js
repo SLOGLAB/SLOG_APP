@@ -24,6 +24,7 @@ const MainView = styled.View`
 const MainView1 = styled.View`
   flex-direction: row;
   background-color: rgba(255, 255, 255, 0);
+  margin-bottom: 15;
 `
 const FlexView = styled.View`
   flex: 1;

@@ -12,6 +12,7 @@ export const MY_GROUP = gql`
       password
       publicBool
       bio
+      imgUrl
       imManager
       manager {
         id

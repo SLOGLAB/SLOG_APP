@@ -330,7 +330,7 @@ const UserDetailPresenter = ({
     }
   }
   useEffect(() => {
-    // console.log(data.seeUser.posts, "data.seeUser.posts")
+    // console.log(data.seeUser.pubOfSchedule, "data.seeUser.posts")
   }, [])
   return (
     <>
@@ -445,7 +445,11 @@ const UserDetailPresenter = ({
               <ModalView>
                 <TouchBox
                   onPress={() => {
-                    navigation.navigate("UserDetailSwiper", { username: data.seeUser.username })
+                    if (data.seeUser.pubOfStatistic) {
+                      navigation.navigate("UserDetailSwiper", { username: data.seeUser.username })
+                    } else {
+                      Alert.alert("통계 비공개 계정입니다")
+                    }
                   }}
                 >
                   {/* <UserSchedule userId={data.seeUser.id}></UserSchedule> */}
@@ -456,10 +460,14 @@ const UserDetailPresenter = ({
               <ModalView>
                 <TouchBox
                   onPress={() => {
-                    navigation.navigate("UserSchedule", {
-                      userId: data.seeUser.id,
-                      username: data.seeUser.username,
-                    })
+                    if (data.seeUser.pubOfSchedule) {
+                      navigation.navigate("UserSchedule", {
+                        userId: data.seeUser.id,
+                        username: data.seeUser.username,
+                      })
+                    } else {
+                      Alert.alert("스케줄 비공개 계정입니다")
+                    }
                   }}
                 >
                   <TouchText>스케줄</TouchText>

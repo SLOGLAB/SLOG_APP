@@ -43,8 +43,6 @@ const Widhi100 = styled.View`
   width: 100%;
 `
 
-const ListsView = styled.View``
-//
 //
 const IndiviList = styled.View`
   justify-content: center;

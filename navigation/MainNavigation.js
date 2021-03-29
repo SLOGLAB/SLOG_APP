@@ -18,7 +18,8 @@ import CreateGroupContainer from "../screens/Group/CreateGroup/CreateGroupContai
 import SearchGroupContainer from "../screens/Group/SearchGroup/SearchGroupContainer"
 import UserDetailSwiper from "../screens/UserDetail/UserSwiper/UserDetailSwiper"
 import UserSchedule from "../screens/UserDetail/UserSwiper/UserSchedule"
-
+import AddTimetable from "../screens/TimeTable/AddTimetable"
+import SelectGroupPhoto from "../screens/Group/SelectGroupPhoto"
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -36,6 +37,8 @@ const MainNavigation = createStackNavigator(
     SearchGroupContainer,
     UserDetailSwiper,
     UserSchedule,
+    AddTimetable,
+    SelectGroupPhoto,
   },
   {
     defaultNavigationOptions: {

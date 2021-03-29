@@ -5,6 +5,9 @@ import { SUBJECT_NAME } from "../Tabs/QueryBox"
 import Loader from "../../components/Loader"
 import AddTimeSchedule from "./TimeTableMenu/AddTimeSchedule"
 import { gql } from "apollo-boost"
+import { Container, Header, TabHeading, Content, Tabs, Text } from "native-base"
+import { SafeAreaView } from "react-native"
+import BackButton from "../../components/BackButton"
 
 const View1 = styled.View`
   flex: 1;
@@ -61,6 +64,32 @@ const StyledModalContainer = styled.View`
 const MenuView = styled.View`
   flex: 1;
 `
+const MainView = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`
+const SubView = styled.View`
+  flex: 1;
+`
+const SubView1 = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`
+const MainText = styled.Text`
+  font-size: 17;
+  font-family: "GmarketBold";
+
+  color: #0f4c82;
+`
+const MainText2 = styled.Text`
+  font-size: 17;
+  font-family: "GmarketBold";
+
+  color: #ffffff;
+`
 export const ME = gql`
   {
     me {
@@ -82,7 +111,7 @@ export default AddTimetable = ({ navigation }) => {
   const [selectDate, setSelectDate] = useState(new Date())
 
   const goback = () => {
-    navigation.navigate("Timecontrol")
+    navigation.navigate("TabNavigation")
   }
   useEffect(() => {
     merefetch()
@@ -94,16 +123,37 @@ export default AddTimetable = ({ navigation }) => {
       {loading ? (
         <Loader />
       ) : (
-        <AddTimeSchedule
-          refetch={refetch}
-          myData={myData}
-          merefetch={merefetch}
-          subjectsName={subjectsName}
-          loading={loading}
-          goback={goback}
-          //
-          targetToday={targetToday}
-        />
+        <>
+          <Container>
+            <Header hasTabs>
+              <MainView>
+                <SubView>
+                  <BackButton />
+                </SubView>
+                <SubView1>
+                  {Platform.OS === "ios" ? (
+                    <MainText>스케줄 만들기</MainText>
+                  ) : (
+                    <MainText2>스케줄 만들기</MainText2>
+                  )}
+                </SubView1>
+                <SubView></SubView>
+              </MainView>
+            </Header>
+            <Content>
+              <AddTimeSchedule
+                refetch={refetch}
+                myData={myData}
+                merefetch={merefetch}
+                subjectsName={subjectsName}
+                loading={loading}
+                goback={goback}
+                //
+                targetToday={targetToday}
+              />
+            </Content>
+          </Container>
+        </>
       )}
     </MenuView>
   )

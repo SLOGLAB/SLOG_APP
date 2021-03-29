@@ -1,10 +1,15 @@
 import React, { useEffect, useState, useRef } from "react"
-
 import StudyPoseLand from "../../Object/StudyPoseLand"
 import StudySSd from "../../Object/StudySSd"
-import StudySSdPose from "../../Object/StudySSdPose"
+import styled from "styled-components"
 
 let existTime_donut = 0
+const MainView = styled.View`
+  /* justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%; */
+`
 
 const StudyPoseContainer = ({
   loading,
@@ -14,9 +19,9 @@ const StudyPoseContainer = ({
   myInfoData,
   myInfoRefetch,
   Bright,
-  studyBool,
-  setStudyBool,
-  deg,
+  land,
+  setting,
+  setSetting,
 }) => {
   const todayGraph_calculate = () => {
     // 오늘 생선된 시간이 있는 인덱스 구하기
@@ -50,8 +55,26 @@ const StudyPoseContainer = ({
       nextDate={nextDate}
       nexistTime={existTime_donut}
       Bright={Bright}
+      land={land}
+      setting={setting}
+      setSetting={setSetting}
     />
   )
 }
 
 export default StudyPoseContainer
+{
+  /* <StudySSd
+                navigation={navigation}
+               myInfoData={myInfoData}
+               myInfoRefetch={myInfoRefetch}
+               deg={"270deg"}
+               // setbool={true}
+               loading={loading}
+               selectDate={selectDate}
+               nextDate={nextDate}
+               Bright={Bright}
+                     land={land}
+
+             /> */
+}

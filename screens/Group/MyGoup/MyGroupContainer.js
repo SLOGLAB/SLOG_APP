@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Alert, ScrollView, RefreshControl } from "react-native"
+import { Alert, ScrollView, RefreshControl, SafeAreaView } from "react-native"
 import styled from "styled-components"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../../components/Loader"

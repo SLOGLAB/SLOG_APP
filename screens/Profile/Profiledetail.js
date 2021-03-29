@@ -219,7 +219,6 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("PhotoNavigation")
-                    // Alert.alert("www.deeeeptime.com 에서 프로필 사진 변경")
                   }}
                 >
                   <Image

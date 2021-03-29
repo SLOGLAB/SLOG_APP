@@ -45,14 +45,7 @@ const VmonthBar = ({ taskArray_month, taskArray_month_pre, ylength }) => {
     })
     return obj
   }
-  useEffect(() => {
-    // console.log(taskArray_month, "taskArray_month")
-    // console.log(taskArray_month_pre, "taskArray_month_pre")
-    // console.log(ylength, "ylength")
-    // console.log(days, "days")
-    // console.log(taskArray_month.length, "taskArray_month.lenght")
-    // console.log(taskArray_month_pre.length, "taskArray_month_pre.lenght")
-  }, [])
+  useEffect(() => {}, [])
   const themeWithSystemFont = replaceRobotoWithSystemFont({ ...VictoryTheme.material })
   return (
     <>

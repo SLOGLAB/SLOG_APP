@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react"
-import { Alert } from "react-native"
+import { Alert, Image, Dimensions } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import styled from "styled-components"
 import Icon from "../../../components/Icon"
+var { height: HEIGHT, width: WIDTH } = Dimensions.get("window")
+
 const MainView = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
   background-color: rgba(255, 255, 255, 1);
-  border-width: 1;
+  /* background-color: rgba(196, 196, 196, 1); */
+  /* border-width: 1; */
 `
 const GroupBox = styled.View`
   flex: 0.3;
-  width: 90%;
-  border-width: 1;
-  justify-content: center;
+  width: 100%;
+  /* border-width: 1; */
+  justify-content: flex-end;
   flex-direction: row;
-  border-radius: 10;
-  padding: 10px;
+  /* border-radius: 10; */
+  padding: 0px;
   border-color: rgba(196, 196, 196, 1);
-  background-color: rgba(199, 199, 199, 1);
+  background-color: rgba(255, 255, 255, 1);
 `
 const Groupup = styled.View`
   flex: 0.05;
@@ -51,15 +54,28 @@ const GroupText = styled.Text`
 `
 const BoxTopView = styled.View`
   flex-direction: row;
-  justify-content: space-between;
-  /* position: absolute; */
-  height: 30%;
-  width: 10%;
+  /* justify-content: space-between; */
+  position: absolute;
+  height: 35;
+  width: 35;
+  justify-content: center;
 `
 const BoxLView = styled.View`
   /* position: absolute; */
   height: 100%;
-  width: 90%;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
+  background-color: rgba(255, 255, 255, 1);
+`
+const BoxView = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+`
+const BoxRView = styled.View`
+  flex: 1;
+  padding-left: 10;
   justify-content: center;
 `
 export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
@@ -95,20 +111,33 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       ) : (
         <GroupBox>
           <BoxLView>
-            <TouchableOpacity
+            <BoxView
               onPress={() => {
                 navigation.navigate("OneGroupContainer", { id: groupData[0].id })
               }}
             >
-              <GroupCate>{groupData[0].category}</GroupCate>
-              <GroupName>{groupData[0].name}</GroupName>
-              <GroupText>최소 학습 시간 : {groupData[0].targetTime}</GroupText>
-              <GroupText>
-                인원 : {groupData[0].memberCount}/{groupData[0].maxMember}
-              </GroupText>
-              <GroupText>방장 : {groupData[0].manager.username}</GroupText>
-              <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText>
-            </TouchableOpacity>
+              <Image
+                source={{ uri: groupData[0].imgUrl }}
+                style={{ flex: 1 }}
+                resizeMode="contain"
+              />
+            </BoxView>
+            <BoxRView>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("OneGroupContainer", { id: groupData[0].id })
+                }}
+              >
+                <GroupCate>{groupData[0].category}</GroupCate>
+                <GroupName>{groupData[0].name}</GroupName>
+                <GroupText>최소 학습 시간 : {groupData[0].targetTime}</GroupText>
+                <GroupText>
+                  인원 : {groupData[0].memberCount}/{groupData[0].maxMember}
+                </GroupText>
+                <GroupText>방장 : {groupData[0].manager.username}</GroupText>
+                <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText>
+              </TouchableOpacity>
+            </BoxRView>
           </BoxLView>
           <BoxTopView>
             <TouchableOpacity
@@ -116,19 +145,11 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
                 onBookmark(groupData[0].id, !groupData[0].bookmark)
               }}
             >
-              {groupData[0].bookmark ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  color={"#FFFD54"}
-                  size={25}
-                />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  size={25}
-                  color={"#fff"}
-                />
-              )}
+              <Icon
+                name={Platform.OS === "ios" ? "ios-star" : "md-star"}
+                color={groupData[0].bookmark ? "#FFFD54" : "#C4C4C4"}
+                size={30}
+              />
             </TouchableOpacity>
           </BoxTopView>
         </GroupBox>
@@ -153,20 +174,33 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       ) : (
         <GroupBox>
           <BoxLView>
-            <TouchableOpacity
+            <BoxView
               onPress={() => {
                 navigation.navigate("OneGroupContainer", { id: groupData[1].id })
               }}
             >
-              <GroupCate>{groupData[1].category}</GroupCate>
-              <GroupName>{groupData[1].name}</GroupName>
-              <GroupText>최소 학습 시간 : {groupData[1].targetTime}</GroupText>
-              <GroupText>
-                인원 : {groupData[1].memberCount}/{groupData[1].maxMember}
-              </GroupText>
-              <GroupText>방장 : {groupData[1].manager.username}</GroupText>
-              <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText>
-            </TouchableOpacity>
+              <Image
+                source={{ uri: groupData[1].imgUrl }}
+                style={{ flex: 1 }}
+                resizeMode="contain"
+              />
+            </BoxView>
+            <BoxRView>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("OneGroupContainer", { id: groupData[1].id })
+                }}
+              >
+                <GroupCate>{groupData[1].category}</GroupCate>
+                <GroupName>{groupData[1].name}</GroupName>
+                <GroupText>최소 학습 시간 : {groupData[1].targetTime}</GroupText>
+                <GroupText>
+                  인원 : {groupData[1].memberCount}/{groupData[1].maxMember}
+                </GroupText>
+                <GroupText>방장 : {groupData[1].manager.username}</GroupText>
+                <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText>
+              </TouchableOpacity>
+            </BoxRView>
           </BoxLView>
           <BoxTopView>
             <TouchableOpacity
@@ -174,19 +208,11 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
                 onBookmark(groupData[1].id, !groupData[1].bookmark)
               }}
             >
-              {groupData[1].bookmark ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  color={"#FFFD54"}
-                  size={25}
-                />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  size={25}
-                  color={"#fff"}
-                />
-              )}
+              <Icon
+                name={Platform.OS === "ios" ? "ios-star" : "md-star"}
+                color={groupData[1].bookmark ? "#FFFD54" : "#C4C4C4"}
+                size={30}
+              />
             </TouchableOpacity>
           </BoxTopView>
         </GroupBox>
@@ -211,20 +237,33 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       ) : (
         <GroupBox>
           <BoxLView>
-            <TouchableOpacity
+            <BoxView
               onPress={() => {
                 navigation.navigate("OneGroupContainer", { id: groupData[2].id })
               }}
             >
-              <GroupCate>{groupData[2].category}</GroupCate>
-              <GroupName>{groupData[2].name}</GroupName>
-              <GroupText>최소 학습 시간 : {groupData[2].targetTime}</GroupText>
-              <GroupText>
-                인원 : {groupData[2].memberCount}/{groupData[2].maxMember}
-              </GroupText>
-              <GroupText>방장 : {groupData[2].manager.username}</GroupText>
-              <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText>
-            </TouchableOpacity>
+              <Image
+                source={{ uri: groupData[2].imgUrl }}
+                style={{ flex: 1 }}
+                resizeMode="contain"
+              />
+            </BoxView>
+            <BoxRView>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("OneGroupContainer", { id: groupData[2].id })
+                }}
+              >
+                <GroupCate>{groupData[2].category}</GroupCate>
+                <GroupName>{groupData[2].name}</GroupName>
+                <GroupText>최소 학습 시간 : {groupData[2].targetTime}</GroupText>
+                <GroupText>
+                  인원 : {groupData[2].memberCount}/{groupData[2].maxMember}
+                </GroupText>
+                <GroupText>방장 : {groupData[2].manager.username}</GroupText>
+                <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText>
+              </TouchableOpacity>
+            </BoxRView>
           </BoxLView>
           <BoxTopView>
             <TouchableOpacity
@@ -232,19 +271,11 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
                 onBookmark(groupData[2].id, !groupData[2].bookmark)
               }}
             >
-              {groupData[2].bookmark ? (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  color={"#FFFD54"}
-                  size={25}
-                />
-              ) : (
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-star" : "md-star"}
-                  size={25}
-                  color={"#fff"}
-                />
-              )}
+              <Icon
+                name={Platform.OS === "ios" ? "ios-star" : "md-star"}
+                color={groupData[2].bookmark ? "#FFFD54" : "#C4C4C4"}
+                size={30}
+              />
             </TouchableOpacity>
           </BoxTopView>
         </GroupBox>

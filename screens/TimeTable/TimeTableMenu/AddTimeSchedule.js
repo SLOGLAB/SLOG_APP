@@ -78,7 +78,7 @@ const ModalView = styled.View`
   align-items: center;
 `
 const ModalView_State = styled.View`
-  flex: 0.7;
+  flex: 0.5;
   justify-content: center;
   align-items: center;
 `
@@ -129,9 +129,11 @@ const ModalCalView = styled.View`
   align-items: center;
   background-color: rgba(233, 237, 244, 1);
   margin-top: 20;
-  border-width: 2;
+  margin-bottom: 10;
+  border-width: 0;
   border-color: rgba(15, 76, 130, 1);
   border-radius: 5;
+  padding: 3px;
 `
 const RowText = styled.Text`
   font-size: 15;
@@ -214,7 +216,9 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
   const initDate2 = new Date(initDate)
   initDate2.setHours(initDate2.getHours() + 1)
   const [subjectId, setSubjectId] = useState("")
-  const [substate, setsubstate] = useState(`${myState[0]}`)
+  // const [substate, setsubstate] = useState(`${myState[0]}`)
+  const [substate, setsubstate] = useState("자습")
+
   const [modalVisible, setModalVisible] = useState(false)
   const [modalVisibleEnd, setModalVisibleEnd] = useState(false)
   const [calVisibleStart, setCalVisibleStart] = useState(false)
@@ -235,12 +239,12 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
     setSubjectId("")
     titleInput.setValue("")
     locationInput.setValue("")
-    setsubstate(`${myState[0]}`)
+    // setsubstate(`${myState[0]}`)
     setstartTime(initDate)
     setendTime(initDate2)
     setstartTimeText(moment(initDate).format("hh:mm a"))
     setendTimeText(moment(initDate2).format("hh:mm a"))
-    setPrivate(false)
+    // setPrivate(false)
   }
 
   const startPicker = (event, selectedDate) => {
@@ -368,7 +372,11 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
       if (!day7 && !day1 && !day2 && !day3 && !day4 && !day5 && !day6) {
         Alert.alert("요일을 선택하세요")
         return
+      } else if (subjectId === "") {
+        Alert.alert("과목을 선택하세요")
+        return
       }
+
       setModifyLoading(true)
       const {
         data: { saveSchedule_my },
@@ -556,28 +564,49 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
                 )
               }}
             />
+            <MarginR style={{ height: constants.height / 50 }} />
+
+            <AuthInput
+              {...titleInput}
+              // value={name}
+              placeholder={"(필수) 제목"}
+              keyboardType="default"
+              returnKeyType="done"
+              // onSubmitEditing={handleLogin}
+              autoCorrect={false}
+            />
+            <MarginR style={{ height: constants.height / 50 }} />
+            {/* <AuthInput
+              {...locationInput}
+              // value={name}
+              placeholder={"(선택) 위치"}
+              keyboardType="default"
+              returnKeyType="done"
+              // onSubmitEditing={handleLogin}
+              autoCorrect={false}
+            /> */}
           </ModalView>
-        </ModalView>
-        <ModalView>
-          <AuthInput
-            {...titleInput}
-            // value={name}
-            placeholder={"(필수) 제목"}
-            keyboardType="default"
-            returnKeyType="done"
-            // onSubmitEditing={handleLogin}
-            autoCorrect={false}
-          />
-          <MarginR style={{ height: constants.height / 50 }} />
-          <AuthInput
-            {...locationInput}
-            // value={name}
-            placeholder={"(선택) 위치"}
-            keyboardType="default"
-            returnKeyType="done"
-            // onSubmitEditing={handleLogin}
-            autoCorrect={false}
-          />
+          {/* <ModalView>
+            <AuthInput
+              {...titleInput}
+              // value={name}
+              placeholder={"(필수) 제목"}
+              keyboardType="default"
+              returnKeyType="done"
+              // onSubmitEditing={handleLogin}
+              autoCorrect={false}
+            />
+            <MarginR style={{ height: constants.height / 50 }} />
+            <AuthInput
+              {...locationInput}
+              // value={name}
+              placeholder={"(선택) 위치"}
+              keyboardType="default"
+              returnKeyType="done"
+              // onSubmitEditing={handleLogin}
+              autoCorrect={false}
+            />
+          </ModalView> */}
         </ModalView>
 
         {/* <View1> */}
@@ -928,7 +957,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
         )}
         {/* </View1> */}
 
-        <ModalView_State style={{ width: constants.width / 3.5 }}>
+        {/* <ModalView_State style={{ width: constants.width / 3.5 }}>
           <MarginView />
           <RNPickerSelect
             onValueChange={(value) => {
@@ -967,15 +996,15 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               )
             }}
           />
-        </ModalView_State>
-        <ModalView_Private>
+        </ModalView_State> */}
+        {/* <ModalView_Private>
           <CheckBox checked={!isPrivate} onPress={() => setPrivate(!isPrivate)} />
           {isPrivate ? (
             <Text style={styles.label}> 🔒(통계 미반영)</Text>
           ) : (
             <Text style={styles.label}> 🔓(통계 반영)</Text>
           )}
-        </ModalView_Private>
+        </ModalView_Private> */}
         <ModalView>
           <AuthButton
             color="white"

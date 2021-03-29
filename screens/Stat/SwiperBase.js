@@ -49,8 +49,6 @@ export default () => {
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
 
   ///
-  const StaTabContents = ["Today", "Week", "Month"]
-
   const [refreshing, setRefreshing] = useState(false)
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())

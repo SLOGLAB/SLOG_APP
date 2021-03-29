@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-// import { Container, Header, Content, ListItem, CheckBox, Body, FlatList } from "native-base"
 import {
   TouchableWithoutFeedback,
   Alert,
@@ -9,7 +8,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from "react-native"
-import { CheckBox, ListItem, Body, Text, Container, Header, Content } from "native-base"
+import { CheckBox } from "native-base"
 
 import styled from "styled-components"
 const TopView = styled.View`

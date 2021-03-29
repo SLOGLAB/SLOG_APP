@@ -1,5 +1,5 @@
 import React from "react"
-import { Platform, View, Image } from "react-native"
+import { Platform, View, Image, Text } from "react-native"
 // import { createBottomTabNavigator, createStackNavigator } from "react-navigation"
 import { createStackNavigator } from "react-navigation-stack"
 import { createBottomTabNavigator } from "react-navigation-tabs"
@@ -47,7 +47,10 @@ export default createBottomTabNavigator(
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-home" : "md-home"} />
+          <>
+            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-home" : "md-home"} />
+            <Text style={{ fontSize: 10 }}>홈</Text>
+          </>
         ),
       },
     },
@@ -72,7 +75,10 @@ export default createBottomTabNavigator(
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-pie" : "md-pie"} />
+          <>
+            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-pie" : "md-pie"} />
+            <Text style={{ fontSize: 10 }}>통계</Text>
+          </>
         ),
       },
     },
@@ -116,10 +122,13 @@ export default createBottomTabNavigator(
       screen: TimetableWeek,
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-calendar" : "md-calendar"}
-          />
+          <>
+            <NavIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-calendar" : "md-calendar"}
+            />
+            <Text style={{ fontSize: 10 }}>스케줄</Text>
+          </>
         ),
       },
     },
@@ -145,7 +154,10 @@ export default createBottomTabNavigator(
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-people" : "md-people"} />
+          <>
+            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-people" : "md-people"} />
+            <Text style={{ fontSize: 10 }}>그룹</Text>
+          </>
         ),
       },
     },
@@ -154,7 +166,10 @@ export default createBottomTabNavigator(
 
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+          <>
+            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+            <Text style={{ fontSize: 10 }}>프로필</Text>
+          </>
         ),
       },
     },

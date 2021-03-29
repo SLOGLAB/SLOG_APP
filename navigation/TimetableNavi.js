@@ -29,12 +29,12 @@ export default createStackNavigator({
     navigationOptions: {
       title: "과목",
       headerLeft: <BackButton />,
-      headerRight: <ToDoButton />,
+      // headerRight: <ToDoButton />,
       headerStyle: {
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },
@@ -48,7 +48,7 @@ export default createStackNavigator({
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },
@@ -62,7 +62,7 @@ export default createStackNavigator({
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },
@@ -76,7 +76,7 @@ export default createStackNavigator({
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },
@@ -90,7 +90,7 @@ export default createStackNavigator({
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },
@@ -104,7 +104,7 @@ export default createStackNavigator({
         ...stackStyles,
       },
       headerTitleStyle: {
-        fontFamily: "GmarketBold",
+        fontFamily: "GmarketMedium",
       },
       headerTintColor: "#000000",
     },

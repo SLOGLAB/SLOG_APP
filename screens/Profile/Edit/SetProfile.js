@@ -17,13 +17,14 @@ import AuthButton from "../../../components/AuthButton"
 import AuthInput from "../../../components/AuthInput"
 import Icon from "../../../components/Icon"
 import AuthInputline from "../../../components/AuthInputline"
-import Modal from "react-native-modal"
 import RNPickerSelect from "react-native-picker-select"
 import { CheckBox, Row } from "native-base"
 import LastWidth from "../../../components/LastWidth"
 // import Textarea from "../../../components/Textarea"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import BackButton from "../../../components/BackButton"
+import Modal from "react-native-modal"
+const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
 const MainView = styled.View`
   justify-content: center;
@@ -67,10 +68,10 @@ const RowView = styled.View`
 `
 
 const CheckWrap = styled.View`
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: row;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   height: 5%;
 `
 
@@ -97,13 +98,13 @@ const Title = styled.Text`
 
   margin-bottom: 15;
 `
-const Sub1 = styled.Text`
+const Sub = styled.Text`
   font-size: 13;
   font-family: "GmarketMedium";
 `
-const Sub = styled.Text`
+const Sub1 = styled.Text`
   font-size: 13;
-  margin-bottom: 25;
+  color: rgba(33, 87, 150, 1);
   font-family: "GmarketMedium";
 `
 const SelectView = styled.View``
@@ -138,7 +139,68 @@ const TouchText = styled.Text`
 //   height: 100px;
 //   margin-bottom: 10px;
 // `
-
+const StyledPlayModalContainer = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.3;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const ModalView = styled.View`
+  flex: 1;
+  justify-content: center;
+`
+const ModalSubView = styled.View`
+  flex: 0.3;
+  align-items: center;
+  justify-content: center;
+`
+const ModalSubView2 = styled.View`
+  flex: 0.8;
+  width: ${WIDTH / 1.15};
+`
+const Play_Text = styled.Text`
+  font-size: 13;
+  font-family: "GmarketMedium";
+  margin-bottom: 10;
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const ModalPlay = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 0.3;
+`
+const LineView = styled.View`
+  width: ${WIDTH / 1.4};
+  height: 2px;
+  color: #000;
+`
+const PlaySetText = styled.Text`
+  font-size: 18;
+  margin-bottom: 3;
+  color: rgba(15, 76, 130, 1);
+  /* color: rgba(255, 255, 255, 1); */
+  font-family: "GmarketMedium";
+`
+const PlayBottom = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex: 0.4;
+  width: 100%;
+`
+const Container = styled.View`
+  /* padding-right: 20px; */
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  width: 40%;
+  /* background-color: rgba(33, 87, 150, 1); */
+`
 export default ({
   navigation,
   data,
@@ -173,6 +235,12 @@ export default ({
   maxLen_11,
   vLoading,
   acLoading,
+  pubOfStatisticBool,
+  onChangePubOfStatistic,
+  pubOfScheduleBool,
+  onChangePubOfSchedule,
+  setpubOfStatisticBool,
+  setpubOfScheduleBool,
 }) => {
   const style_tmp = {
     ...pickerSelectStyles,
@@ -190,6 +258,7 @@ export default ({
   const [isEmailVisible, setEmailVisible] = useState(false)
   const [isPhoneVisible, setPhoneVisible] = useState(false)
   const [isQVisible, setisQVisible] = useState(false)
+  const [modalPlayVisible, setModalPlayVisible] = useState(false)
 
   return (
     <KeyboardAwareScrollView
@@ -559,8 +628,29 @@ export default ({
               <CheckWrap style={{ width: constants.width / 1.6 }}>
                 <CheckBox checked={marketing} onPress={() => onChangeMarketing()} />
                 <CheckView>
-                  <Text>마케팅 정보 수신 동의 </Text>
+                  <Sub>마케팅 정보 수신 동의 </Sub>
                 </CheckView>
+              </CheckWrap>
+
+              <CheckWrap style={{ width: constants.width / 1.6 }}>
+                <CheckBox
+                  checked={pubOfStatisticBool && pubOfScheduleBool}
+                  onPress={() => {
+                    if (pubOfStatisticBool && pubOfScheduleBool) {
+                      setpubOfStatisticBool(false)
+                      setpubOfScheduleBool(false)
+                    } else {
+                      setpubOfStatisticBool(true)
+                      setpubOfScheduleBool(true)
+                    }
+                  }}
+                />
+                <CheckView>
+                  <Sub>개인 데이터 모두 공개 </Sub>
+                </CheckView>
+                <TouchableOpacity onPress={() => setModalPlayVisible(!modalPlayVisible)}>
+                  <Sub1>(공개 범위 선택)</Sub1>
+                </TouchableOpacity>
               </CheckWrap>
               <AuthButton
                 color="white"
@@ -570,6 +660,53 @@ export default ({
                 text="수정"
                 marginArray={[0, 0, 0, 0]}
               />
+              <Modal
+                isVisible={modalPlayVisible}
+                onBackdropPress={() => setModalPlayVisible(false)}
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: Math.round(Dimensions.get("window").height),
+                }}
+              >
+                <StyledPlayModalContainer>
+                  <ModalSubView>
+                    <PlaySetText>개인 데이터 공개 범위 선택</PlaySetText>
+                  </ModalSubView>
+                  <PlayBottom>
+                    <Container>
+                      <CheckBox
+                        checked={pubOfStatisticBool}
+                        onPress={() => setpubOfStatisticBool(!pubOfStatisticBool)}
+                      />
+                      <CheckView>
+                        <Sub>통계 공개</Sub>
+                      </CheckView>
+                    </Container>
+                    <Container>
+                      <CheckBox
+                        checked={pubOfScheduleBool}
+                        onPress={() => setpubOfScheduleBool(!pubOfScheduleBool)}
+                      />
+                      <CheckView>
+                        <Sub>스케줄 공개</Sub>
+                      </CheckView>
+                    </Container>
+                  </PlayBottom>
+                  <ModalPlay>
+                    <AuthButton
+                      onPress={() => {
+                        setModalPlayVisible(!modalPlayVisible)
+                      }}
+                      text="닫기"
+                      color="white"
+                      bgColor={"#7BA9EB"}
+                      widthRatio={LastWidth(1, 2, 4)}
+                    />
+                  </ModalPlay>
+                </StyledPlayModalContainer>
+              </Modal>
               {/* </ScrollView> */}
             </EmptyView>
           ) : (

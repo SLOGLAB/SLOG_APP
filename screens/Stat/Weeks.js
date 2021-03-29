@@ -649,7 +649,7 @@ const Weeks = ({
             />
           </View>
           <Line />
-          <View>
+          {/* <View>
             <CenterView>
               <SubText>{selectPercent ? "과목별 목표 시간 비율" : "과목별 학습 시간 비율"}</SubText>
               <BoxView1>
@@ -729,7 +729,7 @@ const Weeks = ({
                 >
                   <TouchText Color={selectPercent2 ? "white" : "black"}>목표</TouchText>
                 </TouchBox>
-              </FlexView2>
+              </F lexView2>
             </RowView>
             <FlexViewAb>
               <StackedBar
@@ -737,7 +737,7 @@ const Weeks = ({
                 data_2={selectPercent2 ? lecture_percentT : lecture_percent}
               />
             </FlexViewAb>
-          </View>
+          </View> */}
           <Line />
         </DayView>
       )}

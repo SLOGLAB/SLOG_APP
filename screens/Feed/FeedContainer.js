@@ -148,7 +148,6 @@ export default ({ navigation }) => {
       setVariables({ first: variables.first + feedTerm })
     }
   }
-
   // const refresh = async () => {
   //   try {
   //     setRefreshing(true)
@@ -160,7 +159,6 @@ export default ({ navigation }) => {
   //   }
   // }
   useEffect(() => {
-    // console.log(feedData.seeAllFeed)
     feedRefetch()
   }, [])
   return (

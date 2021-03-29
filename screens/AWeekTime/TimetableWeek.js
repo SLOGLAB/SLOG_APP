@@ -45,7 +45,7 @@ const ScheView = styled.View`
 const ScheView2 = styled.View`
   height: 10%;
 `
-export default TimetableWeek = () => {
+export default TimetableWeek = ({ navigation }) => {
   var timetableRef
 
   const { loading, data: scheduledata, refetch } = useQuery(SCHEDULE_USER, {
@@ -81,6 +81,7 @@ export default TimetableWeek = () => {
         loading={loading}
         SCHEDULE_USER={SCHEDULE_USER}
         targetToday={targetToday}
+        navigation={navigation}
       />
     )
   }

@@ -10,8 +10,6 @@ const Container = styled.TouchableOpacity`
 
 export default withNavigation(({ navigation }) => (
   <Container onPress={() => navigation.navigate("TimetableNavi")}>
-    <NavBlackIcon
-      name={Platform.OS === "ios" ? "ios-add-circle-outline" : "md-add-circle-outline"}
-    />
+    <NavBlackIcon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} />
   </Container>
 ))

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { useMutation, useQuery } from "@apollo/react-hooks"
 import useInput from "../../../hooks/useInput"
-import { Alert } from "react-native"
+import { Alert, SafeAreaView } from "react-native"
 
 import { studyOption_group } from "../../../components/LongArray"
 import useSelect from "../../../hooks/useSelect"

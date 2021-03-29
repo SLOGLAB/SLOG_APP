@@ -52,6 +52,17 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
   const [acLoading, setAcLoading] = useState(false)
   const [vLoading, setVLoading] = useState(false)
   // console.log(data.me.studyPurpose)
+  //개인 데이터 공개 범위 선택
+  const [pubOfStatisticBool, setpubOfStatisticBool] = useState(data.me.pubOfStatistic)
+  const onChangePubOfStatistic = () => {
+    setpubOfStatisticBool(!pubOfStatisticBool)
+  }
+  const [pubOfScheduleBool, setpubOfScheduleBool] = useState(data.me.pubOfSchedule)
+  const onChangePubOfSchedule = () => {
+    setpubOfScheduleBool(!pubOfScheduleBool)
+  }
+  pubOfFeedBool = data.me.pubOfFeed
+
   const studyPurpose = useSelect(
     [
       { label: "학습", value: "학습" },
@@ -126,10 +137,7 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
       key: emailKey.value,
     },
   })
-  //개인 데이터 공개 범위 선택
-  pubOfFeedBool = data.me.pubOfFeed
-  pubOfStatisticBool = data.me.pubOfStatistic
-  pubOfScheduleBool = data.me.pubOfSchedule
+
   const onEditAccount = async (e) => {
     e.preventDefault()
     if (data.me.loginPosition === "student") {
@@ -355,6 +363,12 @@ const EditProfile = ({ navigation, data, refetch, onRefresh, loading }) => {
       maxLen_11={maxLen_11}
       vLoading={vLoading}
       acLoading={acLoading}
+      pubOfStatisticBool={pubOfStatisticBool}
+      setpubOfStatisticBool={setpubOfStatisticBool}
+      onChangePubOfStatistic={onChangePubOfStatistic}
+      pubOfScheduleBool={pubOfScheduleBool}
+      setpubOfScheduleBool={setpubOfScheduleBool}
+      onChangePubOfSchedule={onChangePubOfSchedule}
     />
   )
 }

@@ -80,6 +80,7 @@
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+    "react-native-action-button": "2.8.5",
     "react-native-calendars": "1.264.0",
     "react-native-datepicker": "1.7.2",
     "react-native-fs": "^2.16.6",

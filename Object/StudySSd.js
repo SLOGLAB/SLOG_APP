@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
   Image,
+  Switch,
 } from "react-native"
 import * as Permissions from "expo-permissions"
 import * as posenet from "@tensorflow-models/posenet"
@@ -26,6 +27,7 @@ import * as ScreenOrientation from "expo-screen-orientation"
 import Loader from "../components/Loader"
 import StudyPresenter from "../screens/Study/StudyPresenter"
 import * as cocossd from "@tensorflow-models/coco-ssd"
+import * as Brightness from "expo-brightness"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 var image = null
@@ -81,13 +83,19 @@ renderPrediction = (prediction, index) => {
 
   console.log(pclass, score, x, y, w, h)
 }
+let studyArray = []
+let heigt = 812 / HEIGHT
+let studySetInterval = undefined
+let brighttime = undefined
+let isEnabledTime = undefined
 const PoseCamera = ({
-  studyBool,
-  setStudyBool,
   navigation,
   myInfoData,
   myInfoRefetch,
-  deg,
+  nexistTime,
+  Bright,
+  studyBool,
+  setStudyBool,
   loading,
   selectDate,
   nextDate,
@@ -100,31 +108,125 @@ const PoseCamera = ({
   const [setting, setSetting] = useState(false)
   const [camsetting, setcamSetting] = useState(true)
   const [prediction, setPrediction] = useState(null)
+  const [brightnessButton, setbrightnessButton] = useState(true)
+  const [androidCam, setandroidCam] = useState(true)
+  const [personOnoff, setpersonOnoff] = useState(true)
+  const [settingTime, setsettingTime] = useState(10000)
+  const [isEnabled, setIsEnabled] = useState(false)
 
-  setTimeout(function () {
-    setSetting(true)
-  }, 13000)
+  const toggleSwitch = async () => {
+    setIsEnabled((previousState) => !previousState)
+    if (!isEnabled) {
+      isEnabledTime = setTimeout(function () {
+        getAndSetSystemBrightnessAsync()
+      }, settingTime)
+    } else {
+      clearTimeout(brighttime)
+      clearTimeout(isEnabledTime)
+    }
+  }
 
+  let OSbright = Platform.OS == "ios" ? 150 : 1
+
+  const getAndSetSystemBrightnessAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS)
+    if (status === "granted") {
+      setbrightnessButton(!brightnessButton)
+      if (brightnessButton) {
+        for (let i = OSbright; i > -1; i--) {
+          await Brightness.setBrightnessAsync(i / 1000)
+        }
+      } else {
+        await Brightness.setBrightnessAsync(Bright)
+      }
+    } else {
+      // Web browsers
+      console.error("System brightness permission not granted")
+    }
+  }
+  useEffect(() => {
+    if (brightnessButton) {
+      brighttime = setTimeout(function () {
+        if (isEnabled) {
+          getAndSetSystemBrightnessAsync()
+        }
+      }, settingTime)
+    } else {
+      clearTimeout(brighttime)
+    }
+  }, [brightnessButton])
+
+  //blinking 1초마다 10동안
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSetting((setting) => !setting)
+    }, 990)
+
+    setTimeout(function () {
+      setandroidCam(false)
+      clearInterval(interval)
+      if (Platform.OS !== "ios") {
+        setSetting(true)
+      }
+    }, 9900)
+  }, [])
+
+  async function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
+  const isFirstRun = useRef(true)
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
+    if (Platform.OS !== "ios") {
+      studySetInterval = setInterval(async () => {
+        updatePreview()
+
+        const imageTensor = images.next().value
+        tf.dispose([imageTensor])
+        if (!AUTORENDER) {
+          gl.endFrameEXP()
+        }
+      }, 100)
+    }
     studyInterval = setInterval(async () => {
-      if (!AUTORENDER && !button) {
+      if (isFirstRun.current) {
+        clearInterval(studySetInterval)
+        isFirstRun.current = false
+      }
+      if (Platform.OS !== "ios") {
         updatePreview()
       }
       const imageTensor = images.next().value
-      // const flipHorizontal = Platform.OS === "ios" ? false : true
+      const flipHorizontal = Platform.OS === "ios" ? false : true
       const prediction = await ssdModel.detect(imageTensor)
       // setPrediction(prediction)
       // prediction.map((p, index) => renderPrediction(p, index))
-      myInfoRefetch()
+
       if (prediction[0].class == "person") {
-        existToggleMutation({ variables: { email: myInfoData.me.email, existToggle: true } })
+        studyArray.push("true")
+        setSetting(true)
       } else {
-        existToggleMutation({ variables: { email: myInfoData.me.email, existToggle: false } })
+        studyArray.push("false")
+        setSetting(false)
+      }
+      if (studyArray.length == 6) {
+        myInfoRefetch()
+        if (studyArray.findIndex((obj) => obj == "true") == -1) {
+          existToggleMutation({
+            variables: { email: myInfoData.me.email, existToggle: false, userStatus: "none" },
+          })
+          studyArray = []
+        } else {
+          existToggleMutation({
+            variables: { email: myInfoData.me.email, existToggle: true, userStatus: "study" },
+          })
+          studyArray = []
+        }
       }
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
-    }, 40000)
+    }, 9900)
   }
 
   if (!ssdModel) {
@@ -151,116 +253,224 @@ const PoseCamera = ({
   }
   return (
     <>
-      <View style={styles.peopleLand}>
-        <TouchableOpacity
-          onPress={() => {
-            setSetting(false)
-            clearInterval(studyInterval)
-            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
-            navigation.navigate("TabNavigation")
-          }}
-        >
-          <Icon
-            name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
-            color={"#000000"}
-            size={40}
-          />
-        </TouchableOpacity>
-        <ScrollView
-          style={{ backgroundColor: "#ffffff", width: (WIDTH / 5) * 4 }}
-          horizontal={true}
-        >
-          {myInfoData.me.withFollowing.map((list) => (
-            <View style={styles.indiviList} key={list.id}>
+      <TouchableOpacity
+        disabled={brightnessButton}
+        onPressIn={() => {
+          if (!brightnessButton) {
+            getAndSetSystemBrightnessAsync()
+          }
+        }}
+      >
+        <View style={styles.peopleLand}>
+          <TouchableOpacity
+            onPress={() => {
+              clearInterval(studyInterval)
+              clearInterval(studySetInterval)
+              clearTimeout(brighttime)
+              clearTimeout(isEnabledTime)
+              setIsEnabled(false)
+              Brightness.setBrightnessAsync(Bright)
+              // setandroidCam(true)
+              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+              navigation.navigate("TabNavigation")
+            }}
+          >
+            <Icon
+              name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"}
+              color={"#000000"}
+              size={40}
+            />
+          </TouchableOpacity>
+          <ScrollView
+            style={{ backgroundColor: "#ffffff", width: (WIDTH / 5) * 4 }}
+            horizontal={true}
+          >
+            <View style={styles.indiviList}>
+              <Text style={styles.textTimestyle}>
+                {Math.floor(nexistTime / 3600) < 10
+                  ? `0${Math.floor(nexistTime / 3600)}`
+                  : Math.floor(nexistTime / 3600)}
+                :
+                {Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60 < 10
+                  ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
+                  : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
+              </Text>
               <Image
                 style={{
-                  height: HEIGHT / 18,
-                  width: HEIGHT / 18,
+                  height: HEIGHT / 17,
+                  width: HEIGHT / 17,
                   borderRadius: 25,
                   marginTop: 0,
                   marginBottom: 0,
-                  borderWidth: 3.5,
-                  borderColor: list.existToggle
-                    ? "rgba(65, 129, 247, 1)"
-                    : "rgba(133, 133, 133, 1)",
+                  borderWidth: 4,
+                  // borderColor: myInfoData.me.existToggle
+                  borderColor: setting ? "rgba(107, 152, 247, 1)" : "rgba(133, 133, 133, 1)",
                 }}
-                source={{ uri: list.avatar }}
+                source={{ uri: myInfoData.me.avatar }}
               />
               <Text style={styles.textstyle}>
-                {list.username.length > 6 ? list.username.substr(0, 5) + "..." : list.username}
+                {myInfoData.me.username.length > 6
+                  ? myInfoData.me.username.substr(0, 5) + ".."
+                  : myInfoData.me.username}
               </Text>
             </View>
-          ))}
-        </ScrollView>
-        {/* <TouchableOpacity onPress={()=>{
-        setcamSetting(!camsetting)
-      }}>
-      <Icon name={Platform.OS === "ios" ? "ios-arrow-round-back" : "md-arrow-round-back"} color={"#000000"} size={40}/>
-      </TouchableOpacity> */}
-      </View>
-      <View style={[{ justifyContent: "center", alignItems: "center", backgroundColor: "#000" }]}>
-        <>
-          <View
-            style={[
-              styles.cameraContainer,
-              {
-                transform: [{ rotate: "0deg" }],
-              },
-            ]}
-          >
-            <TensorCamera
-              ref={camRef}
-              style={[styles.camera]}
-              type={Camera.Constants.Type.front}
-              zoom={0}
-              // cameraTextureHeight={Dimensions.get("window").height/4}
-              // cameraTextureWidth={Dimensions.get("window").width/1}
-              cameraTextureHeight={textureDims.height}
-              cameraTextureWidth={textureDims.width}
-              resizeHeight={200}
-              resizeWidth={152}
-              resizeDepth={3}
-              onReady={handleImageTensorReady}
-              autorender={false}
-            />
-            {/* <View style={[styles.modelResults]}>
-          {pose && <Pose pose={pose} />}
-        </View> */}
+
+            {myInfoData.me.withFollowing.map((list) => (
+              <View style={styles.indiviList} key={list.id}>
+                <Text style={styles.textTimestyle}>
+                  {Math.floor(list.todayTime.existTime / 3600) < 10
+                    ? `0${Math.floor(list.todayTime.existTime / 3600)}`
+                    : Math.floor(list.todayTime.existTime / 3600)}
+                  :
+                  {Math.floor(list.todayTime.existTime / 60) -
+                    Math.floor(list.todayTime.existTime / 3600) * 60 <
+                  10
+                    ? `0${
+                        Math.floor(list.todayTime.existTime / 60) -
+                        Math.floor(list.todayTime.existTime / 3600) * 60
+                      }`
+                    : Math.floor(list.todayTime.existTime / 60) -
+                      Math.floor(list.todayTime.existTime / 3600) * 60}
+                </Text>
+
+                <Image
+                  style={{
+                    height: HEIGHT / 17,
+                    width: HEIGHT / 17,
+                    borderRadius: 25,
+                    marginTop: 0,
+                    marginBottom: 0,
+                    borderWidth: 4,
+                    borderColor: list.existToggle
+                      ? "rgba(107, 152, 247, 1)"
+                      : "rgba(133, 133, 133, 1)",
+                  }}
+                  source={{ uri: list.avatar }}
+                />
+                <Text style={styles.textstyle}>
+                  {list.username.length > 6 ? list.username.substr(0, 5) + ".." : list.username}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+        <View
+          style={[
+            {
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: setting ? "#000" : "#000",
+              borderWidth: 0,
+              borderColor: setting ? "#6B98F7" : "#858585",
+            },
+          ]}
+        >
+          <View style={styles.moon}>
+            <View style={styles.moon2}>
+              <View style={styles.posebutton}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setpersonOnoff(!personOnoff)
+                  }}
+                >
+                  {personOnoff ? (
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-square-outline" : "md-square-outline"}
+                      color={"#ffffff"}
+                      size={45}
+                    />
+                  ) : (
+                    <Icon
+                      name={Platform.OS === "ios" ? "ios-square" : "md-square"}
+                      color={"#224C7E"}
+                      size={45}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.moon3}>
+              {!isEnabled ? (
+                <View style={styles.TextView}>
+                  <SwitchText>1분 자동</SwitchText>
+                  <SwitchText>화면 밝기</SwitchText>
+                </View>
+              ) : (
+                <View style={styles.TextView}>
+                  <SwitchText></SwitchText>
+                  <SwitchText></SwitchText>
+                </View>
+              )}
+
+              <View style={styles.switchView}>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={isEnabled ? "#f5dd4b" : "#767577"}
+                  ios_backgroundColor="#F4F3F4"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  getAndSetSystemBrightnessAsync()
+                }}
+                style={styles.round}
+              >
+                {brightnessButton ? (
+                  <Icon
+                    name={Platform.OS === "ios" ? "ios-sunny" : "md-sunny"}
+                    color={"#fff"}
+                    size={40}
+                  />
+                ) : (
+                  <Icon
+                    name={Platform.OS === "ios" ? "ios-moon" : "md-moon"}
+                    color={"#fff"}
+                    size={40}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
-          {/* {setting ? null : (
+          <>
             <View
               style={[
-                styles.cameraAbsolute,
+                styles.cameraContainer,
                 {
-                  transform: [{ rotate: "270deg" }],
+                  transform: [{ rotate: "0deg" }],
+                  borderWidth: 5,
+                  borderColor: setting ? "#6B98F7" : "#858585",
                 },
               ]}
             >
-              <View>
-                <Loader />
-              </View>
+              <TensorCamera
+                ref={camRef}
+                style={[styles.camera, { transform: [{ rotate: "360deg" }] }]}
+                type={Camera.Constants.Type.front}
+                zoom={0}
+                cameraTextureHeight={textureDims.height}
+                cameraTextureWidth={textureDims.width}
+                resizeHeight={200}
+                resizeWidth={152}
+                resizeDepth={3}
+                onReady={handleImageTensorReady}
+                autorender={false}
+                // rotation={90} // or -90 for landscape right
+              />
             </View>
-          )} */}
-          {/* {camsetting?
-        null
-        :
-        <View style={[styles.camAbsolute,{
-          transform: [{ rotate:"270deg" }]
-        }]}>
-          <View style={styles.cameraAbsoluteView}>
-          </View>
-        </View> 
-        } */}
-        </>
-
-        {/* <StudyPresenter
-          myData={myInfoData.me}
-          loading={loading}
-          selectDate={selectDate}
-          nextDate={nextDate}
-          myInfoRefetch={myInfoRefetch}
-        /> */}
-      </View>
+            {personOnoff ? null : (
+              <View style={styles.cameraAbsolute}>
+                {androidCam ? null : (
+                  <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+                )}
+              </View>
+            )}
+            {/* <View style={[styles.modelResults]}>{<Pose pose={pose} />}</View> */}
+          </>
+        </View>
+      </TouchableOpacity>
     </>
   )
 }
@@ -279,7 +489,8 @@ export default function StudySSd({
   navigation,
   myInfoData,
   myInfoRefetch,
-  deg,
+  nexistTime,
+  Bright,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -300,10 +511,11 @@ export default function StudySSd({
       navigation={navigation}
       myInfoData={myInfoData}
       myInfoRefetch={myInfoRefetch}
-      deg={deg}
       loading={loading}
       selectDate={selectDate}
       nextDate={nextDate}
+      nexistTime={nexistTime}
+      Bright={Bright}
     />
   )
 }
@@ -340,12 +552,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "flex-start",
     justifyContent: "flex-end",
-    height: Dimensions.get("window").height / 10,
+    height: Dimensions.get("window").height / 9.0,
     width: Dimensions.get("window").width / 1,
     paddingLeft: 10,
     paddingTop: 10,
     flexDirection: "row",
-    // borderWidth:1,
+    // borderWidth: 5,
     borderColor: "grey",
   },
   cameraContainer: {
@@ -353,25 +565,25 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width / 1.8 / 1.4,
-    height: Dimensions.get("window").height / 2.2 / 1.5,
+    width: Dimensions.get("window").width / 1.9 / heigt,
+    height: Dimensions.get("window").height / 3,
     backgroundColor: "#fff",
   },
   cameraAbsolute: {
     position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    // width: 600 / 3,
+    // height: 800 / 3,
     alignItems: "center",
-    width: Dimensions.get("window").width / 1.7,
-    height: Dimensions.get("window").height / 2.1,
-    backgroundColor: "#fff",
+    justifyContent: "center",
+    width: "55%",
+    height: "100%",
+    zIndex: 1,
+    // borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 0,
+    backgroundColor: "#0F4C82",
   },
-  cameraAbsoluteView: {
-    width: Dimensions.get("window").width / 1.8 / 2,
-    height: Dimensions.get("window").height / 2.2 / 2,
-    backgroundColor: "#000",
-  },
+
   camAbsolute: {
     position: "absolute",
     display: "flex",
@@ -399,12 +611,12 @@ const styles = StyleSheet.create({
   },
   modelResults: {
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    // width: 600 / 3,
-    // height: 800 / 3,
+    // width: "100%",
+    // height: "100%",
+    width: Dimensions.get("window").width / 2 / heigt / 0.8,
+    height: Dimensions.get("window").height / 2.64,
     zIndex: 20,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "grey",
     borderRadius: 0,
   },
@@ -422,6 +634,78 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 6.5,
   },
   textstyle: {
-    fontSize: 10,
+    fontSize: 9,
+    fontFamily: "GmarketMedium",
+  },
+  textTimestyle: {
+    fontSize: 12,
+    color: "#0F4C82",
+    fontFamily: "GmarketMedium",
+  },
+  moon: {
+    position: "absolute",
+    width: Dimensions.get("window").width / 1.1,
+    height: "80%",
+    // justifyContent: "flex-start",
+    // alignItems: "flex-end",
+    flexDirection: "row",
+    // backgroundColor: "#0F4B82",
+  },
+  moon2: {
+    height: "100%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
+  },
+  moon3: {
+    height: "80%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    // backgroundColor: "#0F4B82",
+  },
+  person: {
+    height: "20%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
+  },
+  round: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  roundEye: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  posebutton: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  switchView: {
+    // justifyContent: "flex-end",
+    // alignItems: "center",
+    marginBottom: 20,
+    marginTop: 3,
+  },
+  TextView: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 })

@@ -29,6 +29,7 @@ const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 import moment, { Moment } from "moment"
 import StudyButton from "../../screens/Study/StudyButton"
 import * as Brightness from "expo-brightness"
+import * as ScreenOrientation from "expo-screen-orientation"
 
 const MainTView = styled.View`
   /* height:90%; */
@@ -545,9 +546,9 @@ const MainDay = ({
   //     seconds: 10,
   //   },
   // })
-  // useEffect(() => {
-  //   Callnotification()
-  // }, [])
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+  }, [])
   return (
     <>
       <MainTView>
@@ -650,11 +651,11 @@ const MainDay = ({
           <Flex1View />
           <Container
             onPress={() => {
+              ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
               getAndSetSystemBrightnessAsync()
               // navigation.navigate("StudyContainer", { Bright: brightness })
               // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
               // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
-              // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT)
               // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
             }}
           >
@@ -774,19 +775,6 @@ const MainDay = ({
           )}
         </TimeView>
         <MainView>
-          {/*  //휴식시간 
-          <SubView>
-            <Text>{break_title}</Text>
-            {break_countdown == 0 ? (
-              <Text1 />
-            ) : (
-              <RedText>
-                {Math.floor(break_countdown / 3600000)}시간{" "}
-                {Math.floor(break_countdown / 60000) % 60}분 남음
-              </RedText>
-            )}
-            <Text1>{break_time}</Text1>
-          </SubView> */}
           <SubView2>
             <Text>{nextTitle1}</Text>
             <Text1> {nextTitle2}</Text1>
@@ -796,7 +784,6 @@ const MainDay = ({
         <TextView>
           <LeftView>
             <Text>시간대별 Deep Time</Text>
-            <SubText>24시 성취율(%)</SubText>
           </LeftView>
           <VdayBar taskArray={taskArray} />
         </TextView>

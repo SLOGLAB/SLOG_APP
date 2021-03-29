@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { View, Button, Platform, Text } from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
-import moment, { Moment } from "moment"
-import { Row } from "native-base"
 import Modal from "react-native-modal"
 
 const TimePicker = () => {

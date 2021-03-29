@@ -1,4 +1,5 @@
+import { Platform } from "react-native"
 export const stackStyles = {
   backgroundColor: "#FAFAFA",
-  marginTop: 5,
+  marginTop: Platform.OS == "ios" ? 15 : 0,
 }

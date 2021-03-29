@@ -142,46 +142,7 @@ export default ({ navigation }) => {
       return false
     }
   }
-  // const handleSubmit = async () => {
-  //   if (captionInput.value === "" || locationInput.value === "") {
-  //     Alert.alert("All fields are required")
-  //   }
-  //   const formData = new FormData()
-  //   const name = photo.filename
-  //   const [, type] = name.split(".")
-  //   formData.append("file", {
-  //     name,
-  //     type: type.toLowerCase(),
-  //     uri: photo.uri,
-  //   })
-  //   try {
-  //     setIsLoading(true)
-  //     const {
-  //       data: { location },
-  //     } = await axios.post(process.env.REACT_APP_BACKEND_URI + "/api/upload/avatar", formData, {
-  //       headers: {
-  //         "content-type": "multipart/form-data",
-  //       },
-  //     })
 
-  //     const {
-  //       data: { upload },
-  //     } = await uploadMutation({
-  //       variables: {
-  //         location: data.location,
-  //         key: data.key,
-  //       },
-  //     })
-  //     if (upload.id) {
-  //       navigation.navigate("TabNavigation")
-  //     }
-  //   } catch (e) {
-  //     Alert.alert("Cant upload", "Try later")
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
-  useEffect(() => {}, [])
   return (
     <View>
       <Container>
@@ -190,27 +151,9 @@ export default ({ navigation }) => {
           style={{ height: 200, width: 200, borderRadius: 100, marginBottom: 30 }}
         />
         <Form>
-          {/* <STextInput
-            onChangeText={captionInput.onChange}
-            value={captionInput.value}
-            placeholder="Caption"
-            multiline={true}
-            placeholderTextColor={styles.darkGreyColor}
-          />
-          <STextInput
-            onChangeText={locationInput.onChange}
-            value={locationInput.value}
-            placeholder="Location"
-            multiline={true}
-            placeholderTextColor={styles.darkGreyColor}
-          /> */}
           <Button
             onPress={async () => {
               await onAvatar()
-              // const fucResult = await onAvatar()
-              // if (fucResult) {
-              //   close()
-              // }
             }}
           >
             {loading ? <ActivityIndicator color="white" /> : <Text>사진 변경</Text>}

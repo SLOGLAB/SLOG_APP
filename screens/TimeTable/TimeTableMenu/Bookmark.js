@@ -23,6 +23,7 @@ const BottomView = styled.View`
 
 const CheckView = styled.View`
   flex-direction: row;
+  margin-bottom: 10;
 `
 
 const Text1 = styled.Text`

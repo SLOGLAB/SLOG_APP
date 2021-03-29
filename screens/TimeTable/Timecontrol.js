@@ -26,14 +26,14 @@ export default Timecontrol = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <MenuView>
-        <View>
+        {/* <View>
           <AuthButton
             color="white"
             bgColor={"#0f4c82"}
             onPress={() => navigation.navigate("AddTimetable")}
             text="스케줄 만들기"
           />
-        </View>
+        </View> */}
         <View />
         <SubView>
           <AButton

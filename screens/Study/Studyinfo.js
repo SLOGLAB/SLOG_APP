@@ -4,13 +4,17 @@ import {
   RefreshControl,
   TouchableOpacity,
   FlatList,
+  Text,
   Platform,
   Alert,
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
   View,
+  setting,
+  setSetting,
 } from "react-native"
 import styled from "styled-components"
 import RNPickerSelect from "react-native-picker-select"
@@ -34,96 +38,68 @@ import Input_100 from "../../components/Input_100"
 import NumericInput from "react-native-numeric-input"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-const MainTView = styled.View`
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  padding-top: 15;
-`
-const Text = styled.Text`
-  font-family: "GmarketBold";
 
-  margin-top: 5;
-`
-const SubText = styled.Text`
-  color: black;
-  font-size: 10;
-  /*   font-family: "GmarketBold";
- */
-`
-const TextView = styled.View`
-  /* height:35%; */
-  margin-left: 5;
-  margin-right: 5;
-  padding-top: 10;
-  background-color: rgba(255, 255, 255, 1);
+const ChartView = styled.View`
   border: 0px;
   border-radius: 5;
-  border-color: rgba(233, 236, 243, 1);
-  /* height: 30%; */
-`
-const LeftView = styled.View`
-  justify-content: flex-start;
-  align-items: flex-start;
-  /* background-color: rgba(233, 236, 243, 1); */
-  padding-left: 10;
-`
-const ChartView = styled.View`
-  border: 1px;
-  border-radius: 5;
-  border-color: rgba(233, 236, 243, 1);
-  margin-left: 15;
-  margin-right: 15;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin-left: 10;
+  margin-right: 10;
   width: 95%;
-  height: 10%;
-  justify-content: center;
-`
-const MainView = styled.View`
-  background-color: rgba(255, 255, 255, 1);
-  /* justify-content: center;
-  align-items: center; */
-  /* flex-direction: row; */
-  width: 95%;
-`
-const TextCenter = styled.View`
-  align-items: center;
-  background-color: rgba(255, 255, 255, 1);
-  margin-bottom: 10;
-`
-const ChartTextView = styled.View`
+  height: 20%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 1);
 `
+const MainView = styled.View`
+  background-color: rgba(233, 237, 244, 0);
+  margin-left: 10;
+  margin-right: 10;
+  width: 95%;
+  height: 70%;
+
+  /* flex-direction: row; */
+`
+const TextCenter = styled.View`
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0);
+  margin-bottom: 5;
+`
+
 const SubText2 = styled.Text`
   color: black;
-  font-size: 10;
+  font-size: 14;
   font-family: "GmarketBold";
+`
+const Text1 = styled.Text`
+  font-size: 12;
+  font-family: "GmarketMedium";
 `
 const SubText3 = styled.Text`
   color: black;
-  font-size: 20;
+  font-size: 15;
   font-family: "GmarketBold";
 `
 const ExistTimeText = styled.Text`
   color: rgba(34, 76, 126, 1);
-  font-size: 20;
+  font-size: 30;
   font-family: "GmarketBold";
 `
 const ExistText = styled.Text`
-  color: grey;
+  color: black;
   font-size: 20;
   font-family: "GmarketBold";
 `
 const TargetText = styled.Text`
-  color: grey;
+  color: black;
   font-size: 10;
   font-family: "GmarketBold";
 `
 
 const FlexBox = styled.View`
+  flex-direction: row;
+`
+const FlexBox2 = styled.View`
   flex-direction: row;
 `
 const FlexrowBox = styled.View`
@@ -137,8 +113,8 @@ const TimeView = styled.View`
   margin-top: 5;
   margin-bottom: 5;
   padding-bottom: 5;
-  padding-top: 5;
-  background-color: rgba(255, 255, 255, 1);
+  padding-top: 15;
+  background-color: rgba(255, 255, 255, 0.5);
   border: 1px;
   border-radius: 5;
   border-color: rgba(233, 236, 243, 1);
@@ -154,7 +130,10 @@ const TimeViewabsolute = styled.View`
   padding-right: 15;
 `
 const SubView2 = styled.View`
-  background-color: rgba(255, 255, 255, 1);
+  padding-bottom: 5;
+  padding-top: 5;
+
+  background-color: rgba(255, 255, 255, 0.5);
   justify-content: center;
   align-items: center;
   border: 1px;
@@ -163,10 +142,6 @@ const SubView2 = styled.View`
   width: 100%;
 `
 
-const Text1 = styled.Text`
-  font-size: 10;
-  font-family: "GmarketMedium";
-`
 const StyledModalContainer = styled.View`
   flex-direction: column;
   align-items: center;
@@ -180,8 +155,9 @@ const ModalView = styled.View`
   flex: 1;
   justify-content: center;
 `
+
 const ModalSubView = styled.View`
-  flex: 0.2;
+  flex: 0.15;
   align-items: center;
   justify-content: center;
 `
@@ -201,22 +177,34 @@ const LineView2 = styled.View`
   color: #000;
 `
 const Modalflex1 = styled.View`
-  flex: 1;
+  width: 60%;
 `
 const Modalflex06 = styled.View`
   flex: 0.6;
 `
-const Modalflex05 = styled.View`
-  flex: 0.5;
-`
+
 const IndiviList1 = styled.View`
   align-items: center;
   flex: 0.15;
 
   /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
 `
+const StyledModalLandContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 1;
+  /* width: ${WIDTH / 1};
+  height: ${HEIGHT / 1}; */
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const ModalLandView = styled.View`
+  flex: 0.85;
+  justify-content: center;
+`
 const ModalPlay = styled.View`
-  flex: 0.7;
+  flex: 0.6;
   justify-content: center;
   align-items: center;
   width: ${WIDTH / 1.15};
@@ -226,10 +214,27 @@ const ModalPlay = styled.View`
   border-color: rgba(196, 196, 196, 1);
 `
 const ModalPlay2 = styled.View`
+  /* justify-content: center;
+  align-items: center;
+  border-width: 1;
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1); */
   flex: 0.35;
   justify-content: center;
   align-items: center;
   width: ${WIDTH / 1.15};
+  border-width: 1;
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const ModalPlay21 = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: ${WIDTH / 1.15};
+  flex: 0.15;
+
   border-width: 1;
   border-radius: 10;
   margin-bottom: 5px;
@@ -240,6 +245,64 @@ const ModalPlay3 = styled.View`
   justify-content: center;
   align-items: center;
   width: ${WIDTH / 1.15};
+  border-width: 0;
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const ModalLand = styled.View`
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+`
+const ModalPlayLand = styled.View`
+  flex: 0.4;
+  justify-content: center;
+  align-items: center;
+  border-width: 1;
+  border-radius: 10;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const Modalflex05 = styled.View`
+  flex: 0.4;
+  justify-content: center;
+  align-items: center;
+  border-width: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const ModalPlayLand2 = styled.View`
+  flex: 2;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-width: 1px;
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const ModalPlayLand21 = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  border-width: 1px;
+  border-radius: 10;
+  margin-bottom: 5px;
+  border-color: rgba(196, 196, 196, 1);
+`
+const ModalPlayLand3 = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
   border-width: 0;
   border-radius: 10;
   margin-bottom: 5px;
@@ -274,6 +337,8 @@ export default ({
   myInfoRefetch,
   modalVisible,
   setModalVisible,
+  modalVisible2,
+  setModalVisible2,
   startScheduleMutation,
   cutScheduleMutation,
   extensionScheduleMutation,
@@ -294,6 +359,9 @@ export default ({
   setexOnLoading,
   oncutLoading,
   setcutOnLoading,
+  land,
+  setting,
+  setSetting,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
   const [notification, setNotification] = useState(false)
@@ -304,6 +372,7 @@ export default ({
   taskArray_pre = new Array(24).fill(0)
   const titleInput = useInput("")
   const countInput = useInput("")
+  const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}...` : text)
 
   const [substate, setsubstate] = useState("자습")
   // const myState = myData.me.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
@@ -342,23 +411,6 @@ export default ({
     refetchQueries: () => [{ query: ME }],
   })
 
-  // const onGoWith = async (list) => {
-  //   try {
-  //     const {
-  //       data: { goWith },
-  //     } = await goWithMutation({
-  //       variables: {
-  //         followDateId: list.followDateId,
-  //         goWithBool: !list.goWith,
-  //       },
-  //     })
-  //     if (!goWith) {
-  //       Alert.alert("동행 정보를 변경할 수 없습니다.")
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
   const SubjectList_tmp = subjectsName.mySubject.map((file) => {
     if (file.bookMark) {
       return {
@@ -387,13 +439,7 @@ export default ({
     }
     return maxTermMin
   }
-  const prevent_float = (value) => value % 1 === 0
-  // const startScheduleTerm = useInput(
-  //   myData.studyDefaultSet.startScheduleTerm,
-  //   prevent_float,
-  //   undefined,
-  //   true
-  // )
+
   const [startScheduleTerm, setstartScheduleTerm] = useState(
     myData.studyDefaultSet.startScheduleTerm
   )
@@ -617,6 +663,10 @@ export default ({
   //스케줄시작
   const onStartSchedule = async () => {
     try {
+      if (subjectId === "") {
+        Alert.alert("과목을 선택하세요")
+        return
+      }
       setOnLoading(true)
       //스케줄 데이터르 최신으로 업데이트 후 현재 진행중인 스케줄 확인
       await myInfoRefetch()
@@ -627,11 +677,7 @@ export default ({
       }
       // 사전 점검
       if (titleInput.value === "") {
-        Alert.alert("To Do List를 입력하세요.")
-        return
-      }
-      if (titleInput.value.includes("/")) {
-        Alert.alert("To Do List는 1개만 입력 가능합니다.\n즉, '/'는 입력이 불가능합니다.")
+        Alert.alert("스케줄 제목을 입력하세요.")
         return
       }
       // 입력 시간이 최대 시간이내 인지 점검 xxx
@@ -642,10 +688,6 @@ export default ({
         // setstartScheduleTerm(maxTime)
         return
       }
-      // todolist 중복 체크
-      const findTodo = (i) => i.subject.id === subjectId && i.name === titleInput.value
-      const existIndex = todolistData_new.findIndex(findTodo)
-      const existTodo = existIndex === -1 ? false : true
 
       //입력 시간 계산  xxxxx
       const start = new Date()
@@ -665,8 +707,7 @@ export default ({
           end: end,
           totalTime: (end.getTime() - start.getTime()) / 1000,
           calendarId: subjectId, //과목
-          state: substate, //상태
-          existTodo: existTodo,
+          state: "자습", //상태
         },
       })
       if (!startSchedule_study) {
@@ -718,70 +759,255 @@ export default ({
   //   })
   // }
   return (
-    <ScrollView>
-      <MainTView>
-        <ChartView>
-          <ChartTextView>
-            <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
-            <ExistText>시간 </ExistText>
-            <ExistTimeText>
-              {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
-            </ExistTimeText>
-            <ExistText>분 </ExistText>
-            <ExistText>/</ExistText>
-            <FlexBox>
-              <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
-              <TargetText>시간 </TargetText>
-              <TargetText>
-                {targetminutes - targethour * 60 < 10
-                  ? `0${targetminutes - targethour * 60}`
-                  : targetminutes - targethour * 60}
-              </TargetText>
-              <TargetText>분 </TargetText>
-            </FlexBox>
-          </ChartTextView>
-        </ChartView>
-        <MainView>
-          <TimeView>
-            <TextCenter>
-              <SubText2>{nowTitle1}</SubText2>
-              <Text1>{nowTitle2}</Text1>
-            </TextCenter>
-            {nowScheduleTime == 0 ? (
-              <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
-            ) : (
-              <Barcharts
-                nowScheduleTime={nowScheduleTime}
-                nowScheduleTimeT={nowScheduleTimeT}
-                nowScheduleColor={nowScheduleColor}
+    // <ScrollView horizontal={false}>
+    <>
+      <ChartView>
+        <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
+        <ExistText>시간 </ExistText>
+        <ExistTimeText>
+          {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
+        </ExistTimeText>
+        <ExistText>분 </ExistText>
+        <ExistText>/</ExistText>
+        <FlexBox2>
+          <TargetText>{targethour < 10 ? `0${targethour}` : targethour}</TargetText>
+          <TargetText>시간 </TargetText>
+          <TargetText>
+            {targetminutes - targethour * 60 < 10
+              ? `0${targetminutes - targethour * 60}`
+              : targetminutes - targethour * 60}
+          </TargetText>
+          <TargetText>분 </TargetText>
+        </FlexBox2>
+      </ChartView>
+      <MainView>
+        <TimeView>
+          <TextCenter>
+            <SubText2>{trimText(nowTitle1, 20)}</SubText2>
+            <Text1>{nowTitle2}</Text1>
+          </TextCenter>
+          {nowScheduleTime == 0 ? (
+            <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
+          ) : (
+            <Barcharts
+              nowScheduleTime={nowScheduleTime}
+              nowScheduleTimeT={nowScheduleTimeT}
+              nowScheduleColor={nowScheduleColor}
+            />
+          )}
+          <TimeViewabsolute>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(!modalVisible)
+                const maxTime_tmp = maxTimeCal(new Date())
+                setmaxtime(maxTime_tmp)
+              }}
+            >
+              <Icon
+                name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+                color={"#000000"}
+                size={20}
               />
-            )}
-            <TimeViewabsolute>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible)
-                  const maxTime_tmp = maxTimeCal(new Date())
-                  setmaxtime(maxTime_tmp)
-                }}
-              >
-                <Icon
-                  name={Platform.OS === "ios" ? "ios-options" : "md-options"}
-                  color={"#000000"}
-                  size={25}
-                />
-              </TouchableOpacity>
-            </TimeViewabsolute>
-          </TimeView>
-          <Modal
-            isVisible={modalVisible}
-            onBackdropPress={() => setModalVisible(false)}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: Math.round(Dimensions.get("window").height),
-            }}
-          >
+            </TouchableOpacity>
+          </TimeViewabsolute>
+        </TimeView>
+        <SubView2>
+          <FlexBox>
+            <SubText2>{nextTitle1}</SubText2>
+            <Text1> {trimText(nextTitle2, 20)}</Text1>
+          </FlexBox>
+          <Text1>{next_TimeText}</Text1>
+        </SubView2>
+        <Modal
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            // minHeight: Math.round(Dimensions.get("window").height),
+          }}
+        >
+          {land ? (
+            <StyledModalLandContainer>
+              <ModalSubView>
+                <CoText>스케줄 컨트롤</CoText>
+              </ModalSubView>
+              <ModalLandView>
+                <ModalLand>
+                  <ModalPlayLand>
+                    <FlexrowBox>
+                      <Modalflex1>
+                        <RNPickerSelect
+                          onValueChange={(value) => {
+                            if (value !== null) {
+                              setSubjectId(value)
+                            }
+                          }}
+                          items={SubjectList}
+                          placeholder={{
+                            label: "과목 선택...",
+                            value: null,
+                            color: "red",
+                          }}
+                          value={subjectId} //선택된 과목이 어떻게 들어가는지 봐야함
+                          style={{
+                            ...pickerSelectStyles,
+                            iconContainer: {
+                              top: 9,
+                              right: 10,
+                            },
+                            placeholder: {
+                              color: "black",
+                              fontSize: 14,
+                              fontWeight: "bold",
+                            },
+                          }}
+                          Icon={() => {
+                            return (
+                              <Ionicons
+                                name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                                size={24}
+                                color="gray"
+                              />
+                            )
+                          }}
+                        />
+                      </Modalflex1>
+                      {/* <LineView2 /> */}
+                      {/* <Modalflex1 /> */}
+                    </FlexrowBox>
+                    <LineView></LineView>
+                    <FlexrowBox>
+                      <AuthInput
+                        {...titleInput}
+                        // value={name}
+                        placeholder={"To Do List"}
+                        keyboardType="default"
+                        returnKeyType="done"
+                        // onSubmitEditing={handleLogin}
+                        autoCorrect={false}
+                      />
+                    </FlexrowBox>
+                    <LineView></LineView>
+
+                    <FlexrowBox>
+                      <NumericInput
+                        value={startScheduleTerm}
+                        onChange={(value) => setstartScheduleTerm(value)}
+                        totalWidth={80}
+                        totalHeight={35}
+                        iconSize={25}
+                        rounded
+                        type="up-down"
+                        minValue={0}
+                        maxValue={maxtime}
+                        step={5}
+                        valueType="real"
+                        rounded
+                        validateOnBlur
+                        textColor="#B0228C"
+                        iconStyle={{ color: "black" }}
+                        rightButtonBackgroundColor="#EA3788"
+                        leftButtonBackgroundColor="#E56B70"
+                      />
+
+                      <SubText3> 분</SubText3>
+                    </FlexrowBox>
+                    <LineView></LineView>
+                    <LineView />
+
+                    <AuthButton
+                      onPress={() => {
+                        onStartSchedule()
+                      }}
+                      text="스케줄 시작"
+                      color="white"
+                      bgColor={"#7BA9EB"}
+                      widthRatio={LastWidth(1, 2, 18)}
+                      loading={onLoading}
+                    />
+                  </ModalPlayLand>
+                  <Modalflex05>
+                    <ModalPlayLand2>
+                      <FlexrowBox>
+                        <SubText3>현재 스케줄을 </SubText3>
+                        <NumericInput
+                          value={extensionTerm}
+                          onChange={(value) => setextensionTerm(value)}
+                          totalWidth={80}
+                          totalHeight={35}
+                          iconSize={25}
+                          rounded
+                          type="up-down"
+                          minValue={0}
+                          maxValue={posibleMin}
+                          step={5}
+                          valueType="real"
+                          rounded
+                          validateOnBlur
+                          textColor="#B0228C"
+                          iconStyle={{ color: "black" }}
+                          rightButtonBackgroundColor="#EA3788"
+                          leftButtonBackgroundColor="#E56B70"
+                        />
+                        <SubText3> 분</SubText3>
+                      </FlexrowBox>
+                      <LineView />
+                      <LineView />
+                      <LineView />
+                      <FlexrowBox>
+                        <AuthButton
+                          onPress={() => {
+                            onCutSchedule()
+                          }}
+                          text="단축"
+                          color="white"
+                          bgColor={"#7BA9EB"}
+                          widthRatio={LastWidth(1, 2, 5)}
+                          loading={oncutLoading}
+                        />
+                        <LineView2 />
+                        <AuthButton
+                          onPress={() => {
+                            onExtensionSchedule()
+                          }}
+                          text="연장"
+                          color="white"
+                          bgColor={"#7BA9EB"}
+                          widthRatio={LastWidth(1, 2, 5)}
+                          loading={onexLoading}
+                        />
+                      </FlexrowBox>
+                    </ModalPlayLand2>
+                    <ModalPlayLand21>
+                      <AuthButton
+                        onPress={() => {
+                          onStopSchedule()
+                        }}
+                        text="현재 스케줄 마침"
+                        color="white"
+                        bgColor={"#D83835"}
+                        widthRatio={LastWidth(1, 2, 18)}
+                        loading={onstopLoading}
+                      />
+                    </ModalPlayLand21>
+                    <ModalPlayLand3>
+                      <AuthButton
+                        onPress={() => {
+                          setModalVisible(false)
+                        }}
+                        text="닫기"
+                        color="white"
+                        bgColor={"#7BA9EB"}
+                        widthRatio={LastWidth(1, 2, 18)}
+                      />
+                    </ModalPlayLand3>
+                  </Modalflex05>
+                </ModalLand>
+              </ModalLandView>
+            </StyledModalLandContainer>
+          ) : (
             <StyledModalContainer>
               <ModalView>
                 <ModalSubView>
@@ -789,7 +1015,6 @@ export default ({
                 </ModalSubView>
                 <ModalPlay>
                   <FlexrowBox>
-                    <Modalflex05 />
                     <Modalflex1>
                       <RNPickerSelect
                         onValueChange={(value) => {
@@ -827,48 +1052,8 @@ export default ({
                         }}
                       />
                     </Modalflex1>
-                    <LineView2 />
-
-                    <Modalflex06>
-                      <RNPickerSelect
-                        onValueChange={(value) => {
-                          if (value === null) {
-                            Alert.alert(`${myState[0]} 또는 ${myState[1]}를 선택하세요`)
-                          } else {
-                            setsubstate(value)
-                          }
-                        }}
-                        items={lists}
-                        placeholder={{
-                          label: `선택...`,
-                          value: null,
-                          color: "red",
-                        }}
-                        value={substate}
-                        style={{
-                          ...pickerSelectStyles,
-                          iconContainer: {
-                            top: 9,
-                            right: 10,
-                          },
-                          placeholder: {
-                            color: "black",
-                            fontSize: 14,
-                            fontWeight: "bold",
-                          },
-                        }}
-                        Icon={() => {
-                          return (
-                            <Ionicons
-                              name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
-                              size={24}
-                              color="gray"
-                            />
-                          )
-                        }}
-                      />
-                    </Modalflex06>
-                    <Modalflex1 />
+                    {/* <LineView2 /> */}
+                    {/* <Modalflex1 /> */}
                   </FlexrowBox>
                   <LineView></LineView>
                   <FlexrowBox>
@@ -932,70 +1117,71 @@ export default ({
                     loading={onLoading}
                   />
                 </ModalPlay>
-
-                <ModalPlay2>
-                  <FlexrowBox>
-                    <SubText3>현재 스케줄을 </SubText3>
-                    <NumericInput
-                      value={extensionTerm}
-                      onChange={(value) => setextensionTerm(value)}
-                      totalWidth={80}
-                      totalHeight={35}
-                      iconSize={25}
-                      rounded
-                      type="up-down"
-                      minValue={0}
-                      maxValue={posibleMin}
-                      step={5}
-                      valueType="real"
-                      rounded
-                      validateOnBlur
-                      textColor="#B0228C"
-                      iconStyle={{ color: "black" }}
-                      rightButtonBackgroundColor="#EA3788"
-                      leftButtonBackgroundColor="#E56B70"
-                    />
-                    <SubText3> 분</SubText3>
-                  </FlexrowBox>
-                  <LineView />
-                  <LineView />
-                  <LineView />
-                  <FlexrowBox>
+                <>
+                  <ModalPlay2>
+                    <FlexrowBox>
+                      <SubText3>현재 스케줄을 </SubText3>
+                      <NumericInput
+                        value={extensionTerm}
+                        onChange={(value) => setextensionTerm(value)}
+                        totalWidth={80}
+                        totalHeight={35}
+                        iconSize={25}
+                        rounded
+                        type="up-down"
+                        minValue={0}
+                        maxValue={posibleMin}
+                        step={5}
+                        valueType="real"
+                        rounded
+                        validateOnBlur
+                        textColor="#B0228C"
+                        iconStyle={{ color: "black" }}
+                        rightButtonBackgroundColor="#EA3788"
+                        leftButtonBackgroundColor="#E56B70"
+                      />
+                      <SubText3> 분</SubText3>
+                    </FlexrowBox>
+                    <LineView />
+                    <LineView />
+                    <LineView />
+                    <FlexrowBox>
+                      <AuthButton
+                        onPress={() => {
+                          onCutSchedule()
+                        }}
+                        text="단축"
+                        color="white"
+                        bgColor={"#7BA9EB"}
+                        widthRatio={LastWidth(1, 2, 5)}
+                        loading={oncutLoading}
+                      />
+                      <LineView2 />
+                      <AuthButton
+                        onPress={() => {
+                          onExtensionSchedule()
+                        }}
+                        text="연장"
+                        color="white"
+                        bgColor={"#7BA9EB"}
+                        widthRatio={LastWidth(1, 2, 5)}
+                        loading={onexLoading}
+                      />
+                    </FlexrowBox>
+                  </ModalPlay2>
+                  <ModalPlay21>
                     <AuthButton
                       onPress={() => {
-                        onCutSchedule()
+                        onStopSchedule()
                       }}
-                      text="단축"
+                      text="현재 스케줄 마침"
                       color="white"
-                      bgColor={"#7BA9EB"}
-                      widthRatio={LastWidth(1, 2, 5)}
-                      loading={oncutLoading}
+                      bgColor={"#D83835"}
+                      widthRatio={LastWidth(1, 2, 18)}
+                      loading={onstopLoading}
                     />
-                    <LineView2 />
-                    <AuthButton
-                      onPress={() => {
-                        onExtensionSchedule()
-                      }}
-                      text="연장"
-                      color="white"
-                      bgColor={"#7BA9EB"}
-                      widthRatio={LastWidth(1, 2, 5)}
-                      loading={onexLoading}
-                    />
-                  </FlexrowBox>
-                </ModalPlay2>
-                <ModalPlay2>
-                  <AuthButton
-                    onPress={() => {
-                      onStopSchedule()
-                    }}
-                    text="현재 스케줄 마침"
-                    color="white"
-                    bgColor={"#D83835"}
-                    widthRatio={LastWidth(1, 2, 18)}
-                    loading={onstopLoading}
-                  />
-                </ModalPlay2>
+                  </ModalPlay21>
+                </>
                 <ModalPlay3>
                   <AuthButton
                     onPress={() => {
@@ -1009,30 +1195,10 @@ export default ({
                 </ModalPlay3>
               </ModalView>
             </StyledModalContainer>
-          </Modal>
-          <SubView2>
-            <FlexBox>
-              <SubText2>{nextTitle1}</SubText2>
-              <Text1> {nextTitle2}</Text1>
-            </FlexBox>
-            <Text1>{next_TimeText}</Text1>
-          </SubView2>
-        </MainView>
-        <TextView>
-          {/* <LeftView>
-            <SubText>24시 성취율(%)</SubText>
-            </LeftView> */}
-          <VTodayBar
-            taskArray={taskArray}
-            taskArray_pre={taskArray_pre}
-            // ylength={Math.max.apply(null, taskArray)}
-            ylength={69.99}
-            title={"시간별 Real 시간"}
-            title_y={"Real 시간(분)"}
-          />
-        </TextView>
-      </MainTView>
-    </ScrollView>
+          )}
+        </Modal>
+      </MainView>
+    </>
   )
 }
 async function sendPushNotification(expoPushToken) {
@@ -1110,3 +1276,226 @@ const pickerSelectStyles = StyleSheet.create({
     margin: 10,
   },
 })
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  top: {
+    backgroundColor: "#fff",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    height: Dimensions.get("window").height / 15,
+    width: Dimensions.get("window").width / 1,
+    paddingLeft: 10,
+  },
+  people: {
+    backgroundColor: "#fff",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    height: Dimensions.get("window").height / 10,
+    width: Dimensions.get("window").width / 1,
+    paddingLeft: 10,
+    paddingTop: 10,
+    flexDirection: "row",
+    // borderWidth:1,
+    borderColor: "grey",
+  },
+  peopleLand: {
+    // position:"absolute",
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "flex-end",
+
+    flexDirection: "row",
+    // backgroundColor: "#000",
+  },
+  cameraContainer: {
+    // display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // flexDirection: "column",
+    // borderWidth: 5,
+    // backgroundColor: "#fff",
+  },
+  tensorcamera: {
+    position: "absolute",
+    backgroundColor: "#fff",
+    // width: "100%",
+    // height: "100%",
+  },
+  cameraAbsolute: {
+    position: "absolute",
+
+    alignItems: "center",
+    justifyContent: "center",
+    // width: "100%",
+    // height: "100%",
+    // zIndex: 1,
+
+    backgroundColor: "#0F4C82",
+  },
+  indiviList: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 9,
+    flex: 1,
+    width: Dimensions.get("window").width / 6.5,
+  },
+  refresh: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    width: Dimensions.get("window").width / 6.5,
+  },
+  textstyle: {
+    fontSize: 9,
+    fontFamily: "GmarketMedium",
+  },
+  textTimestyle: {
+    fontSize: 12,
+    color: "#0F4C82",
+    fontFamily: "GmarketMedium",
+  },
+  moon: {
+    position: "absolute",
+    height: "80%",
+    flexDirection: "row",
+  },
+  moon2: {
+    height: "50%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
+  },
+  moon3: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    marginTop: 10,
+    // backgroundColor: "#0F4B82",
+  },
+  person: {
+    height: "20%",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    // backgroundColor: "#0F4B82",
+  },
+  round: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  roundEye: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  posebutton: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  switchView: {
+    // justifyContent: "flex-end",
+    // alignItems: "center",
+    marginBottom: 20,
+    marginTop: 3,
+  },
+  TextView: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  MainView: {
+    width: WIDTH / 1,
+    height: HEIGHT / 1,
+  },
+})
+
+{
+  /* <TextView> */
+}
+{
+  /* <LeftView>
+            <SubText>24시 성취율(%)</SubText>
+            </LeftView> */
+}
+{
+  /* <VTodayBar
+            taskArray={taskArray}
+            taskArray_pre={taskArray_pre}
+            // ylength={Math.max.apply(null, taskArray)}
+            ylength={69.99}
+            title={"시간별 Real 시간"}
+            title_y={"Real 시간(분)"}
+          /> */
+}
+{
+  /* <TextView>
+            <LeftView>
+              <Text>시간대별 Deep Time</Text>
+            </LeftView>
+            <VdayBar taskArray={taskArray} />
+          </TextView> */
+}
+{
+  /* </TextView> */
+}
+{
+  /* </ScrollView> */
+}
+{
+  /* <Modalflex06>
+                    <RNPickerSelect
+                      onValueChange={(value) => {
+                        if (value === null) {
+                          Alert.alert(`${myState[0]} 또는 ${myState[1]}를 선택하세요`)
+                        } else {
+                          setsubstate(value)
+                        }
+                      }}
+                      items={lists}
+                      placeholder={{
+                        label: `선택...`,
+                        value: null,
+                        color: "red",
+                      }}
+                      value={substate}
+                      style={{
+                        ...pickerSelectStyles,
+                        iconContainer: {
+                          top: 9,
+                          right: 10,
+                        },
+                        placeholder: {
+                          color: "black",
+                          fontSize: 14,
+                          fontWeight: "bold",
+                        },
+                      }}
+                      Icon={() => {
+                        return (
+                          <Ionicons
+                            name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                            size={24}
+                            color="gray"
+                          />
+                        )
+                      }}
+                    />
+                  </Modalflex06> */
+}

@@ -1,27 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
-import {
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-  FlatList,
-  Platform,
-  Alert,
-  StyleSheet,
-  Dimensions,
-  TouchableWithoutFeedback,
-  Keyboard,
-  StatusBar,
-} from "react-native"
-import { gql } from "apollo-boost"
 
-import styled from "styled-components"
-import RNPickerSelect from "react-native-picker-select"
-import { Ionicons } from "@expo/vector-icons"
-import AuthButton from "../../components/AuthButton"
-import AuthInput from "../../components/AuthInput"
-import LastWidth from "../../components/LastWidth"
+import { gql } from "apollo-boost"
 import Loader from "../../components/Loader"
-import Icon from "../../components/Icon"
 import Studyinfo from "./Studyinfo"
 import moment, { Moment } from "moment"
 import SplitArray from "../../components/SplitArray"
@@ -65,11 +45,7 @@ export const MY_TODOLIST = gql`
     }
   }
 `
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-const MainView = styled.View`
-  justify-content: center;
-  align-items: center;
-`
+
 let scheduleList_selectDay = []
 let scheduleList_selectDay_length = 0
 let taskArray = []
@@ -110,7 +86,16 @@ let endPoint = 0
 let existTime_donut = 0
 let targetTime_donut = 0
 
-export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
+export default ({
+  myData,
+  selectDate,
+  nextDate,
+  loading,
+  myInfoRefetch,
+  land,
+  setting,
+  setSetting,
+}) => {
   const scheduleList = myData.schedules
   const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
   const lastMonthDate = new Date(selectDate.getFullYear(), selectDate.getMonth() + 1, 0).getDate()
@@ -119,6 +104,7 @@ export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
   const daysOfMonth_number = daysOfMonth_tmp.map((a) => a + 1)
   const daysOfMonth = daysOfMonth_number.map(String)
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible2, setModalVisible2] = useState(false)
 
   const todaySchedule_calculate = () => {
     scheduleList_selectDay = []
@@ -441,7 +427,7 @@ export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
   }, [])
 
   return (
-    <MainView>
+    <>
       {todolistLoading || subLoading ? (
         <Loader />
       ) : (
@@ -463,6 +449,8 @@ export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
           next_TimeText={next_TimeText}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          modalVisible2={modalVisible2}
+          setModalVisible2={setModalVisible2}
           // refreshing={refreshing}
           // setRefreshing={setRefreshing}
           // goWithMutation={goWithMutation}
@@ -489,8 +477,11 @@ export default ({ myData, selectDate, nextDate, loading, myInfoRefetch }) => {
           setexOnLoading={setexOnLoading}
           oncutLoading={oncutLoading}
           setcutOnLoading={setcutOnLoading}
+          land={land}
+          setting={setting}
+          setSetting={setSetting}
         />
       )}
-    </MainView>
+    </>
   )
 }

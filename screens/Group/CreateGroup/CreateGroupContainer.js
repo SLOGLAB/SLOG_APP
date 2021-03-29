@@ -24,7 +24,7 @@ const CreateGroupContainer = ({ navigation }) => {
   const studyGroup = useSelect(studyOption_group)
   return (
     <CreateGroupPresenter
-      name={name}
+      groupname={name}
       bio={bio}
       password={password}
       studyGroup={studyGroup}
