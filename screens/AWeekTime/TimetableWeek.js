@@ -34,7 +34,22 @@ export const SCHEDULE_USER = gql`
     }
   }
 `
-
+export const MY_TODOLIST = gql`
+  query myTodolist {
+    myTodolist {
+      id
+      name
+      finish
+      finishAt
+      subject {
+        id
+        name
+        bgColor
+        bookMark
+      }
+    }
+  }
+`
 const LoaderWrapper = styled.View`
   justify-content: center;
   align-items: center;
@@ -51,7 +66,9 @@ export default TimetableWeek = ({ navigation }) => {
   const { loading, data: scheduledata, refetch } = useQuery(SCHEDULE_USER, {
     // pollInterval: 3000,
   })
-
+  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
+    MY_TODOLIST
+  )
   const onRefresh = async () => {
     try {
       await refetch()
@@ -66,7 +83,7 @@ export default TimetableWeek = ({ navigation }) => {
   var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
 
   var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
-  if (loading) {
+  if (loading || todolistLoading) {
     return (
       <LoaderWrapper style={{ minHeight: Math.round(Dimensions.get("window").height) }}>
         <Loader />
@@ -82,6 +99,8 @@ export default TimetableWeek = ({ navigation }) => {
         SCHEDULE_USER={SCHEDULE_USER}
         targetToday={targetToday}
         navigation={navigation}
+        todolistData={todolistData}
+        todolistRefetch={todolistRefetch}
       />
     )
   }

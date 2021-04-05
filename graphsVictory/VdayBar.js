@@ -91,7 +91,7 @@ const VdayBar = ({ taskArray }) => {
             { x: 22, y: hour23 },
             { x: 23, y: hour24 },
           ]}
-          labels={({ datum }) => (` ${datum.y}` < 1 ? null : ` ${datum.y}`)}
+          // labels={({ datum }) => (` ${datum.y}` < 1 ? null : ` ${datum.y}`)}
         />
       </VictoryChart>
     </>

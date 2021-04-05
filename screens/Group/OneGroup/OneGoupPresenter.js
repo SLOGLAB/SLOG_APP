@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react"
-import { Alert } from "react-native"
-import { TouchableOpacity, ScrollView, Dimensions } from "react-native-gesture-handler"
+import { Alert, Image } from "react-native"
+import { TouchableOpacity, ScrollView } from "react-native-gesture-handler"
 import styled from "styled-components"
 import Icon from "../../../components/Icon"
 import AuthButton from "../../../components/AuthButton"
 import LastWidth from "../../../components/LastWidth"
 import GroupSwiperBase from "../GroupStat/GroupSwiperBase"
 import Modal from "react-native-modal"
-import { not } from "react-native-reanimated"
 
 const MainView = styled.View`
   justify-content: center;
@@ -17,10 +16,10 @@ const MainView = styled.View`
   border-width: 1;
 `
 const GroupBox = styled.View`
-  flex: ${(props) => (props.not ? 0.6 : 0.3)};
+  flex: ${(props) => (props.not ? 0.6 : 0.05)};
   width: 100%;
-  border-width: 1;
-  justify-content: center;
+  /* border-width: 1; */
+  /* align-items: center; */
   padding: 10px;
   border-color: rgba(196, 196, 196, 1);
   background-color: rgba(255, 255, 255, 1);
@@ -35,13 +34,15 @@ const GroupName = styled.Text`
   /* margin-top: 5; */
   margin-bottom: 5;
 `
-const GroupCate = styled.Text`
-  font-family: "GmarketMedium";
-  color: rgba(34, 76, 126, 1);
+const BoxMainView = styled.View`
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  /* border-width: 0.5; */
+  /* padding: 10px; */
+  margin-left: 1;
 `
-const GroupText = styled.Text`
-  font-family: "GmarketLight";
-`
+
 const BoxTopView = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -88,7 +89,37 @@ const CaretView = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
+  height: 25;
 `
+const GroupText = styled.Text`
+  font-family: "GmarketMedium";
+  font-size: 13;
+  margin-right: 5;
+`
+const GroupGreyText = styled.Text`
+  font-family: "GmarketMedium";
+  color: #c7c7c7;
+  font-size: 13;
+  margin-right: 5;
+`
+const RowGroup = styled.View`
+  flex-direction: row;
+`
+const BoxView = styled.View`
+  width: 100%;
+  height: 25%;
+  justify-content: center;
+  /* background-color: rgba(196, 196, 196, 1); */
+  flex-direction: row;
+  border-top-width: 1;
+  border-color: rgba(199, 199, 199, 1);
+  padding-top: 10;
+`
+const PhotoCircle = styled.View`
+  width: 200;
+  border-radius: 50;
+`
+const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
 
 export default ({
   groupData,
@@ -176,6 +207,18 @@ export default ({
                 </TouchableOpacity>
               </BoxinButtonView>
               <BoxinButtonView>
+                <TouchableOpacity
+                  onPress={() => {
+                    // setModalPlayVisible(!modalPlayVisible)
+                  }}
+                >
+                  <Icon
+                    name={Platform.OS === "ios" ? "ios-calendar-sharp" : "md-calendar-sharp"}
+                    size={30}
+                  />
+                </TouchableOpacity>
+              </BoxinButtonView>
+              <BoxinButtonView>
                 {groupData.imManager ? (
                   <TouchableOpacity
                     onPress={() => {
@@ -184,11 +227,7 @@ export default ({
                   >
                     <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
                   </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity onPress={() => {}}>
-                    <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
-                  </TouchableOpacity>
-                )}
+                ) : null}
               </BoxinButtonView>
               <BoxinButtonView>
                 {groupData.imManager ? (
@@ -217,16 +256,69 @@ export default ({
           )}
         </BoxinView>
       </BoxTopView>
+      <BoxView>
+        <Image
+          source={{ uri: groupData.imgUrl }}
+          style={{ width: 200, borderRadius: 0 }}
+          resizeMode="contain"
+        />
+        <BoxMainView>
+          <GroupName>{groupData.name}</GroupName>
+          <RowGroup>
+            <GroupGreyText>카테고리</GroupGreyText>
+            <GroupText>{groupData.category}</GroupText>
+          </RowGroup>
+          <RowGroup>
+            <GroupGreyText>활동 요일</GroupGreyText>
+
+            <GroupText>
+              {groupData.activeDay.findIndex((e) => e == false) == -1
+                ? " 매일 "
+                : groupData.activeDay.map((bool, index) => {
+                    if (bool) {
+                      if (index === groupData.activeDay.lastIndexOf(true)) {
+                        return dayArray[index]
+                      } else {
+                        return dayArray[index] + ","
+                      }
+                    }
+                  })}
+            </GroupText>
+          </RowGroup>
+          <RowGroup>
+            <GroupGreyText>하루 목표</GroupGreyText>
+            <GroupText>{groupData.targetTime}시간</GroupText>
+          </RowGroup>
+          <RowGroup>
+            <GroupGreyText>평균 학습량</GroupGreyText>
+            <GroupText>{Math.floor(groupData.lastStudyTime)}시간</GroupText>
+          </RowGroup>
+          <RowGroup>
+            <GroupGreyText>평균 출석률</GroupGreyText>
+            <GroupText>{Math.floor(groupData.lastAttendance)}%</GroupText>
+          </RowGroup>
+          <RowGroup>
+            <RowGroup>
+              <GroupGreyText>인원</GroupGreyText>
+              <GroupText>
+                {groupData.memberCount}/{groupData.maxMember}
+              </GroupText>
+            </RowGroup>
+            <RowGroup>
+              <GroupGreyText>방장</GroupGreyText>
+              <GroupText>{groupData.manager.username}</GroupText>
+              {/* <GroupText>{groupData.publicBool ? "공개방" : "비공개방"}</GroupText> */}
+            </RowGroup>
+          </RowGroup>
+        </BoxMainView>
+      </BoxView>
       <GroupBox not={noti}>
-        <BoxTopView2>
-          <GroupCate>{groupData.category} </GroupCate>
-          <GroupText>멤버 {groupData.memberCount}</GroupText>
-        </BoxTopView2>
-        <GroupName>{groupData.name}</GroupName>
-        <GroupText>최소 학습 시간 : {groupData.targetTime}시간</GroupText>
-        <ScrollView>
-          <GroupText>{groupData.bio}</GroupText>
-        </ScrollView>
+        {noti ? (
+          <ScrollView>
+            <GroupGreyText>그룹 소개</GroupGreyText>
+            <GroupText>{groupData.bio}</GroupText>
+          </ScrollView>
+        ) : null}
         <CaretView>
           <TouchableOpacity
             onPress={() => {

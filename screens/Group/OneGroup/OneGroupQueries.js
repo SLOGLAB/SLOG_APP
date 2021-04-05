@@ -10,6 +10,8 @@ export const SEEONE_GROUP = gql`
       targetTime
       publicBool
       bio
+      imgUrl
+      activeDay
       manager {
         id
         username
@@ -28,10 +30,14 @@ export const SEEONE_GROUP = gql`
       }
       memberCount
       imManager
+      lastStudyTime
+      lastAttendance
       createdAt
     }
   }
 `
+// lastStudyTime
+// lastAttendance
 
 export const JOIN_GROUP = gql`
   mutation joinGroup($groupId: String!) {
@@ -68,6 +74,7 @@ export const EDIT_GROUP = gql`
     $bio: String!
     $imgUrl: String!
     $imgKey: String!
+    $activeDay: [Boolean!]!
   ) {
     editGroup(
       groupId: $groupId
@@ -79,6 +86,7 @@ export const EDIT_GROUP = gql`
       bio: $bio
       imgUrl: $imgUrl
       imgKey: $imgKey
+      activeDay: $activeDay
     )
   }
 `

@@ -13,6 +13,7 @@ import {
   ADD_TODOLIST,
   DELETE_TODOLIST,
   FINISH_TODOLIST,
+  EDIT_TODOLIST,
 } from "../Tabs/QueryBox"
 export default (
   todoArray
@@ -24,6 +25,8 @@ export default (
   const [addTodolistMutation] = useMutation(ADD_TODOLIST)
   const [deleteTodolistMutation] = useMutation(DELETE_TODOLIST)
   const [finishTodolistMutation] = useMutation(FINISH_TODOLIST)
+  const [editTodolistMutation] = useMutation(EDIT_TODOLIST)
+
   const {
     data: subjectData,
     loading: subjectLoading,
@@ -60,6 +63,7 @@ export default (
           addTodolistMutation={addTodolistMutation}
           deleteTodolistMutation={deleteTodolistMutation}
           finishTodolistMutation={finishTodolistMutation}
+          editTodolistMutation={editTodolistMutation}
           refreshing={refreshing}
           onRefresh={onRefresh}
           todolistName={todolistName}

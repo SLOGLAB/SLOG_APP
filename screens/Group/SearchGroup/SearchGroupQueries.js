@@ -12,13 +12,15 @@ export const SEE_GROUP = gql`
       publicBool
       bio
       imgUrl
-
+      activeDay
       imManager
       manager {
         id
         username
       }
       memberCount
+      lastStudyTime
+      lastAttendance
       createdAt
     }
   }
@@ -33,6 +35,7 @@ export const CREATE_GROUP = gql`
     $bio: String!
     $imgUrl: String!
     $imgKey: String!
+    $activeDay: [Boolean!]!
   ) {
     createGroup(
       name: $name
@@ -43,6 +46,7 @@ export const CREATE_GROUP = gql`
       bio: $bio
       imgUrl: $imgUrl
       imgKey: $imgKey
+      activeDay: $activeDay
     )
   }
 `

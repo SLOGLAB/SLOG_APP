@@ -20,6 +20,7 @@ import styled from "styled-components"
 import RNPickerSelect from "react-native-picker-select"
 import { Ionicons } from "@expo/vector-icons"
 import AuthButton from "../../components/AuthButton"
+import AuthButton2 from "../../components/AuthButton2"
 import AuthInput from "../../components/AuthInput"
 import LastWidth from "../../components/LastWidth"
 import Icon from "../../components/Icon"
@@ -36,6 +37,7 @@ import Modal from "react-native-modal"
 import useInput from "../../hooks/useInput"
 import Input_100 from "../../components/Input_100"
 import NumericInput from "react-native-numeric-input"
+import constants from "../../constants"
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
 
@@ -46,7 +48,7 @@ const ChartView = styled.View`
   margin-left: 10;
   margin-right: 10;
   width: 95%;
-  height: 20%;
+  height: 23%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -82,12 +84,12 @@ const SubText3 = styled.Text`
 `
 const ExistTimeText = styled.Text`
   color: rgba(34, 76, 126, 1);
-  font-size: 30;
+  font-size: 25;
   font-family: "GmarketBold";
 `
 const ExistText = styled.Text`
   color: black;
-  font-size: 20;
+  font-size: 18;
   font-family: "GmarketBold";
 `
 const TargetText = styled.Text`
@@ -104,8 +106,15 @@ const FlexBox2 = styled.View`
 `
 const FlexrowBox = styled.View`
   flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 75%;
+`
+const FlexrowBox2 = styled.View`
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 75%;
 `
 
 const TimeView = styled.View`
@@ -127,7 +136,7 @@ const TimeViewabsolute = styled.View`
   align-items: flex-end;
   height: 100%;
   border-color: rgba(196, 196, 196, 1);
-  padding-right: 15;
+  padding-right: 0;
 `
 const SubView2 = styled.View`
   padding-bottom: 5;
@@ -150,6 +159,10 @@ const StyledModalContainer = styled.View`
   width: 100%;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
+`
+const ModalLandView = styled.View`
+  flex: 1;
+  justify-content: center;
 `
 const ModalView = styled.View`
   flex: 1;
@@ -177,7 +190,7 @@ const LineView2 = styled.View`
   color: #000;
 `
 const Modalflex1 = styled.View`
-  width: 60%;
+  width: 100%;
 `
 const Modalflex06 = styled.View`
   flex: 0.6;
@@ -199,10 +212,7 @@ const StyledModalLandContainer = styled.View`
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
-const ModalLandView = styled.View`
-  flex: 0.85;
-  justify-content: center;
-`
+
 const ModalPlay = styled.View`
   flex: 0.6;
   justify-content: center;
@@ -234,7 +244,7 @@ const ModalPlay21 = styled.View`
   align-items: center;
   width: ${WIDTH / 1.15};
   flex: 0.15;
-
+  flex-direction: row;
   border-width: 1;
   border-radius: 10;
   margin-bottom: 5px;
@@ -256,14 +266,14 @@ const ModalLand = styled.View`
   height: 100%;
 `
 const ModalPlayLand = styled.View`
-  flex: 0.4;
+  flex: 0.45;
   justify-content: center;
   align-items: center;
   border-width: 1;
   border-radius: 10;
   margin-bottom: 5px;
   margin-left: 5px;
-  margin-right: 5px;
+  margin-right: 0px;
   border-color: rgba(196, 196, 196, 1);
 `
 const Modalflex05 = styled.View`
@@ -293,7 +303,7 @@ const ModalPlayLand21 = styled.View`
   justify-content: center;
   align-items: center;
   width: 100%;
-
+  flex-direction: row;
   border-width: 1px;
   border-radius: 10;
   margin-bottom: 5px;
@@ -308,6 +318,116 @@ const ModalPlayLand3 = styled.View`
   margin-bottom: 5px;
   border-color: rgba(196, 196, 196, 1);
 `
+
+//
+const IndiviList = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  height: 40;
+  margin-top: 3;
+
+  border: 0.5px;
+  border-color: rgba(196, 196, 196, 1);
+
+  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
+`
+const TaskView = styled.View`
+  width: 20%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+const TaskNameView = styled.TouchableOpacity`
+  width: 70%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`
+const TaskName_todo = styled.Text`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 5px;
+  margin-left: 3px;
+  font-size: 13;
+  /* color: ${(props) => props.color}; */
+  color: rgba(0, 0, 0, 1);
+
+  font-family: "GmarketMedium";
+
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const TodoNameDiv = styled.Text`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  width: 220px;
+  font-size: 13;
+  padding: 0 10px;
+  font-family: "GmarketMedium";
+
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const ColorBox = styled.View`
+  height: ${(props) => props.size};
+  width: ${(props) => props.size};
+  background-color: ${(props) => props.bgColor};
+  margin-right: 5px;
+  border-radius: ${(props) => props.radius};
+`
+const View01 = styled.View`
+  flex: 1;
+  /* justify-content: center; */
+  /* background-color: rgba(233, 237, 244, 1); */
+`
+const View05 = styled.View`
+  margin-left: 5;
+  flex: 0.5;
+  /* justify-content: center; */
+`
+const StyledModalSetContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.6;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const StyledTodoModalLandContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.8;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const TodoRowView = styled.View`
+  flex-direction: row;
+`
+const TodoModalTopEnd = styled.View`
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 90%;
+  height: 10%;
+`
+const TodoModalTop = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+`
+const CopyText = styled.Text`
+  font-size: 17;
+  font-family: "GmarketBold";
+`
+const TimeText = styled.Text`
+  font-size: 25;
+  color: #fff;
+  font-family: "GmarketMedium";
+  /* margin-bottom: 50; */
+`
+//
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -315,8 +435,13 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 })
+const ChartTopView = styled.View`
+  width: 100%;
+  height: 10%;
+  align-items: center;
+  justify-content: center;
+`
 let taskArray_pre = []
-
 export default ({
   nexistTime,
   nowtarget,
@@ -352,6 +477,7 @@ export default ({
   todolistData,
   scheduleList_selectDay,
   scheduleList_selectDay_length,
+  pullScheduleMutation,
   nextScheduleIndex,
   onstopLoading,
   setstopOnLoading,
@@ -362,30 +488,27 @@ export default ({
   land,
   setting,
   setSetting,
+  androidCam,
+  setandroidCam,
+  personOnoff,
+  setpersonOnoff,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
-  const [notification, setNotification] = useState(false)
+  const [notification, setNotification] = useState(true)
   const [subjectId, setSubjectId] = useState("")
-
+  useEffect(() => {
+    setTimeout(function () {
+      setNotification(false)
+    }, 9900)
+  }, [])
   const notificationListener = useRef()
   const responseListener = useRef()
   taskArray_pre = new Array(24).fill(0)
   const titleInput = useInput("")
   const countInput = useInput("")
   const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}...` : text)
+  const [scheduletodoModal, setscheduleTodoModal] = useState(false)
 
-  const [substate, setsubstate] = useState("자습")
-  // const myState = myData.me.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
-  const lists = [
-    {
-      label: "자습",
-      value: "자습",
-    },
-    {
-      label: "강의",
-      value: "강의",
-    },
-  ]
   // 팔로우한 각 유저 데이터에 알맞은 createdAt 넣어주기(내가가 언제 팔로우 했는지)
   for (let i = 0; i < myData.followDates.length; i++) {
     const findUser = (a) => a.id === myData.followDates[i].followId
@@ -716,7 +839,6 @@ export default ({
         // await todolistRefetch();
         await myInfoRefetch()
         setSubjectId("")
-        setsubstate("자습")
         titleInput.setValue("")
         setstartScheduleTerm(0)
         setModalVisible(false)
@@ -727,7 +849,45 @@ export default ({
       setOnLoading(false)
     }
   }
+  const onPullSchedule = async () => {
+    // 스케줄 데이터르 최신으로 업데이트 후 현재 진행중인 스케줄 확인
+    await myInfoRefetch()
+    await todayGraph_calculate()
+    if (nowScheduleIndex !== -1) {
+      Alert.alert("현재 스케줄이 없을 때 사용 가능합니다.")
+      return
+    } else if (nextScheduleIndex === -1) {
+      Alert.alert("다음 스케줄이 없습니다.")
+      return
+    }
+    // 시작 시간 계산
+    const start = new Date()
+    const end = new Date()
+    start.setSeconds(0)
+    start.setMilliseconds(0)
+    start.setMinutes(Math.floor(start.getMinutes() / 5) * 5)
+    end.setTime(start.getTime() + scheduleList_selectDay[nextScheduleIndex].totalTime * 1000)
 
+    try {
+      const {
+        data: { pullSchedule_study },
+      } = await pullScheduleMutation({
+        variables: {
+          scheduleId: scheduleList_selectDay[nextScheduleIndex].id,
+          start,
+          end,
+        },
+      })
+      if (!pullSchedule_study) {
+        Alert.alert("다음 스케줄을 당길 수 없습니다.")
+      } else {
+        await myInfoRefetch()
+        setModalVisible(false)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
   useEffect(() => {}, [])
   // useEffect(() => {
   //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
@@ -761,6 +921,11 @@ export default ({
   return (
     // <ScrollView horizontal={false}>
     <>
+      <ChartTopView>
+        {personOnoff && !notification ? (
+          <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+        ) : null}
+      </ChartTopView>
       <ChartView>
         <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
         <ExistText>시간 </ExistText>
@@ -796,7 +961,7 @@ export default ({
             />
           )}
           <TimeViewabsolute>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 setModalVisible(!modalVisible)
                 const maxTime_tmp = maxTimeCal(new Date())
@@ -808,7 +973,21 @@ export default ({
                 color={"#000000"}
                 size={20}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <AuthButton
+              text={"스케줄조정"}
+              color="black"
+              bgColor={"#ECE9E9"}
+              onPress={() => {
+                setModalVisible(!modalVisible)
+                const maxTime_tmp = maxTimeCal(new Date())
+                setmaxtime(maxTime_tmp)
+              }}
+              widthRatio={4}
+              paddingArray={[5, 0, 5, 0]}
+              marginArray={[0, 0, 0, 0]}
+              // loading={modifyLoading}
+            />
           </TimeViewabsolute>
         </TimeView>
         <SubView2>
@@ -837,7 +1016,7 @@ export default ({
                 <ModalLand>
                   <ModalPlayLand>
                     <FlexrowBox>
-                      <Modalflex1>
+                      <View01>
                         <RNPickerSelect
                           onValueChange={(value) => {
                             if (value !== null) {
@@ -873,9 +1052,78 @@ export default ({
                             )
                           }}
                         />
-                      </Modalflex1>
-                      {/* <LineView2 /> */}
-                      {/* <Modalflex1 /> */}
+                      </View01>
+                      <View05>
+                        <AuthButton
+                          text={"TODO"}
+                          color="black"
+                          bgColor={"#ECE9E9"}
+                          onPress={() => {
+                            setscheduleTodoModal(true)
+                          }}
+                          widthRatio={5}
+                          marginArray={[0, 0, 0, 0]}
+                          // loading={modifyLoading}
+                        />
+                      </View05>
+
+                      <Modal
+                        isVisible={scheduletodoModal}
+                        onBackdropPress={() => setscheduleTodoModal(false)}
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                          minHeight: Math.round(Dimensions.get("window").height),
+                        }}
+                      >
+                        <StyledTodoModalLandContainer style={{ width: constants.width / 1.0 }}>
+                          <TodoModalTopEnd>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setscheduleTodoModal(false)
+                              }}
+                            >
+                              <Icon
+                                name={
+                                  Platform.OS === "ios"
+                                    ? "ios-close-circle-outline"
+                                    : "md-close-circle-outline"
+                                }
+                                size={23}
+                              />
+                            </TouchableOpacity>
+                          </TodoModalTopEnd>
+                          <TodoModalTop>
+                            <CopyText>To Do List</CopyText>
+                          </TodoModalTop>
+                          <ScrollView>
+                            {todolistData_new.map((list) => (
+                              <IndiviList key={list.id}>
+                                <TaskView>
+                                  <ColorBox
+                                    size={"10px"}
+                                    radius={"16px"}
+                                    bgColor={list.subject.bgColor}
+                                  />
+
+                                  <TaskName_todo color={list.subject.bgColor}>
+                                    {trimText(list.subject.name, 10)}
+                                  </TaskName_todo>
+                                </TaskView>
+                                <TaskNameView
+                                  onPress={() => {
+                                    setSubjectId(list.subject.id)
+                                    titleInput.setValue(list.name)
+                                    setscheduleTodoModal(false)
+                                  }}
+                                >
+                                  <TodoNameDiv>{trimText(list.name, 15)}</TodoNameDiv>
+                                </TaskNameView>
+                              </IndiviList>
+                            ))}
+                          </ScrollView>
+                        </StyledTodoModalLandContainer>
+                      </Modal>
                     </FlexrowBox>
                     <LineView></LineView>
                     <FlexrowBox>
@@ -891,7 +1139,7 @@ export default ({
                     </FlexrowBox>
                     <LineView></LineView>
 
-                    <FlexrowBox>
+                    <FlexrowBox2>
                       <NumericInput
                         value={startScheduleTerm}
                         onChange={(value) => setstartScheduleTerm(value)}
@@ -913,7 +1161,7 @@ export default ({
                       />
 
                       <SubText3> 분</SubText3>
-                    </FlexrowBox>
+                    </FlexrowBox2>
                     <LineView></LineView>
                     <LineView />
 
@@ -930,7 +1178,7 @@ export default ({
                   </ModalPlayLand>
                   <Modalflex05>
                     <ModalPlayLand2>
-                      <FlexrowBox>
+                      <FlexrowBox2>
                         <SubText3>현재 스케줄을 </SubText3>
                         <NumericInput
                           value={extensionTerm}
@@ -952,11 +1200,11 @@ export default ({
                           leftButtonBackgroundColor="#E56B70"
                         />
                         <SubText3> 분</SubText3>
-                      </FlexrowBox>
+                      </FlexrowBox2>
                       <LineView />
                       <LineView />
                       <LineView />
-                      <FlexrowBox>
+                      <FlexrowBox2>
                         <AuthButton
                           onPress={() => {
                             onCutSchedule()
@@ -964,9 +1212,10 @@ export default ({
                           text="단축"
                           color="white"
                           bgColor={"#7BA9EB"}
-                          widthRatio={LastWidth(1, 2, 5)}
+                          widthRatio={LastWidth(1, 2, 3)}
                           loading={oncutLoading}
                         />
+                        <LineView2 />
                         <LineView2 />
                         <AuthButton
                           onPress={() => {
@@ -975,20 +1224,33 @@ export default ({
                           text="연장"
                           color="white"
                           bgColor={"#7BA9EB"}
-                          widthRatio={LastWidth(1, 2, 5)}
+                          widthRatio={LastWidth(1, 2, 3)}
                           loading={onexLoading}
                         />
-                      </FlexrowBox>
+                      </FlexrowBox2>
                     </ModalPlayLand2>
                     <ModalPlayLand21>
-                      <AuthButton
+                      <AuthButton2
                         onPress={() => {
                           onStopSchedule()
                         }}
                         text="현재 스케줄 마침"
                         color="white"
                         bgColor={"#D83835"}
-                        widthRatio={LastWidth(1, 2, 18)}
+                        widthRatio={LastWidth(1, 2, 4.5)}
+                        loading={onstopLoading}
+                      />
+
+                      <LineView2 />
+                      <LineView2 />
+                      <AuthButton2
+                        onPress={() => {
+                          onPullSchedule()
+                        }}
+                        text="다음 스케줄 당김"
+                        color="white"
+                        bgColor={"#7BA9EB"}
+                        widthRatio={LastWidth(1, 2, 4.5)}
                         loading={onstopLoading}
                       />
                     </ModalPlayLand21>
@@ -1015,45 +1277,116 @@ export default ({
                 </ModalSubView>
                 <ModalPlay>
                   <FlexrowBox>
-                    <Modalflex1>
-                      <RNPickerSelect
-                        onValueChange={(value) => {
-                          if (value !== null) {
-                            setSubjectId(value)
-                          }
-                        }}
-                        items={SubjectList}
-                        placeholder={{
-                          label: "과목 선택...",
-                          value: null,
-                          color: "red",
-                        }}
-                        value={subjectId} //선택된 과목이 어떻게 들어가는지 봐야함
-                        style={{
-                          ...pickerSelectStyles,
-                          iconContainer: {
-                            top: 9,
-                            right: 10,
-                          },
-                          placeholder: {
-                            color: "black",
-                            fontSize: 14,
-                            fontWeight: "bold",
-                          },
-                        }}
-                        Icon={() => {
-                          return (
-                            <Ionicons
-                              name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
-                              size={24}
-                              color="gray"
+                    <TodoRowView>
+                      <View01>
+                        <RNPickerSelect
+                          onValueChange={(value) => {
+                            if (value !== null) {
+                              setSubjectId(value)
+                            }
+                          }}
+                          items={SubjectList}
+                          placeholder={{
+                            label: "과목 선택...",
+                            value: null,
+                            color: "red",
+                          }}
+                          value={subjectId} //선택된 과목이 어떻게 들어가는지 봐야함
+                          style={{
+                            ...pickerSelectStyles,
+                            iconContainer: {
+                              top: 9,
+                              right: 10,
+                            },
+                            placeholder: {
+                              color: "black",
+                              fontSize: 14,
+                              fontWeight: "bold",
+                            },
+                          }}
+                          Icon={() => {
+                            return (
+                              <Ionicons
+                                name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                                size={24}
+                                color="gray"
+                              />
+                            )
+                          }}
+                        />
+                      </View01>
+                      <View05>
+                        <AuthButton
+                          text={"TODO"}
+                          color="black"
+                          bgColor={"#ECE9E9"}
+                          onPress={() => {
+                            setscheduleTodoModal(true)
+                          }}
+                          widthRatio={5}
+                          marginArray={[0, 0, 0, 0]}
+                          // loading={modifyLoading}
+                        />
+                      </View05>
+                    </TodoRowView>
+
+                    <Modal
+                      isVisible={scheduletodoModal}
+                      onBackdropPress={() => setscheduleTodoModal(false)}
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: Math.round(Dimensions.get("window").height),
+                      }}
+                    >
+                      <StyledModalSetContainer style={{ width: constants.width / 1.1 }}>
+                        <TodoModalTopEnd>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setscheduleTodoModal(false)
+                            }}
+                          >
+                            <Icon
+                              name={
+                                Platform.OS === "ios"
+                                  ? "ios-close-circle-outline"
+                                  : "md-close-circle-outline"
+                              }
+                              size={23}
                             />
-                          )
-                        }}
-                      />
-                    </Modalflex1>
-                    {/* <LineView2 /> */}
-                    {/* <Modalflex1 /> */}
+                          </TouchableOpacity>
+                        </TodoModalTopEnd>
+                        <TodoModalTop>
+                          <CopyText>To Do List</CopyText>
+                        </TodoModalTop>
+                        <ScrollView>
+                          {todolistData_new.map((list) => (
+                            <IndiviList key={list.id}>
+                              <TaskView>
+                                <ColorBox
+                                  size={"10px"}
+                                  radius={"16px"}
+                                  bgColor={list.subject.bgColor}
+                                />
+
+                                <TaskName_todo color={list.subject.bgColor}>
+                                  {trimText(list.subject.name, 10)}
+                                </TaskName_todo>
+                              </TaskView>
+                              <TaskNameView
+                                onPress={() => {
+                                  setSubjectId(list.subject.id)
+                                  titleInput.setValue(list.name)
+                                  setscheduleTodoModal(false)
+                                }}
+                              >
+                                <TodoNameDiv>{trimText(list.name, 15)}</TodoNameDiv>
+                              </TaskNameView>
+                            </IndiviList>
+                          ))}
+                        </ScrollView>
+                      </StyledModalSetContainer>
+                    </Modal>
                   </FlexrowBox>
                   <LineView></LineView>
                   <FlexrowBox>
@@ -1068,8 +1401,9 @@ export default ({
                     />
                   </FlexrowBox>
                   <LineView></LineView>
+                  <LineView />
 
-                  <FlexrowBox>
+                  <FlexrowBox2>
                     <NumericInput
                       value={startScheduleTerm}
                       onChange={(value) => setstartScheduleTerm(value)}
@@ -1102,7 +1436,7 @@ export default ({
                     widthRatio={LastWidth(1, 1, 18)}
                   /> */}
                     <SubText3> 분</SubText3>
-                  </FlexrowBox>
+                  </FlexrowBox2>
                   <LineView></LineView>
                   <LineView />
 
@@ -1119,7 +1453,7 @@ export default ({
                 </ModalPlay>
                 <>
                   <ModalPlay2>
-                    <FlexrowBox>
+                    <FlexrowBox2>
                       <SubText3>현재 스케줄을 </SubText3>
                       <NumericInput
                         value={extensionTerm}
@@ -1141,11 +1475,11 @@ export default ({
                         leftButtonBackgroundColor="#E56B70"
                       />
                       <SubText3> 분</SubText3>
-                    </FlexrowBox>
+                    </FlexrowBox2>
                     <LineView />
                     <LineView />
                     <LineView />
-                    <FlexrowBox>
+                    <FlexrowBox2>
                       <AuthButton
                         onPress={() => {
                           onCutSchedule()
@@ -1153,7 +1487,7 @@ export default ({
                         text="단축"
                         color="white"
                         bgColor={"#7BA9EB"}
-                        widthRatio={LastWidth(1, 2, 5)}
+                        widthRatio={LastWidth(1, 2, 7)}
                         loading={oncutLoading}
                       />
                       <LineView2 />
@@ -1164,10 +1498,10 @@ export default ({
                         text="연장"
                         color="white"
                         bgColor={"#7BA9EB"}
-                        widthRatio={LastWidth(1, 2, 5)}
+                        widthRatio={LastWidth(1, 2, 7)}
                         loading={onexLoading}
                       />
-                    </FlexrowBox>
+                    </FlexrowBox2>
                   </ModalPlay2>
                   <ModalPlay21>
                     <AuthButton
@@ -1177,7 +1511,19 @@ export default ({
                       text="현재 스케줄 마침"
                       color="white"
                       bgColor={"#D83835"}
-                      widthRatio={LastWidth(1, 2, 18)}
+                      widthRatio={LastWidth(1, 2, 7)}
+                      loading={onstopLoading}
+                    />
+                    <LineView2 />
+
+                    <AuthButton
+                      onPress={() => {
+                        onPullSchedule()
+                      }}
+                      text="다음 스케줄 당김"
+                      color="white"
+                      bgColor={"#7BA9EB"}
+                      widthRatio={LastWidth(1, 2, 7)}
                       loading={onstopLoading}
                     />
                   </ModalPlay21>

@@ -13,6 +13,7 @@ export const MY_GROUP = gql`
       publicBool
       bio
       imgUrl
+      activeDay
       imManager
       manager {
         id
@@ -23,6 +24,8 @@ export const MY_GROUP = gql`
     }
   }
 `
+// lastStudyTime
+// lastAttendance
 export const BOOKMARK_GROUP = gql`
   mutation bookmarkGroup($groupId: String!, $orderBool: Boolean!) {
     bookmarkGroup(groupId: $groupId, orderBool: $orderBool)

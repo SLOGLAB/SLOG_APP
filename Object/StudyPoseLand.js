@@ -21,11 +21,6 @@ import Icon from "../components/Icon"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import styled from "styled-components"
-import AsyncStorage from "@react-native-community/async-storage"
-
-import * as mobilenet from "@tensorflow-models/mobilenet"
-import { PoseNet } from "@tensorflow-models/posenet"
-import { ExpoWebGLRenderingContext } from "expo-gl"
 const TimeText = styled.Text`
   font-size: 25;
   color: #fff;
@@ -86,6 +81,10 @@ export default function StudyPoseLand({
   land,
   setting,
   setSetting,
+  androidCam,
+  setandroidCam,
+  personOnoff,
+  setpersonOnoff,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -114,6 +113,10 @@ export default function StudyPoseLand({
       land={land}
       setting={setting}
       setSetting={setSetting}
+      androidCam={androidCam}
+      setandroidCam={setandroidCam}
+      personOnoff={personOnoff}
+      setpersonOnoff={setpersonOnoff}
     />
   )
 }
@@ -167,6 +170,10 @@ const PoseCamera = ({
   land,
   setting,
   setSetting,
+  androidCam,
+  setandroidCam,
+  personOnoff,
+  setpersonOnoff,
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
@@ -175,8 +182,8 @@ const PoseCamera = ({
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
   // const [setting, setSetting] = useState(false)
   const [brightnessButton, setbrightnessButton] = useState(true)
-  const [androidCam, setandroidCam] = useState(true)
-  const [personOnoff, setpersonOnoff] = useState(true)
+  // const [androidCam, setandroidCam] = useState(true)
+  // const [personOnoff, setpersonOnoff] = useState(true)
   const [settingTime, setsettingTime] = useState(10000)
   const [isEnabled, setIsEnabled] = useState(false)
   useEffect(() => {
@@ -184,6 +191,7 @@ const PoseCamera = ({
     clearInterval(studySetInterval)
     clearTimeout(brighttime)
     clearTimeout(isEnabledTime)
+    setandroidCam(true)
   }, [land])
 
   const toggleSwitch = async () => {
@@ -562,6 +570,7 @@ const PoseCamera = ({
             </View>
           </View>
         </View>
+
         {personOnoff ? null : (
           <View
             style={[
@@ -811,7 +820,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0F4C82",
+    backgroundColor: "#000",
   },
 
   modelResults: {

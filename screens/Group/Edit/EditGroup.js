@@ -21,7 +21,11 @@ const EditGroup = ({ navigation }) => {
   const selectIndex = data.myGroup.findIndex((a) => a.id === navigation.getParam("id"))
   const GroupId = navigation.getParam("id")
   const [editGroupMutation] = useMutation(EDIT_GROUP, {
-    refetchQueries: [{ query: SEE_GROUP }, { query: MY_GROUP }],
+    refetchQueries: [
+      { query: SEEONE_GROUP, variables: { groupId: GroupId } },
+      { query: SEE_GROUP },
+      { query: MY_GROUP },
+    ],
   })
 
   const onRefresh = async () => {

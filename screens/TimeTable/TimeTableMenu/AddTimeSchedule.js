@@ -9,10 +9,12 @@ import {
   TouchableOpacity,
   Platform,
   Dimensions,
+  ScrollView,
 } from "react-native"
 import { useMutation } from "@apollo/react-hooks"
 import RNPickerSelect from "react-native-picker-select"
 import AuthInput from "../../../components/AuthInput"
+import Icon from "../../../components/Icon"
 import useInput from "../../../hooks/useInput"
 import { Button, Text } from "native-base"
 import constants from "../../../constants"
@@ -26,6 +28,7 @@ import { Calendar } from "react-native-calendars"
 import { CheckBox } from "native-base"
 import AuthButton from "../../../components/AuthButton"
 import { Ionicons } from "@expo/vector-icons"
+
 const MarginR = styled.View``
 
 const MarginView = styled.View`
@@ -38,7 +41,7 @@ const View1 = styled.View`
   flex: 0.15;
 `
 const WeekView = styled.View`
-  flex: 1;
+  flex: 0.1;
   justify-content: center;
   align-items: center;
   flex-direction: row;
@@ -76,25 +79,22 @@ const ModalView = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+  margin-top: 10;
 `
-const ModalView_State = styled.View`
-  flex: 0.5;
+const ModalView02 = styled.View`
+  flex: 0.2;
   justify-content: center;
   align-items: center;
+  margin-top: 10;
 `
-const ModalView_Private = styled.View`
-  flex: 0.5;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
+
 const RowAndView = styled.View`
   /* flex-direction: row; */
   justify-content: center;
   align-items: center;
   width: 100%;
   flex: 1;
-  margin-top: 10;
+  margin-top: 0;
   /* background-color: rgba(15, 76, 130, 1); */
 `
 const RowView = styled.View`
@@ -128,7 +128,7 @@ const ModalCalView = styled.View`
   justify-content: center;
   align-items: center;
   background-color: rgba(233, 237, 244, 1);
-  margin-top: 20;
+  margin-top: 5;
   margin-bottom: 10;
   border-width: 0;
   border-color: rgba(15, 76, 130, 1);
@@ -138,6 +138,101 @@ const ModalCalView = styled.View`
 const RowText = styled.Text`
   font-size: 15;
 `
+//
+const IndiviList = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  height: 40;
+  margin-top: 3;
+
+  border: 0.5px;
+  border-color: rgba(196, 196, 196, 1);
+
+  /* background-color: ${(props) => (props.isOdd ? "#FAFAFA" : "#c7c7c7")}; */
+`
+const TaskView = styled.View`
+  width: 20%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+const TaskNameView = styled.TouchableOpacity`
+  width: 70%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`
+const TaskName_todo = styled.Text`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 5px;
+  margin-left: 3px;
+  font-size: 13;
+  /* color: ${(props) => props.color}; */
+  color: rgba(0, 0, 0, 1);
+
+  font-family: "GmarketMedium";
+
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const TodoNameDiv = styled.Text`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  width: 220px;
+  font-size: 13;
+  padding: 0 10px;
+  font-family: "GmarketMedium";
+
+  /* border-color: ${(props) => (props.isOdd ? "#c7c7c7" : "#FAFAFA")}; */
+`
+const ColorBox = styled.View`
+  height: ${(props) => props.size};
+  width: ${(props) => props.size};
+  background-color: ${(props) => props.bgColor};
+  margin-right: 5px;
+  border-radius: ${(props) => props.radius};
+`
+const View01 = styled.View`
+  flex: 1;
+  /* justify-content: center; */
+  /* background-color: rgba(233, 237, 244, 1); */
+`
+const View05 = styled.View`
+  margin-left: 10;
+  flex: 0.5;
+  /* justify-content: center; */
+  /* background-color: rgba(233, 237, 244, 1); */
+`
+const StyledModalSetContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.6;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const TodoRowView = styled.View`
+  flex-direction: row;
+`
+const TodoModalTopEnd = styled.View`
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 90%;
+  height: 10%;
+`
+const TodoModalTop = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+`
+const CopyText = styled.Text`
+  font-size: 17;
+  font-family: "GmarketBold";
+`
 export const SAVE_SCHEDULE = gql`
   mutation saveSchedule_my($scheduleArray: [ScheduleArray_my!]!) {
     saveSchedule_my(scheduleArray: $scheduleArray)
@@ -145,20 +240,29 @@ export const SAVE_SCHEDULE = gql`
 `
 
 let newScheduleArray = []
-export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData }) => {
+export default AddTimeSchedule = ({
+  goback,
+  subjectsName,
+  targetToday,
+  myData,
+  todolistData,
+  todolistRefetch,
+}) => {
+  let todolistData_new = []
+  let todolistData_finish = []
+  todolistData.myTodolist.map((todolist) => {
+    if (todolist.finish) {
+      todolistData_finish.push(todolist)
+    } else {
+      todolistData_new.push(todolist)
+    }
+  })
+  const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}...` : text)
+
   const myState = myData.me.studyPurpose === "학습" ? ["자습", "강의"] : ["업무", "개인"]
 
-  const lists = [
-    {
-      label: `${myState[0]}`,
-      value: `${myState[0]}`,
-    },
-    {
-      label: `${myState[1]}`,
-      value: `${myState[1]}`,
-    },
-  ]
   const [selectDay, setselectDay] = useState(targetToday)
+  const [scheduletodoModal, setscheduleTodoModal] = useState(false)
 
   var scheduleArray = []
   var currentDay = new Date(selectDay)
@@ -244,6 +348,13 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
     setendTime(initDate2)
     setstartTimeText(moment(initDate).format("hh:mm a"))
     setendTimeText(moment(initDate2).format("hh:mm a"))
+    setday1(false)
+    setday2(false)
+    setday3(false)
+    setday4(false)
+    setday5(false)
+    setday6(false)
+    setday7(false)
     // setPrivate(false)
   }
 
@@ -390,7 +501,6 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
         Alert.alert("스케줄을 만들 수 없습니다.")
       } else {
         allClear()
-        goback()
       }
     } catch (e) {
       console.log(e)
@@ -408,7 +518,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <TotalView style={{ minHeight: Math.round(Dimensions.get("window").height) }}>
+      <TotalView>
         <ModalCalView>
           <TouchableOpacity onPress={() => setCalModalVisible(!CalmodalVisible)}>
             <Text>
@@ -459,6 +569,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               }}
               onPress={() => {
                 setday1(!day1)
+                console.log("hi")
               }}
             >
               <Text style={{ color: "black" }}>월 </Text>
@@ -528,42 +639,112 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               <Text style={{ color: "black" }}>토</Text>
             </Button>
           </WeekView>
-          <ModalView style={{ width: constants.width / 1.7 }}>
-            <RNPickerSelect
-              onValueChange={(value) => {
-                if (value !== null) {
-                  setSubjectId(value)
-                }
-              }}
-              items={SubjectList}
-              placeholder={{
-                label: "과목 선택...",
-                value: null,
-                color: "red",
-              }}
-              value={subjectId}
-              style={{
-                ...pickerSelectStyles,
-                iconContainer: {
-                  top: 9,
-                  right: 10,
-                },
-                placeholder: {
-                  color: "black",
-                  fontSize: 15,
-                  fontWeight: "bold",
-                },
-              }}
-              Icon={() => {
-                return (
-                  <Ionicons
-                    name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
-                    size={24}
-                    color="gray"
-                  />
-                )
-              }}
-            />
+          <ModalView02 style={{ width: constants.width / 1.7 }}>
+            <TodoRowView>
+              <View01>
+                <RNPickerSelect
+                  onValueChange={(value) => {
+                    if (value !== null) {
+                      setSubjectId(value)
+                    }
+                  }}
+                  items={SubjectList}
+                  placeholder={{
+                    label: "과목 선택...",
+                    value: null,
+                    color: "red",
+                  }}
+                  value={subjectId}
+                  style={{
+                    ...pickerSelectStyles,
+                    iconContainer: {
+                      top: 9,
+                      right: 10,
+                    },
+                    placeholder: {
+                      color: "black",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                    },
+                  }}
+                  Icon={() => {
+                    return (
+                      <Ionicons
+                        name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                        size={24}
+                        color="gray"
+                      />
+                    )
+                  }}
+                />
+              </View01>
+              <View05>
+                <AuthButton
+                  text={"TODO"}
+                  color="black"
+                  bgColor={"#ECE9E9"}
+                  onPress={() => {
+                    setscheduleTodoModal(true)
+                  }}
+                  widthRatio={5}
+                  marginArray={[0, 0, 0, 0]}
+                  // loading={modifyLoading}
+                />
+              </View05>
+              <Modal
+                isVisible={scheduletodoModal}
+                onBackdropPress={() => setscheduleTodoModal(false)}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: Math.round(Dimensions.get("window").height),
+                }}
+              >
+                <StyledModalSetContainer style={{ width: constants.width / 1.1 }}>
+                  <TodoModalTopEnd>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setscheduleTodoModal(false)
+                      }}
+                    >
+                      <Icon
+                        name={
+                          Platform.OS === "ios"
+                            ? "ios-close-circle-outline"
+                            : "md-close-circle-outline"
+                        }
+                        size={23}
+                      />
+                    </TouchableOpacity>
+                  </TodoModalTopEnd>
+                  <TodoModalTop>
+                    <CopyText>To Do List</CopyText>
+                  </TodoModalTop>
+                  <ScrollView>
+                    {todolistData_new.map((list) => (
+                      <IndiviList key={list.id}>
+                        <TaskView>
+                          <ColorBox size={"10px"} radius={"16px"} bgColor={list.subject.bgColor} />
+
+                          <TaskName_todo color={list.subject.bgColor}>
+                            {trimText(list.subject.name, 10)}
+                          </TaskName_todo>
+                        </TaskView>
+                        <TaskNameView
+                          onPress={() => {
+                            setSubjectId(list.subject.id)
+                            titleInput.setValue(list.name)
+                            setscheduleTodoModal(false)
+                          }}
+                        >
+                          <TodoNameDiv>{trimText(list.name, 15)}</TodoNameDiv>
+                        </TaskNameView>
+                      </IndiviList>
+                    ))}
+                  </ScrollView>
+                </StyledModalSetContainer>
+              </Modal>
+            </TodoRowView>
             <MarginR style={{ height: constants.height / 50 }} />
 
             <AuthInput
@@ -576,41 +757,8 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               autoCorrect={false}
             />
             <MarginR style={{ height: constants.height / 50 }} />
-            {/* <AuthInput
-              {...locationInput}
-              // value={name}
-              placeholder={"(선택) 위치"}
-              keyboardType="default"
-              returnKeyType="done"
-              // onSubmitEditing={handleLogin}
-              autoCorrect={false}
-            /> */}
-          </ModalView>
-          {/* <ModalView>
-            <AuthInput
-              {...titleInput}
-              // value={name}
-              placeholder={"(필수) 제목"}
-              keyboardType="default"
-              returnKeyType="done"
-              // onSubmitEditing={handleLogin}
-              autoCorrect={false}
-            />
-            <MarginR style={{ height: constants.height / 50 }} />
-            <AuthInput
-              {...locationInput}
-              // value={name}
-              placeholder={"(선택) 위치"}
-              keyboardType="default"
-              returnKeyType="done"
-              // onSubmitEditing={handleLogin}
-              autoCorrect={false}
-            />
-          </ModalView> */}
+          </ModalView02>
         </ModalView>
-
-        {/* <View1> */}
-        {/* <MarginView /> */}
 
         {Platform.OS === "ios" ? (
           <>
@@ -661,124 +809,11 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               </View12>
               <View13 />
             </RowView>
-            {/* <View2>
-                <TouchableOpacity onPress={() => setCalVisibleStart(!calVisibleStart)}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: startTime >= endTime ? "red" : "black",
-                    }}
-                  >
-                    {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
-                    )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Text>
-                </TouchableOpacity>
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  isVisible={calVisibleStart}
-                  backdropColor={"black"}
-                  onBackdropPress={() => setCalVisibleStart(!calVisibleStart)}
-                >
-                  <Calendar
-                    current={startTime}
-                    onDayPress={(day) => {
-                      const date_tmp = new Date(day.timestamp)
-                      date_tmp.setHours(startTime.getHours())
-                      date_tmp.setMinutes(startTime.getMinutes())
-                      startTime.setTime(date_tmp.getTime())
-                      setCalVisibleStart(!calVisibleStart)
-                    }}
-                    monthFormat={"yyyy MM"}
-                    onPressArrowLeft={(subtractMonth) => subtractMonth()}
-                    onPressArrowRight={(addMonth) => addMonth()}
-                  />
-                </Modal>
-                <TouchableOpacity onPress={showMode}>
-                  <View2>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        color: startTime >= endTime ? "red" : "black",
-                      }}
-                    >
-                      {startTimeText}
-                    </Text>
-                  </View2>
-                </TouchableOpacity>
-              </View2>
-              <MarginView />
-              <View2>
-                <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
-                  <Text style={{ fontSize: 20 }}>
-                    {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
-                    )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Text>
-                </TouchableOpacity>
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  isVisible={calVisibleEnd}
-                  backdropColor={"black"}
-                  onBackdropPress={() => setCalVisibleEnd(!calVisibleEnd)}
-                >
-                  <Calendar
-                    current={endTime}
-                    onDayPress={(day) => {
-                      const date_tmp = new Date(day.timestamp)
-                      date_tmp.setHours(endTime.getHours())
-                      date_tmp.setMinutes(endTime.getMinutes())
-                      endTime.setTime(date_tmp.getTime())
-                      setCalVisibleEnd(!calVisibleEnd)
-                    }}
-                    monthFormat={"yyyy MM"}
-                    onPressArrowLeft={(subtractMonth) => subtractMonth()}
-                    onPressArrowRight={(addMonth) => addMonth()}
-                  />
-                </Modal>
-                <TouchableOpacity onPress={showModeEnd}>
-                  <View2>
-                    <Text style={{ fontSize: 20 }}>{endTimeText}</Text>
-                  </View2>
-                </TouchableOpacity>
-              </View2> */}
           </>
         ) : (
           <>
             <RowAndView>
               <View2>
-                {/* <TouchableOpacity onPress={() => setCalVisibleStart(!calVisibleStart)}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: startTime >= endTime ? "red" : "black",
-                    }}
-                  >
-                    {moment(startTime).format("YYYY-MM-DD")}({dayList[startTime.getDay()]}
-                    )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Text>
-                </TouchableOpacity> */}
-                {/* <Modal
-                  animationType="slide"
-                  transparent={true}
-                  isVisible={calVisibleStart}
-                  backdropColor={"black"}
-                  onBackdropPress={() => setCalVisibleStart(!calVisibleStart)}
-                >
-                  <Calendar
-                    current={startTime}
-                    onDayPress={(day) => {
-                      const date_tmp = new Date(day.timestamp)
-                      date_tmp.setHours(startTime.getHours())
-                      date_tmp.setMinutes(startTime.getMinutes())
-                      startTime.setTime(date_tmp.getTime())
-                      setCalVisibleStart(!calVisibleStart)
-                    }}
-                    monthFormat={"yyyy MM"}
-                    onPressArrowLeft={(subtractMonth) => subtractMonth()}
-                    onPressArrowRight={(addMonth) => addMonth()}
-                  />
-                </Modal> */}
                 <View1>
                   <Text
                     style={{
@@ -812,35 +847,7 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
                 </TouchableOpacity>
               </View2>
               <View3></View3>
-              {/* <MarginView /> */}
               <View2>
-                {/* <TouchableOpacity onPress={() => setCalVisibleEnd(!calVisibleEnd)}>
-                  <Text style={{ fontSize: 20 }}>
-                    {moment(endTime).format("YYYY-MM-DD")}({dayList[endTime.getDay()]}
-                    )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Text>
-                </TouchableOpacity> */}
-                {/* <Modal
-                animationType="slide"
-                transparent={true}
-                isVisible={calVisibleEnd}
-                backdropColor={"black"}
-                onBackdropPress={() => setCalVisibleEnd(!calVisibleEnd)}
-              >
-                <Calendar
-                  current={endTime}
-                  onDayPress={(day) => {
-                    const date_tmp = new Date(day.timestamp)
-                    date_tmp.setHours(endTime.getHours())
-                    date_tmp.setMinutes(endTime.getMinutes())
-                    endTime.setTime(date_tmp.getTime())
-                    setCalVisibleEnd(!calVisibleEnd)
-                  }}
-                  monthFormat={"yyyy MM"}
-                  onPressArrowLeft={(subtractMonth) => subtractMonth()}
-                  onPressArrowRight={(addMonth) => addMonth()}
-                />
-              </Modal> */}
                 <View1>
                   <Text
                     style={{
@@ -871,62 +878,6 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
         )}
 
         {Platform.OS === "ios" ? (
-          // <EmptyView>
-          //   <Modal
-          //     animationType="slide"
-          //     transparent={true}
-          //     isVisible={modalVisible}
-          //     backdropColor={"white"}
-          //   >
-          //     <EmptyView>
-          //       <TouchableOpacity onPress={offMode}>
-          //         <View style={{ alignItems: "flex-end" }}>
-          //           <Text>선택</Text>
-          //         </View>
-          //       </TouchableOpacity>
-          //       <View3>
-          //         <View1>
-          //           <DateTimePicker
-          //             testID="dateTimePicker"
-          //             value={startTime}
-          //             mode={"time"}
-          //             is24Hour={true}
-          //             display="spinner"
-          //             onChange={startPicker}
-          //             minuteInterval={5}
-          //           />
-          //         </View1>
-          //       </View3>
-          //     </EmptyView>
-          //   </Modal>
-          //   <Modal
-          //     animationType="slide"
-          //     transparent={true}
-          //     isVisible={modalVisibleEnd}
-          //     backdropColor={"white"}
-          //   >
-          //     <EmptyView>
-          //       <TouchableOpacity onPress={offModeEnd}>
-          //         <View style={{ alignItems: "flex-end" }}>
-          //           <Text>선택</Text>
-          //         </View>
-          //       </TouchableOpacity>
-          //       <View3>
-          //         <View1>
-          //           <DateTimePicker
-          //             testID="dateTimePicker"
-          //             value={endTime}
-          //             mode={"time"}
-          //             is24Hour={true}
-          //             display="spinner"
-          //             onChange={endPicker}
-          //             minuteInterval={5}
-          //           />
-          //         </View1>
-          //       </View3>
-          //     </EmptyView>
-          //   </Modal>
-          // </EmptyView>
           <></>
         ) : (
           <EmptyView>
@@ -955,9 +906,54 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
             )}
           </EmptyView>
         )}
-        {/* </View1> */}
 
-        {/* <ModalView_State style={{ width: constants.width / 3.5 }}>
+        <ModalView>
+          <AuthButton
+            color="white"
+            onPress={finSchedule}
+            bgColor={"#0f4c82"}
+            text="만들기"
+            loading={modifyLoading}
+          />
+        </ModalView>
+      </TotalView>
+    </TouchableWithoutFeedback>
+  )
+}
+
+const styles = StyleSheet.create({
+  label: {
+    margin: 8,
+  },
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    color: "black",
+  },
+  inputAndroid: {
+    fontSize: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: "purple",
+    borderRadius: 8,
+    color: "black",
+  },
+})
+
+{
+  /* </View1> */
+}
+
+{
+  /* <ModalView_State style={{ width: constants.width / 3.5 }}>
           <MarginView />
           <RNPickerSelect
             onValueChange={(value) => {
@@ -996,53 +992,5 @@ export default AddTimeSchedule = ({ goback, subjectsName, targetToday, myData })
               )
             }}
           />
-        </ModalView_State> */}
-        {/* <ModalView_Private>
-          <CheckBox checked={!isPrivate} onPress={() => setPrivate(!isPrivate)} />
-          {isPrivate ? (
-            <Text style={styles.label}> 🔒(통계 미반영)</Text>
-          ) : (
-            <Text style={styles.label}> 🔓(통계 반영)</Text>
-          )}
-        </ModalView_Private> */}
-        <ModalView>
-          <AuthButton
-            color="white"
-            onPress={finSchedule}
-            bgColor={"#0f4c82"}
-            text="만들기"
-            loading={modifyLoading}
-          />
-        </ModalView>
-        <ModalView />
-      </TotalView>
-    </TouchableWithoutFeedback>
-  )
+        </ModalView_State> */
 }
-
-const styles = StyleSheet.create({
-  label: {
-    margin: 8,
-  },
-})
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 4,
-    color: "black",
-  },
-  inputAndroid: {
-    fontSize: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: "purple",
-    borderRadius: 8,
-    color: "black",
-  },
-})

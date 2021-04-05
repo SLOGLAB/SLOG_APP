@@ -129,7 +129,7 @@ const SideViewLand = styled.View`
 `
 const SideViewLand2 = styled.View`
   position: absolute;
-  width: ${constants.height / 3};
+  width: ${constants.height / 2};
   height: ${constants.width / 2};
   justify-content: center;
   align-items: flex-start;
@@ -181,6 +181,8 @@ const StudyContainer = ({ navigation }) => {
   const todolistName = useInput("")
   const scheduleTitle = useInput("")
   const [studyBool, setStudyBool] = useState(false)
+  const [androidCam, setandroidCam] = useState(true)
+  const [personOnoff, setpersonOnoff] = useState(true)
 
   const [selectDate, setSelectDate] = useState(new Date())
   const [nextDate, setNextDate] = useState(new Date())
@@ -235,6 +237,10 @@ const StudyContainer = ({ navigation }) => {
                   land={screenData.isLandscape}
                   setting={setting}
                   setSetting={setSetting}
+                  androidCam={androidCam}
+                  setandroidCam={setandroidCam}
+                  personOnoff={personOnoff}
+                  setpersonOnoff={setpersonOnoff}
                 />
                 <SideView1>
                   <StudyPresenter
@@ -246,6 +252,10 @@ const StudyContainer = ({ navigation }) => {
                     land={screenData.isLandscape}
                     setting={setting}
                     setSetting={setSetting}
+                    androidCam={androidCam}
+                    setandroidCam={setandroidCam}
+                    personOnoff={personOnoff}
+                    setpersonOnoff={setpersonOnoff}
                   />
                 </SideView1>
               </SideView>
@@ -267,6 +277,10 @@ const StudyContainer = ({ navigation }) => {
                   land={screenData.isLandscape}
                   setting={setting}
                   setSetting={setSetting}
+                  androidCam={androidCam}
+                  setandroidCam={setandroidCam}
+                  personOnoff={personOnoff}
+                  setpersonOnoff={setpersonOnoff}
                 />
                 <SideViewLand2>
                   <StudyPresenter
@@ -278,6 +292,10 @@ const StudyContainer = ({ navigation }) => {
                     land={screenData.isLandscape}
                     setting={setting}
                     setSetting={setSetting}
+                    androidCam={androidCam}
+                    setandroidCam={setandroidCam}
+                    personOnoff={personOnoff}
+                    setpersonOnoff={setpersonOnoff}
                   />
                 </SideViewLand2>
               </SideViewLand>

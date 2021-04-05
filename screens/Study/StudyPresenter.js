@@ -95,6 +95,10 @@ export default ({
   land,
   setting,
   setSetting,
+  androidCam,
+  setandroidCam,
+  personOnoff,
+  setpersonOnoff,
 }) => {
   const scheduleList = myData.schedules
   const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
@@ -413,6 +417,8 @@ export default ({
   const [cutScheduleMutation] = useMutation(CUT_SCHEDULE)
   const [extensionScheduleMutation] = useMutation(EXTENSION_SCHEDULE)
   const [stopScheduleMutation] = useMutation(STOP_SCHEDULE)
+  const [pullScheduleMutation] = useMutation(PULL_SCHEDULE)
+
   const [onLoading, setOnLoading] = useState(false)
   const [onstopLoading, setstopOnLoading] = useState(false)
   const [onexLoading, setexOnLoading] = useState(false)
@@ -462,6 +468,7 @@ export default ({
           cutScheduleMutation={cutScheduleMutation}
           extensionScheduleMutation={extensionScheduleMutation}
           stopScheduleMutation={stopScheduleMutation}
+          pullScheduleMutation={pullScheduleMutation}
           onLoading={onLoading}
           setOnLoading={setOnLoading}
           todayGraph_calculate={todayGraph_calculate}
@@ -480,6 +487,10 @@ export default ({
           land={land}
           setting={setting}
           setSetting={setSetting}
+          androidCam={androidCam}
+          setandroidCam={setandroidCam}
+          personOnoff={personOnoff}
+          setpersonOnoff={setpersonOnoff}
         />
       )}
     </>

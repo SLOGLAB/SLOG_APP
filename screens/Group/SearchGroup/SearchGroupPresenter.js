@@ -15,7 +15,7 @@ import RNPickerSelect from "react-native-picker-select"
 import { Ionicons } from "@expo/vector-icons"
 import { studyOption_group0 } from "../../../components/LongArray"
 import constants from "../../../constants"
-import { Container, Header, Content } from "native-base"
+import { Container, Header, Content, CheckBox } from "native-base"
 
 import useSelect from "../../../hooks/useSelect"
 import Modal from "react-native-modal"
@@ -32,6 +32,13 @@ const TopView = styled.View`
   align-items: center;
   justify-content: center;
   /* margin-bottom: 10px; */
+`
+const TopView1 = styled.View`
+  flex-direction: row;
+  flex: 0.5;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 5;
 `
 const TopEm = styled.View``
 const FlexBox = styled.View`
@@ -76,6 +83,11 @@ const GroupName = styled.Text`
   /* margin-top: 5; */
   margin-bottom: 1;
 `
+const CheckText = styled.Text`
+  font-family: "GmarketMedium";
+  font-size: 13;
+  /* margin-top: 5; */
+`
 const GrouptopName = styled.Text`
   font-family: "GmarketBold";
   font-size: 18;
@@ -86,14 +98,25 @@ const GrouptopName = styled.Text`
 const GroupCate = styled.Text`
   font-family: "GmarketMedium";
   color: rgba(34, 76, 126, 1);
+  font-size: 10;
 `
 const GroupText = styled.Text`
-  font-family: "GmarketLight";
+  font-family: "GmarketMedium";
+  font-size: 10;
+  margin-right: 5;
+`
+const GroupGreyText = styled.Text`
+  font-family: "GmarketMedium";
+  color: #c7c7c7;
+  font-size: 10;
+  margin-right: 5;
+`
+const RowGroup = styled.View`
+  flex-direction: row;
 `
 const BoxTopView = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-right: 10;
 `
 const StyledModalContainer = styled.View`
   flex-direction: column;
@@ -125,8 +148,9 @@ const Button2Text = styled.Text`
 `
 const SelectView = styled.View`
   margin-bottom: 10;
-  margin-left: 10;
+  margin-left: 0;
   margin-top: 10;
+  justify-content: flex-start;
 `
 const MainText = styled.Text`
   font-size: 17;
@@ -141,6 +165,8 @@ const MainText2 = styled.Text`
   color: #ffffff;
 `
 const Box = styled.View``
+const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
+
 export default ({
   groupData,
   groupRefetch,
@@ -164,8 +190,18 @@ export default ({
   //       : 0
   //   })
   const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}..` : text)
+  const arr3 = [
+    { label: "높은 시간순", value: "높은 시간순" },
+    { label: "낮은 시간순", value: "낮은 시간순" },
+    { label: "높은 출석률순", value: "높은 출석률순" },
+    { label: "낮은 출석률순", value: "낮은 출석률순" },
+  ]
 
   const [purpose, setpurpose] = useState("전체")
+  const [timesort, settimesort] = useState("높은 시간순")
+  const [checkBox, setcheckBox] = useState(false)
+  const [checkBox1, setcheckBox1] = useState(false)
+
   const [filData, setFilData] = useState(groupData)
 
   const getData = () => {
@@ -176,9 +212,48 @@ export default ({
       setFilData(filGroup)
     }
   }
+  const timeSort = () => {
+    if (timesort === "낮은 시간순") {
+      filData.sort(function (a, b) {
+        return b.lastStudyTime - a.lastStudyTime
+      })
+    } else if (timesort === "높은 시간순") {
+      filData.sort(function (a, b) {
+        return a.lastStudyTime - b.lastStudyTime
+      })
+    } else if (timesort === "높은 출석률순") {
+      filData.sort(function (a, b) {
+        return a.lastAttendance - b.lastAttendance
+      })
+    } else if (timesort === "낮은 출석률순") {
+      filData.sort(function (a, b) {
+        return b.lastAttendance - a.lastAttendance
+      })
+    }
+  }
+  const publicHandler = () => {
+    if (checkBox) {
+      const filGroup = filData.filter((ctr) => ctr.publicBool === true)
+      setFilData(filGroup)
+    }
+  }
+
+  const emptyHandle = () => {
+    if (checkBox1) {
+      const filGroup = filData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+      setFilData(filGroup)
+    }
+  }
   useEffect(() => {
     getData()
-  }, [purpose])
+    timeSort()
+    // publicHandler()
+    // emptyHandle()
+  }, [
+    purpose,
+    timesort,
+    //  checkBox, checkBox1
+  ])
 
   useEffect(() => {
     groupRefetch()
@@ -227,37 +302,80 @@ export default ({
           </TopView>
         </Header>
         <Content>
-          <SelectView style={{ width: constants.width / 2.5 }}>
-            <RNPickerSelect
-              onValueChange={(value) => {
-                if (value !== null) {
-                  setpurpose(value)
-                }
-              }}
-              items={studyOption_group0}
-              value={purpose} //선택된 과목이 어떻게 들어가는지 봐야함
-              style={{
-                ...pickerSelectStyles,
-                iconContainer: {
-                  top: 9,
-                  right: 10,
-                },
-                placeholder: {
-                  color: "black",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                },
-              }}
-              Icon={() => {
-                return (
-                  <Ionicons
-                    name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
-                    size={24}
-                    color="gray"
-                  />
-                )
-              }}
-            />
+          <SelectView style={{ width: constants.width / 1, flexDirection: "row" }}>
+            <TopView>
+              <RNPickerSelect
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setpurpose(value)
+                  }
+                }}
+                items={studyOption_group0}
+                value={purpose} //선택된 과목이 어떻게 들어가는지 봐야함
+                style={{
+                  ...pickerSelectStyles,
+                  iconContainer: {
+                    top: 9,
+                    right: 10,
+                  },
+                  placeholder: {
+                    color: "black",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                  },
+                }}
+                Icon={() => {
+                  return (
+                    <Ionicons
+                      name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                      size={24}
+                      color="gray"
+                    />
+                  )
+                }}
+              />
+            </TopView>
+            <TopView>
+              <RNPickerSelect
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    settimesort(value)
+                  }
+                }}
+                items={arr3}
+                value={timesort} //선택된 과목이 어떻게 들어가는지 봐야함
+                style={{
+                  ...pickerSelectStyles,
+                  iconContainer: {
+                    top: 9,
+                    right: 10,
+                  },
+                  placeholder: {
+                    color: "black",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                  },
+                }}
+                Icon={() => {
+                  return (
+                    <Ionicons
+                      name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                      size={24}
+                      color="gray"
+                    />
+                  )
+                }}
+              />
+            </TopView>
+            <TopView1>
+              <CheckBox checked={checkBox} onPress={() => setcheckBox(!checkBox)} />
+              <CheckText>공개</CheckText>
+            </TopView1>
+            <TopView1>
+              <CheckBox checked={checkBox1} onPress={() => setcheckBox1(!checkBox1)} />
+
+              <CheckText>빈방</CheckText>
+            </TopView1>
           </SelectView>
           <ScrollView
             style={{ backgroundColor: "#FFFFFF", marginBottom: 80 }}
@@ -281,12 +399,58 @@ export default ({
                   <GroupCate>{list.category}</GroupCate>
 
                   <GroupName>{trimText(list.name, 19)}</GroupName>
-                  <GroupText>최소 학습 시간 : {list.targetTime}</GroupText>
-                  <GroupText>
-                    인원 : {list.memberCount}/{list.maxMember}
-                  </GroupText>
-                  <GroupText>방장 : {list.manager.username}</GroupText>
-                  <GroupText>{list.publicBool ? "공개방" : "비공개방"}</GroupText>
+                  <RowGroup>
+                    <GroupGreyText>평균 학습량</GroupGreyText>
+                    <GroupText>{Math.floor(list.lastStudyTime)}시간</GroupText>
+                  </RowGroup>
+                  <RowGroup>
+                    <GroupGreyText>평균 출석률</GroupGreyText>
+                    <GroupText>{Math.floor(list.lastAttendance)}%</GroupText>
+                  </RowGroup>
+                  <RowGroup>
+                    <GroupGreyText>하루 목표</GroupGreyText>
+                    <GroupText>{list.targetTime}시간</GroupText>
+                  </RowGroup>
+
+                  <RowGroup>
+                    <GroupGreyText>인원</GroupGreyText>
+                    <GroupText>
+                      {list.memberCount}/{list.maxMember}
+                    </GroupText>
+                    <GroupGreyText>방장</GroupGreyText>
+                    <GroupText>{list.manager.username}</GroupText>
+                  </RowGroup>
+
+                  <RowGroup>
+                    <GroupGreyText>활동 요일</GroupGreyText>
+                    <GroupText>
+                      {list.activeDay.findIndex((e) => e == false) == -1
+                        ? " 매일 "
+                        : list.activeDay.map((bool, index) => {
+                            if (bool) {
+                              if (index === list.activeDay.lastIndexOf(true)) {
+                                return dayArray[index]
+                              } else {
+                                return dayArray[index] + ","
+                              }
+                            }
+                          })}
+                    </GroupText>
+                  </RowGroup>
+                  {/* <GroupText>
+                    활동 요일 :
+                    {list.activeDay.findIndex((e) => e == false) == -1
+                      ? " 매일 "
+                      : list.activeDay.map((bool, index) => {
+                          if (bool) {
+                            if (index === list.activeDay.lastIndexOf(true)) {
+                              return dayArray[index]
+                            } else {
+                              return dayArray[index] + ","
+                            }
+                          }
+                        })}
+                  </GroupText> */}
                 </BoxView>
               </GroupBox>
             ))}
@@ -298,22 +462,24 @@ export default ({
 }
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    fontSize: 15,
+    fontSize: 13,
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 1,
     borderColor: "gray",
     borderRadius: 4,
     color: "black",
+    width: constants.width / 3.5,
   },
   inputAndroid: {
-    fontSize: 15,
+    fontSize: 13,
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 0.5,
     borderColor: "purple",
     borderRadius: 8,
     color: "black",
+    width: constants.width / 3.5,
   },
   seprator: {
     height: 10,

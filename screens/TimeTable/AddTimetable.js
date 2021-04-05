@@ -6,61 +6,10 @@ import Loader from "../../components/Loader"
 import AddTimeSchedule from "./TimeTableMenu/AddTimeSchedule"
 import { gql } from "apollo-boost"
 import { Container, Header, TabHeading, Content, Tabs, Text } from "native-base"
-import { SafeAreaView } from "react-native"
-import BackButton from "../../components/BackButton"
+import { SafeAreaView, TouchableOpacity } from "react-native"
+import Icon from "../../components/Icon"
+import { Platform } from "react-native"
 
-const View1 = styled.View`
-  flex: 1;
-`
-const View2 = styled.View`
-  flex: 1;
-  /* background-color: "#000000"; */
-  flex-direction: row;
-  justify-content: center;
-`
-const View3 = styled.View`
-  flex: 0.5;
-  /* background-color: "#000000"; */
-  flex-direction: row;
-  justify-content: center;
-`
-
-const TotalView = styled.View`
-  flex: 1;
-`
-const Flex1View = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  margin-left: 10;
-`
-const ModalView = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`
-const WeekView = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`
-const ModalText = styled.Text`
-  font-size: 25;
-  font-family: "GmarketBold";
-`
-const ModalTimeText = styled.Text`
-  font-size: 15;
-`
-const StyledModalContainer = styled.View`
-  flex-direction: column;
-  align-items: center;
-  /* 모달창 크기 조절 */
-  width: 320px;
-  height: 600px;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: 10px;
-`
 const MenuView = styled.View`
   flex: 1;
 `
@@ -72,11 +21,11 @@ const MainView = styled.View`
 `
 const SubView = styled.View`
   flex: 1;
+  align-items: flex-end;
+  justify-content: flex-start;
 `
 const SubView1 = styled.View`
   flex: 1;
-  align-items: center;
-  justify-content: center;
 `
 const MainText = styled.Text`
   font-size: 17;
@@ -98,8 +47,27 @@ export const ME = gql`
     }
   }
 `
-export default AddTimetable = ({ navigation }) => {
+export const MY_TODOLIST = gql`
+  query myTodolist {
+    myTodolist {
+      id
+      name
+      finish
+      finishAt
+      subject {
+        id
+        name
+        bgColor
+        bookMark
+      }
+    }
+  }
+`
+export default AddTimetable = ({ navigation, clesesheetRefhi, setandroidSchedule }) => {
   const { loading, data: subjectsName, refetch } = useQuery(SUBJECT_NAME, {})
+  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
+    MY_TODOLIST
+  )
   const { data: myData, refetch: merefetch } = useQuery(ME)
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
@@ -120,16 +88,14 @@ export default AddTimetable = ({ navigation }) => {
 
   return (
     <MenuView>
-      {loading ? (
+      {loading || todolistLoading ? (
         <Loader />
       ) : (
         <>
           <Container>
             <Header hasTabs>
               <MainView>
-                <SubView>
-                  <BackButton />
-                </SubView>
+                <SubView></SubView>
                 <SubView1>
                   {Platform.OS === "ios" ? (
                     <MainText>스케줄 만들기</MainText>
@@ -137,7 +103,27 @@ export default AddTimetable = ({ navigation }) => {
                     <MainText2>스케줄 만들기</MainText2>
                   )}
                 </SubView1>
-                <SubView></SubView>
+                <SubView>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (Platform.OS == "android") {
+                        setandroidSchedule()
+                      } else {
+                        clesesheetRefhi()
+                      }
+                    }}
+                  >
+                    <Icon
+                      name={
+                        Platform.OS === "ios"
+                          ? "ios-close-circle-outline"
+                          : "md-close-circle-outline"
+                      }
+                      size={25}
+                      color={Platform.OS === "ios" ? "black" : "white"}
+                    />
+                  </TouchableOpacity>
+                </SubView>
               </MainView>
             </Header>
             <Content>
@@ -150,6 +136,8 @@ export default AddTimetable = ({ navigation }) => {
                 goback={goback}
                 //
                 targetToday={targetToday}
+                todolistData={todolistData}
+                todolistRefetch={todolistRefetch}
               />
             </Content>
           </Container>

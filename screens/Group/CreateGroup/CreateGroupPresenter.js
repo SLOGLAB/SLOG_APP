@@ -10,7 +10,6 @@ import {
   Alert,
   Platform,
   Image,
-  ScrollView,
   KeyboardAvoidingView,
 } from "react-native"
 import axios from "axios"
@@ -27,7 +26,7 @@ import LastWidth from "../../../components/LastWidth"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import BackButton from "../../../components/BackButton"
 import NumericInput from "react-native-numeric-input"
-import { Container, Header, Content } from "native-base"
+import { Container, Header, Content, CheckBox } from "native-base"
 
 const EmptyView = styled.View`
   /* flex: 1; */
@@ -39,11 +38,9 @@ const EmptyView = styled.View`
 `
 
 const View2 = styled.View`
-  height: 11%;
-  justify-content: center;
-  align-items: flex-end;
-  flex-direction: row;
-  /* background-color: "rgba(123, 169, 234, 1)"; */
+  padding-right: 20;
+  margin-top: 10;
+  margin-bottom: 10;
 `
 
 const ColorView = styled.View`
@@ -115,6 +112,7 @@ export default ({ navigation, groupname, bio, password, studyGroup, createGroupM
       fontWeight: "bold",
     },
   }
+  const [dayBool, setDayBool] = useState(new Array(7).fill(true))
 
   const [startScheduleTerm, setstartScheduleTerm] = useState(2)
   const [extensionTerm, setextensionTerm] = useState(1)
@@ -169,6 +167,7 @@ export default ({ navigation, groupname, bio, password, studyGroup, createGroupM
           bio: bio.value,
           imgUrl: getPhoto ? data.location : "",
           imgKey: getPhoto ? data.key : "",
+          activeDay: dayBool,
         },
       })
       if (!createGroup) {
@@ -180,6 +179,13 @@ export default ({ navigation, groupname, bio, password, studyGroup, createGroupM
       setAcLoading(false)
       navigation.navigate("TabNavigation")
     }
+  }
+  const dayList = ["일", "월", "화", "수", "목", "금", "토"]
+  const onCheckDay = (index) => {
+    let newArr = [...dayBool]
+    newArr[index] = !dayBool[index]
+    // e.target.checked
+    setDayBool(newArr)
   }
   return (
     <EmptyView>
@@ -207,9 +213,7 @@ export default ({ navigation, groupname, bio, password, studyGroup, createGroupM
             <SubView></SubView>
           </MainView>
         </Header>
-        {/* <View2>
-        <Title>그룹 만들기</Title>
-      </View2> */}
+
         <Content>
           <KeyboardAwareScrollView behavior={Platform.OS == "ios" ? "padding" : "height"}>
             <ColorView>
@@ -283,6 +287,33 @@ export default ({ navigation, groupname, bio, password, studyGroup, createGroupM
                 />
                 <Sub>시간</Sub>
               </SelectRowView>
+              <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
+              <SelectView
+                style={{
+                  width: constants.width / 1.3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 0.5,
+                  borderColor: "grey",
+                  paddingTop: 10,
+                }}
+              >
+                <Sub>활동 요일</Sub>
+                <Sub>(출석 및 통계에 반영)</Sub>
+                <Sub />
+                <SelectRowView>
+                  {dayList.map((day, index) => {
+                    return (
+                      <SubView1 key={index}>
+                        <Sub>{day}</Sub>
+                        <View2>
+                          <CheckBox checked={dayBool[index]} onPress={() => onCheckDay(index)} />
+                        </View2>
+                      </SubView1>
+                    )
+                  })}
+                </SelectRowView>
+              </SelectView>
               <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
 
               <AuthInput

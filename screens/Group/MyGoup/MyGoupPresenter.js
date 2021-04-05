@@ -10,19 +10,18 @@ const MainView = styled.View`
   align-items: center;
   flex: 1;
   background-color: rgba(255, 255, 255, 1);
-  /* background-color: rgba(196, 196, 196, 1); */
   /* border-width: 1; */
 `
 const GroupBox = styled.View`
-  flex: 0.3;
+  flex: 1;
   width: 100%;
-  /* border-width: 1; */
+  border-width: 1;
   justify-content: flex-end;
   flex-direction: row;
   /* border-radius: 10; */
   padding: 0px;
   border-color: rgba(196, 196, 196, 1);
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(196, 196, 196, 1);
 `
 const Groupup = styled.View`
   flex: 0.05;
@@ -35,10 +34,12 @@ const BoxIn = styled.View`
   width: 100%;
   justify-content: center;
   align-items: center;
+  background-color: rgba(255, 255, 255, 1);
 `
 const LineView = styled.View`
   width: 100%;
-  height: 5%;
+  height: 0;
+  border-width: 0;
 `
 const GroupName = styled.Text`
   font-family: "GmarketMedium";
@@ -50,7 +51,22 @@ const GroupCate = styled.Text`
   color: rgba(34, 76, 126, 1);
 `
 const GroupText = styled.Text`
-  font-family: "GmarketLight";
+  font-family: "GmarketMedium";
+  font-size: 13;
+  margin-right: 5;
+`
+const GroupGreyText = styled.Text`
+  font-family: "GmarketMedium";
+  color: #c7c7c7;
+  font-size: 13;
+  margin-right: 5;
+`
+const RowGroup = styled.View`
+  flex-direction: row;
+`
+const BoxSBView = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
 `
 const BoxTopView = styled.View`
   flex-direction: row;
@@ -78,6 +94,8 @@ const BoxRView = styled.View`
   padding-left: 10;
   justify-content: center;
 `
+const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
+
 export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
   groupData.sort(function (a, b) {
     return a.bookmark === true && b.bookmark !== true
@@ -86,12 +104,13 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
       ? 1
       : 0
   })
+
   useEffect(() => {
     groupRefetch()
   }, [])
   return (
     <MainView>
-      <Groupup></Groupup>
+      {/* <LineView /> */}
       {groupData.length < 1 ? (
         <GroupBox>
           <BoxIn>
@@ -130,12 +149,38 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               >
                 <GroupCate>{groupData[0].category}</GroupCate>
                 <GroupName>{groupData[0].name}</GroupName>
-                <GroupText>최소 학습 시간 : {groupData[0].targetTime}</GroupText>
-                <GroupText>
-                  인원 : {groupData[0].memberCount}/{groupData[0].maxMember}
-                </GroupText>
-                <GroupText>방장 : {groupData[0].manager.username}</GroupText>
-                <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText>
+                <RowGroup>
+                  <GroupGreyText>하루 목표</GroupGreyText>
+                  <GroupText>{groupData[0].targetTime}시간</GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>인원</GroupGreyText>
+                  <GroupText>
+                    {groupData[0].memberCount}/{groupData[0].maxMember}
+                  </GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>방장</GroupGreyText>
+                  <GroupText>{groupData[0].manager.username}</GroupText>
+                  {/* <GroupText>{groupData[0].publicBool ? "공개방" : "비공개방"}</GroupText> */}
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>활동 요일</GroupGreyText>
+
+                  <GroupText>
+                    {groupData[0].activeDay.findIndex((e) => e == false) == -1
+                      ? " 매일 "
+                      : groupData[0].activeDay.map((bool, index) => {
+                          if (bool) {
+                            if (index === groupData[0].activeDay.lastIndexOf(true)) {
+                              return dayArray[index]
+                            } else {
+                              return dayArray[index] + ","
+                            }
+                          }
+                        })}
+                  </GroupText>
+                </RowGroup>
               </TouchableOpacity>
             </BoxRView>
           </BoxLView>
@@ -154,7 +199,6 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
           </BoxTopView>
         </GroupBox>
       )}
-      <LineView />
       {groupData.length < 2 ? (
         <GroupBox>
           <BoxIn>
@@ -193,12 +237,38 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               >
                 <GroupCate>{groupData[1].category}</GroupCate>
                 <GroupName>{groupData[1].name}</GroupName>
-                <GroupText>최소 학습 시간 : {groupData[1].targetTime}</GroupText>
-                <GroupText>
-                  인원 : {groupData[1].memberCount}/{groupData[1].maxMember}
-                </GroupText>
-                <GroupText>방장 : {groupData[1].manager.username}</GroupText>
-                <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText>
+                <RowGroup>
+                  <GroupGreyText>하루 목표</GroupGreyText>
+                  <GroupText>{groupData[1].targetTime}시간</GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>인원</GroupGreyText>
+                  <GroupText>
+                    {groupData[1].memberCount}/{groupData[1].maxMember}
+                  </GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>방장</GroupGreyText>
+                  <GroupText>{groupData[1].manager.username}</GroupText>
+                  {/* <GroupText>{groupData[1].publicBool ? "공개방" : "비공개방"}</GroupText> */}
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>활동 요일</GroupGreyText>
+
+                  <GroupText>
+                    {groupData[1].activeDay.findIndex((e) => e == false) == -1
+                      ? " 매일 "
+                      : groupData[1].activeDay.map((bool, index) => {
+                          if (bool) {
+                            if (index === groupData[1].activeDay.lastIndexOf(true)) {
+                              return dayArray[index]
+                            } else {
+                              return dayArray[index] + ","
+                            }
+                          }
+                        })}
+                  </GroupText>
+                </RowGroup>
               </TouchableOpacity>
             </BoxRView>
           </BoxLView>
@@ -217,7 +287,6 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
           </BoxTopView>
         </GroupBox>
       )}
-      <LineView />
       {groupData.length < 3 ? (
         <GroupBox>
           <BoxIn>
@@ -256,12 +325,38 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
               >
                 <GroupCate>{groupData[2].category}</GroupCate>
                 <GroupName>{groupData[2].name}</GroupName>
-                <GroupText>최소 학습 시간 : {groupData[2].targetTime}</GroupText>
-                <GroupText>
-                  인원 : {groupData[2].memberCount}/{groupData[2].maxMember}
-                </GroupText>
-                <GroupText>방장 : {groupData[2].manager.username}</GroupText>
-                <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText>
+                <RowGroup>
+                  <GroupGreyText>하루 목표</GroupGreyText>
+                  <GroupText>{groupData[2].targetTime}시간</GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>인원</GroupGreyText>
+                  <GroupText>
+                    {groupData[2].memberCount}/{groupData[2].maxMember}
+                  </GroupText>
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>방장</GroupGreyText>
+                  <GroupText>{groupData[2].manager.username}</GroupText>
+                  {/* <GroupText>{groupData[2].publicBool ? "공개방" : "비공개방"}</GroupText> */}
+                </RowGroup>
+                <RowGroup>
+                  <GroupGreyText>활동 요일</GroupGreyText>
+
+                  <GroupText>
+                    {groupData[2].activeDay.findIndex((e) => e == false) == -1
+                      ? " 매일 "
+                      : groupData[2].activeDay.map((bool, index) => {
+                          if (bool) {
+                            if (index === groupData[2].activeDay.lastIndexOf(true)) {
+                              return dayArray[index]
+                            } else {
+                              return dayArray[index] + ","
+                            }
+                          }
+                        })}
+                  </GroupText>
+                </RowGroup>
               </TouchableOpacity>
             </BoxRView>
           </BoxLView>
@@ -280,7 +375,7 @@ export default ({ groupData, groupRefetch, onBookmark, navigation }) => {
           </BoxTopView>
         </GroupBox>
       )}
-      <LineView />
+      {/* <LineView /> */}
     </MainView>
   )
 }

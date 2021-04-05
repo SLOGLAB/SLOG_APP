@@ -27,7 +27,7 @@ import BackButton from "../../../components/BackButton"
 import NumericInput from "react-native-numeric-input"
 import { Container, Header, Content } from "native-base"
 import axios from "axios"
-
+import { CheckBox } from "native-base"
 const EmptyView = styled.View`
   /* flex: 1; */
   align-items: center;
@@ -38,11 +38,9 @@ const EmptyView = styled.View`
 `
 
 const View2 = styled.View`
-  height: 11%;
-  justify-content: center;
-  align-items: flex-end;
-  flex-direction: row;
-  /* background-color: "rgba(123, 169, 234, 1)"; */
+  padding-right: 20;
+  margin-top: 10;
+  margin-bottom: 10;
 `
 const AndroidView2 = styled.View`
   justify-content: center;
@@ -130,6 +128,7 @@ export default ({
       fontWeight: "bold",
     },
   }
+  const [dayBool, setDayBool] = useState(data.activeDay)
 
   const [startScheduleTerm, setstartScheduleTerm] = useState(data.maxMember)
   const [extensionTerm, setextensionTerm] = useState(data.targetTime)
@@ -179,6 +178,7 @@ export default ({
           bio: bio.value,
           imgUrl: getPhoto ? data.location : "",
           imgKey: getPhoto ? data.key : "",
+          activeDay: dayBool,
         },
       })
       if (!editGroup) {
@@ -190,6 +190,13 @@ export default ({
       setAcLoading(false)
       navigation.navigate("OneGroupContainer")
     }
+  }
+  const dayList = ["일", "월", "화", "수", "목", "금", "토"]
+  const onCheckDay = (index) => {
+    let newArr = [...dayBool]
+    newArr[index] = !dayBool[index]
+    // e.target.checked
+    setDayBool(newArr)
   }
   return (
     <EmptyView>
@@ -268,7 +275,7 @@ export default ({
                 />
               </SelectView>
               <SelectRowView style={{ width: constants.width / 1.3 }}>
-                <Sub>최소 학습 시간(1-18): </Sub>
+                <Sub>하루 목표 학습 시간(1-18): </Sub>
                 <NumericInput
                   value={extensionTerm}
                   onChange={(value) => setextensionTerm(value)}
@@ -290,6 +297,35 @@ export default ({
                 />
                 <Sub>시간</Sub>
               </SelectRowView>
+              <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
+              <SelectView
+                style={{
+                  width: constants.width / 1.3,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 0.5,
+                  borderColor: "grey",
+                  paddingTop: 10,
+                }}
+              >
+                <Sub>활동 요일</Sub>
+                <Sub>(출석 및 통계에 반영)</Sub>
+                <Sub />
+
+                <SelectRowView>
+                  {dayList.map((day, index) => {
+                    return (
+                      <SubView1 key={index}>
+                        <Sub>{day}</Sub>
+                        <View2>
+                          <CheckBox checked={dayBool[index]} onPress={() => onCheckDay(index)} />
+                        </View2>
+                      </SubView1>
+                    )
+                  })}
+                </SelectRowView>
+              </SelectView>
+
               <MarginR style={{ width: constants.width / 40, marginBottom: 10 }} />
 
               <AuthInput

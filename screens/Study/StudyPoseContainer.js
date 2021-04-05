@@ -22,6 +22,10 @@ const StudyPoseContainer = ({
   land,
   setting,
   setSetting,
+  androidCam,
+  setandroidCam,
+  personOnoff,
+  setpersonOnoff,
 }) => {
   const todayGraph_calculate = () => {
     // 오늘 생선된 시간이 있는 인덱스 구하기
@@ -58,6 +62,10 @@ const StudyPoseContainer = ({
       land={land}
       setting={setting}
       setSetting={setSetting}
+      androidCam={androidCam}
+      setandroidCam={setandroidCam}
+      personOnoff={personOnoff}
+      setpersonOnoff={setpersonOnoff}
     />
   )
 }

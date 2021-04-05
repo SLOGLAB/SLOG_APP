@@ -158,7 +158,11 @@ export const FINISH_TODOLIST = gql`
     finishTodolist(todolistId: $todolistId)
   }
 `
-
+export const EDIT_TODOLIST = gql`
+  mutation editTodolist($todolistId: String!, $subjectId: String!, $name: String!) {
+    editTodolist(todolistId: $todolistId, subjectId: $subjectId, name: $name)
+  }
+`
 export const MY_SUBJECT = gql`
   query mySubject {
     mySubject {
