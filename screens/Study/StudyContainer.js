@@ -96,20 +96,13 @@ export const ME = gql`
     }
   }
 `
-const ContainerLandscape = styled.View`
-  background-color: rgba(255, 255, 255, 1);
-  /* align-items: center;
-  justify-content: center; */
-  /* height: ${(constants.height / 13) * 12}; */
-  width: ${constants.height / 1};
-  height: ${(constants.width * 2) / 2};
-`
 
 const SideView = styled.View`
   width: ${constants.width / 1};
-  height: ${(constants.height * 3) / 3};
-  align-items: flex-end;
-  justify-content: flex-end;
+  height: ${constants.height / 1};
+  /* flex: 1; */
+  /* align-items: flex-end;
+  justify-content: flex-end; */
 `
 
 const SideView1 = styled.View`
@@ -117,9 +110,10 @@ const SideView1 = styled.View`
   position: absolute;
   width: ${constants.width / 1};
   justify-content: center;
-  height: ${(constants.height * 1) / 3};
+  height: ${(constants.height * 1) / 2.9};
   align-items: flex-end;
   background-color: rgba(233, 237, 244, 0);
+  margin-top: ${constants.height / 1.65};
 `
 const SideViewLand = styled.View`
   width: ${constants.height / 1};
@@ -144,7 +138,11 @@ const SideView2 = styled.View`
 const BodyView = styled.View`
   flex-direction: row;
   /* justify-content: center;
-  align-items: center; */
+  align-items: cent
+  er; */
+  width: ${constants.height / 1};
+  height: ${constants.width / 1};
+  background-color: rgba(15, 76, 130, 1);
 `
 const useScreenDimensions = () => {
   const [screenData, setScreenData] = useState(Dimensions.get("screen"))

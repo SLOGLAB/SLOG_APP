@@ -82,6 +82,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-action-button": "2.8.5",
     "react-native-calendars": "1.264.0",
+    "react-native-countdown-circle-timer": "2.5.1",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-keyboard-aware-scroll-view": "0.9.3",

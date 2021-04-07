@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Alert } from "react-native"
 import styled from "styled-components"
 import { useQuery, useMutation } from "@apollo/react-hooks"
@@ -35,7 +35,17 @@ export const BOOKMARK_GROUP = gql`
 `
 let playAlert = undefined
 export default ({ navigation }) => {
+  var todaydate = new Date().getDate() //Current Date
+  var todaymonth = new Date().getMonth() + 1 //Current Month
+  var todayyear = new Date().getFullYear() //Current Year
+  var targetMonth = String(todaymonth).length === 1 ? "0" + todaymonth : todaymonth
+  var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
+
+  var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
+
   const [modalPlayVisible, setModalPlayVisible] = useState(false)
+  const [modalcheckVisible, setModalcheckVisible] = useState(false)
+
   const { loading: MyLoading, data: MyGroupdata, refetch: MyRefetch } = useQuery(MY_GROUP)
 
   const [modlaOutMember, setmodlaOutMember] = useState(false)
@@ -215,6 +225,19 @@ export default ({ navigation }) => {
   const clearintervalrefetch = () => {
     clearInterval(playAlert)
   }
+  const [selectDate, setSelectDate] = useState(new Date())
+  const [attendDate, setAttendDate] = useState(new Date())
+  const isFirstRun = useRef(true)
+
+  // useEffect(() => {
+  //   if (isFirstRun.current) {
+  //     isFirstRun.current = false
+  //     nextDate.setDate(new Date().getDate() + 1)
+  //     return
+  //   }
+  //   nextDate.setTime(selectDate.getTime())
+  //   nextDate.setDate(nextDate.getDate() + 1)
+  // }, [selectDate])
   useEffect(() => {
     groupRefetch()
   }, [])
@@ -245,6 +268,13 @@ export default ({ navigation }) => {
           search={search}
           onJoin={onJoin}
           MyGroupdata={MyGroupdata}
+          modalcheckVisible={modalcheckVisible}
+          setModalcheckVisible={setModalcheckVisible}
+          targetToday={targetToday}
+          selectDate={selectDate}
+          setSelectDate={setSelectDate}
+          attendDate={attendDate}
+          setAttendDate={setAttendDate}
         />
       )}
     </>

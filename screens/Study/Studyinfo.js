@@ -437,7 +437,7 @@ Notifications.setNotificationHandler({
 })
 const ChartTopView = styled.View`
   width: 100%;
-  height: 10%;
+  height: 15%;
   align-items: center;
   justify-content: center;
 `
@@ -923,7 +923,7 @@ export default ({
     <>
       <ChartTopView>
         {personOnoff && !notification ? (
-          <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+          <>{setting ? <TimeText>학습중</TimeText> : <TimeText>부재중...</TimeText>}</>
         ) : null}
       </ChartTopView>
       <ChartView>

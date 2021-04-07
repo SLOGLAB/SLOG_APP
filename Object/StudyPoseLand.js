@@ -10,7 +10,7 @@ import {
   ScrollView,
   Dimensions,
   Image,
-  Switch,
+  Animated,
 } from "react-native"
 import * as Permissions from "expo-permissions"
 import * as posenet from "@tensorflow-models/posenet"
@@ -21,6 +21,8 @@ import Icon from "../components/Icon"
 import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import styled from "styled-components"
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer"
+
 const TimeText = styled.Text`
   font-size: 25;
   color: #fff;
@@ -177,6 +179,8 @@ const PoseCamera = ({
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
+  const [count, setcount] = useState(false)
+
   const rafId = useRef(null)
   const camRef = useRef(null)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
@@ -270,6 +274,8 @@ const PoseCamera = ({
       }, 100)
     }
     studyInterval = setInterval(async () => {
+      setcount(false)
+
       if (isFirstRun.current) {
         clearInterval(studySetInterval)
         isFirstRun.current = false
@@ -311,6 +317,7 @@ const PoseCamera = ({
       if (!AUTORENDER) {
         gl.endFrameEXP()
       }
+      setcount(true)
     }, 9900)
   }
 
@@ -523,11 +530,28 @@ const PoseCamera = ({
               styles.moon3,
               {
                 width: land ? HEIGHT / 1.1 : WIDTH / 1.1,
-                // backgroundColor: "rgba(189, 0, 248, 1)",
               },
             ]}
           >
             <View style={styles.posebutton}>
+              {count && Platform.OS == "android" ? (
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={9.9}
+                  colors="#004777"
+                  size={60}
+                  strokeWidth={3}
+                  onComplete={() => {
+                    return [true, 0]
+                  }}
+                >
+                  {({ remainingTime, animatedColor }) => (
+                    <Animated.Text style={{ fontSize: 20, color: animatedColor }}>
+                      {remainingTime}
+                    </Animated.Text>
+                  )}
+                </CountdownCircleTimer>
+              ) : null}
               <TouchableOpacity
                 onPress={() => {
                   setpersonOnoff(!personOnoff)
@@ -586,7 +610,7 @@ const PoseCamera = ({
             ]}
           >
             {androidCam ? null : (
-              <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+              <>{setting ? <TimeText>학습중</TimeText> : <TimeText>부재중...</TimeText>}</>
             )}
             <View
               style={[
@@ -716,6 +740,24 @@ const PoseCamera = ({
                 ]}
               >
                 <View style={styles.posebutton}>
+                  {count && Platform.OS == "android" ? (
+                    <CountdownCircleTimer
+                      isPlaying
+                      duration={9.9}
+                      colors="#004777"
+                      size={60}
+                      strokeWidth={3}
+                      onComplete={() => {
+                        return [true, 0]
+                      }}
+                    >
+                      {({ remainingTime, animatedColor }) => (
+                        <Animated.Text style={{ fontSize: 20, color: animatedColor }}>
+                          {remainingTime}
+                        </Animated.Text>
+                      )}
+                    </CountdownCircleTimer>
+                  ) : null}
                   <TouchableOpacity
                     onPress={() => {
                       setpersonOnoff(!personOnoff)
@@ -786,7 +828,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height / 10,
     width: Dimensions.get("window").width / 1,
     paddingLeft: 10,
-    paddingTop: 10,
+    // paddingTop: 10,
     flexDirection: "row",
     // borderWidth:1,
     borderColor: "grey",
@@ -795,10 +837,8 @@ const styles = StyleSheet.create({
     // position:"absolute",
     backgroundColor: "#fff",
     // opacity: 0,
-
     alignItems: "center",
     justifyContent: "flex-end",
-
     flexDirection: "row",
     // backgroundColor: "#000",
   },
@@ -825,11 +865,6 @@ const styles = StyleSheet.create({
 
   modelResults: {
     position: "absolute",
-    // width: "100%",
-    // height: "100%",
-
-    // width: Dimensions.get("window").width / 2 / heigt / 0.8,
-    // height: Dimensions.get("window").height / 2.64,
     zIndex: 20,
     borderWidth: 0,
     borderColor: "grey",
@@ -870,10 +905,10 @@ const styles = StyleSheet.create({
     // backgroundColor: "#0F4B82",
   },
   moon3: {
-    flex: 1,
+    flex: 0.5,
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    marginTop: 10,
+    marginTop: 0,
     // backgroundColor: "#0F4B82",
   },
   person: {

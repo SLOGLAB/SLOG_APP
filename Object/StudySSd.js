@@ -463,7 +463,7 @@ const PoseCamera = ({
             {personOnoff ? null : (
               <View style={styles.cameraAbsolute}>
                 {androidCam ? null : (
-                  <>{setting ? <TimeText>열공중!!!</TimeText> : <TimeText>부재중...</TimeText>}</>
+                  <>{setting ? <TimeText>학습중</TimeText> : <TimeText>부재중...</TimeText>}</>
                 )}
               </View>
             )}

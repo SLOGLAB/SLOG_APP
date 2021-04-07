@@ -7,6 +7,9 @@ import AuthButton from "../../../components/AuthButton"
 import LastWidth from "../../../components/LastWidth"
 import GroupSwiperBase from "../GroupStat/GroupSwiperBase"
 import Modal from "react-native-modal"
+import WeekRange from "../../../components/WeekRange"
+import { Calendar } from "react-native-calendars"
+import { CheckBox } from "native-base"
 
 const MainView = styled.View`
   justify-content: center;
@@ -74,16 +77,24 @@ const StyledPlayModalContainer = styled.View`
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
 `
+const CheckTop0 = styled.TouchableOpacity`
+  height: 10%;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 10;
+`
 const ModalView = styled.View`
   flex: 1;
   justify-content: center;
 `
-const Container = styled.TouchableOpacity`
+const Container = styled.View`
   /* padding-right: 20px; */
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex: 1;
+  height: 80%;
+  width: 100%;
 `
 const CaretView = styled.View`
   width: 100%;
@@ -119,8 +130,88 @@ const PhotoCircle = styled.View`
   width: 200;
   border-radius: 50;
 `
-const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
+const StyledCheckModalContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* 모달창 크기 조절 */
+  flex: 0.8;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+`
+const CheckTop = styled.TouchableOpacity`
+  height: 5%;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 10;
+`
+const SubView = styled.TouchableOpacity`
+  height: 10%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`
+const SubView1 = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+`
+const SubView2 = styled.TouchableOpacity`
+  height: 25;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10;
+  background-color: rgba(223, 231, 233, 1);
+`
+const Sub = styled.Text`
+  font-size: 13;
+  font-family: "GmarketMedium";
+`
+const CheckSub = styled.Text`
+  font-size: 13;
+  color: rgba(255, 255, 255, 1);
+  font-family: "GmarketMedium";
+`
+const CheckView1 = styled.View`
+  flex-direction: row;
+  width: 20%;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1;
 
+  background-color: rgba(34, 76, 126, 1);
+`
+const View1 = styled.View`
+  flex-direction: row;
+  width: 20%;
+  align-items: center;
+  margin-right: 1;
+
+  justify-content: center;
+`
+const View11 = styled.View`
+  flex-direction: row;
+  width: 10%;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1;
+  background-color: rgba(34, 76, 126, 1);
+`
+const View2 = styled.View`
+  flex-direction: row;
+  width: 10%;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1;
+  padding-right: 20;
+`
+
+const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
+let attend_member = []
+let attend_Array = []
 export default ({
   groupData,
   navigation,
@@ -140,6 +231,13 @@ export default ({
   search,
   onJoin,
   MyGroupdata,
+  modalcheckVisible,
+  setModalcheckVisible,
+  targetToday,
+  selectDate,
+  setSelectDate,
+  attendDate,
+  setAttendDate,
 }) => {
   let list = []
   for (var i = 0; i < MyGroupdata.myGroup.length; i += 1) {
@@ -148,7 +246,77 @@ export default ({
   }
   let findmygroup = list.findIndex((e) => e == groupData.id)
   const [noti, setnoti] = useState(false)
-  useEffect(() => {}, [])
+
+  /////월요일부터 이번주 공부시간///////
+  // const [selectDay, setselectDay] = useState(targetToday)
+  var currentDay = new Date(selectDate)
+  var theYear = currentDay.getFullYear()
+  var theMonth = currentDay.getMonth()
+  var theDate = currentDay.getDate()
+  var theDayOfWeek = currentDay.getDay() //요일
+
+  var thisWeek = []
+  var thism = []
+  var thisd = []
+  var thisy = []
+
+  for (var i = 0; i < 7; i++) {
+    var resultDay = new Date(theYear, theMonth, theDate + (i - theDayOfWeek))
+    var yyyy = resultDay.getFullYear()
+    var mm = Number(resultDay.getMonth()) + 1
+    var dd = resultDay.getDate()
+
+    mm = String(mm).length === 1 ? "0" + mm : mm
+    dd = String(dd).length === 1 ? "0" + dd : dd
+
+    thisWeek[i] = yyyy + "-" + mm + "-" + dd
+    thisy[i] = yyyy
+    thism[i] = mm
+    thisd[i] = dd
+  }
+  //
+  const { real_weekStart: attendRS, real_weekEnd: attendRE, weekEnd: attendE } = WeekRange(
+    attendDate
+  )
+  //
+  const [renderBool, setRenderBool] = useState(false)
+
+  const attend_calculate = () => {
+    attend_member = []
+    attend_Array = [] // 출석여부 넣기
+    for (let k = 0; k < groupData.member.length; k++) {
+      const nowMember = groupData.member[k]
+      let default_attend = new Array(7).fill(false)
+      // 선택할 날짜 일요일부터 일주일 출석 점검
+      for (let j = 0; j < 7; j++) {
+        const baseDate = new Date(attendRS)
+        baseDate.setDate(attendRS.getDate() + j)
+        const indexOfTime = nowMember.times.findIndex(
+          (i) =>
+            new Date(i.createdAt).getFullYear() === baseDate.getFullYear() &&
+            new Date(i.createdAt).getMonth() === baseDate.getMonth() &&
+            new Date(i.createdAt).getDate() === baseDate.getDate()
+        )
+        if (indexOfTime !== -1) {
+          //해당 날짜 총 시간 시간으로 환산
+          const timesHour = nowMember.times[indexOfTime].existTime / 3600
+          if (timesHour >= groupData.targetTime) {
+            default_attend[j] = true
+          }
+        }
+      }
+      attend_member.push(nowMember)
+      attend_Array.push(default_attend)
+    }
+    setRenderBool(!renderBool)
+  }
+
+  useEffect(() => {
+    attend_calculate()
+  }, [attendDate])
+
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <MainView>
       <BoxTopView>
@@ -209,17 +377,17 @@ export default ({
               <BoxinButtonView>
                 <TouchableOpacity
                   onPress={() => {
-                    // setModalPlayVisible(!modalPlayVisible)
+                    setModalcheckVisible(!modalcheckVisible)
                   }}
                 >
                   <Icon
-                    name={Platform.OS === "ios" ? "ios-calendar-sharp" : "md-calendar-sharp"}
+                    name={Platform.OS === "ios" ? "ios-checkbox-outline" : "md-checkbox-outline"}
                     size={30}
                   />
                 </TouchableOpacity>
               </BoxinButtonView>
-              <BoxinButtonView>
-                {groupData.imManager ? (
+              {groupData.imManager ? (
+                <BoxinButtonView>
                   <TouchableOpacity
                     onPress={() => {
                       setModalPlayVisible(!modalPlayVisible)
@@ -227,8 +395,8 @@ export default ({
                   >
                     <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
                   </TouchableOpacity>
-                ) : null}
-              </BoxinButtonView>
+                </BoxinButtonView>
+              ) : null}
               <BoxinButtonView>
                 {groupData.imManager ? (
                   <TouchableOpacity
@@ -355,23 +523,119 @@ export default ({
         }}
       >
         <StyledPlayModalContainer>
-          <ModalView>
-            <Container>
-              {groupData.imManager ? (
-                <AuthButton
-                  onPress={() => {
-                    navigation.navigate("EditGroup", { id: groupData.id })
-                    setModalPlayVisible(false)
-                  }}
-                  text="그룹 정보 수정"
-                  color="white"
-                  bgColor={"#7BA9EB"}
-                  widthRatio={LastWidth(1, 2, 10)}
-                />
-              ) : null}
-            </Container>
-          </ModalView>
+          <CheckTop0>
+            <TouchableOpacity
+              onPress={() => {
+                setModalPlayVisible(false)
+              }}
+            >
+              <Icon
+                name={
+                  Platform.OS === "ios" ? "ios-close-circle-outline" : "md-close-circle-outline"
+                }
+                size={23}
+              />
+            </TouchableOpacity>
+          </CheckTop0>
+
+          <Container>
+            {groupData.imManager ? (
+              <AuthButton
+                onPress={() => {
+                  navigation.navigate("EditGroup", { id: groupData.id })
+                  setModalPlayVisible(false)
+                }}
+                text="그룹 정보 수정"
+                color="white"
+                bgColor={"#7BA9EB"}
+                widthRatio={LastWidth(1, 2, 10)}
+              />
+            ) : null}
+          </Container>
         </StyledPlayModalContainer>
+      </Modal>
+      <Modal
+        isVisible={modalcheckVisible}
+        onBackdropPress={() => setModalcheckVisible(false)}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <StyledCheckModalContainer>
+          <CheckTop>
+            <TouchableOpacity
+              onPress={() => {
+                setModalcheckVisible(false)
+              }}
+            >
+              <Icon
+                name={
+                  Platform.OS === "ios" ? "ios-close-circle-outline" : "md-close-circle-outline"
+                }
+                size={23}
+              />
+            </TouchableOpacity>
+          </CheckTop>
+          <SubView>
+            <GroupName>출석부</GroupName>
+            <Sub>(목표 시간 : {groupData.targetTime}시간)</Sub>
+          </SubView>
+          <SubView2 onPress={() => setModalVisible(!modalVisible)}>
+            <GroupText>
+              {thism[0]}.{thisd[0]}(일) ~ {thism[6]}.{thisd[6]}(토)
+            </GroupText>
+          </SubView2>
+
+          <SubView1 style={{ marginBottom: 5 }}>
+            <CheckView1>
+              <CheckSub>이름</CheckSub>
+            </CheckView1>
+            {dayArray.map((day, index) => (
+              <View11 key={index}>
+                <CheckSub>{day}</CheckSub>
+              </View11>
+            ))}
+          </SubView1>
+          <ScrollView style={{ width: "100%" }}>
+            {attend_member.map((name, index) => (
+              <SubView1 key={index} style={{ marginBottom: 3 }}>
+                <View1>
+                  <Sub>{name.username}</Sub>
+                </View1>
+                {attend_Array[index].map((check) => (
+                  <View2>
+                    <CheckBox checked={check} onPress={() => {}} />
+                  </View2>
+                ))}
+              </SubView1>
+            ))}
+          </ScrollView>
+        </StyledCheckModalContainer>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          backdropColor={"black"}
+        >
+          <Calendar
+            current={selectDate}
+            minDate={"2012-05-10"}
+            maxDate={"2030-05-30"}
+            onDayPress={(day) => {
+              // console.log(day.dateString)
+              setAttendDate(new Date(day.timestamp))
+
+              setSelectDate(day.timestamp)
+              setModalVisible(!modalVisible)
+            }}
+            monthFormat={"yyyy MM"}
+            onPressArrowLeft={(subtractMonth) => subtractMonth()}
+            onPressArrowRight={(addMonth) => addMonth()}
+          />
+        </Modal>
       </Modal>
     </MainView>
   )
