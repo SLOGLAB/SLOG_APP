@@ -580,25 +580,15 @@ const TimeWeek = ({
   const showModeEnd = () => {
     setModalVisibleEnd(!modalVisibleEnd)
   }
-  const offMode = () => {
-    setModalVisible(!modalVisible)
-    var timestartText = moment(startTime).format("hh:mm a")
-    // var timeEndText = moment(endTime).format("hh:mm a")
-    setstartTimeText(timestartText)
-    // setendTimeText(timeEndText)
-  }
-  const offModeEnd = () => {
-    setModalVisibleEnd(!modalVisibleEnd)
-    // var timestartText = moment(startTime).format("hh:mm a")
-    var timeEndText = moment(endTime).format("hh:mm a")
-    // setstartTimeText(timestartText)
-    setendTimeText(timeEndText)
-  }
+
   const androidstartPicker = (event, selectedDate) => {
     setModalVisible(!modalVisible)
     const currentTime = new Date(selectedDate)
+
     if (currentTime.getMinutes() % 5 !== 0) {
-      Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      if (selectedDate !== undefined) {
+        Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      }
     } else if (currentTime > endTime) {
       Alert.alert("시작 시간이 끝나는 시간보다 늦을 수 없습니다.")
     } else {
@@ -610,7 +600,9 @@ const TimeWeek = ({
     setModalVisibleEnd(!modalVisibleEnd)
     const currentTime = new Date(selectedendTime)
     if (currentTime.getMinutes() % 5 !== 0) {
-      Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      if (selectedendTime !== undefined) {
+        Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      }
     } else if (currentTime < startTime) {
       Alert.alert("끝나는 시간이 시작 시간보다 빠를 수 없습니다.")
     } else {
@@ -1226,7 +1218,7 @@ const TimeWeek = ({
                     onPress={() => {
                       setTodoModal(true)
                     }}
-                    widthRatio={5}
+                    widthRatio={4}
                     marginArray={[0, 0, 0, 0]}
                     // loading={modifyLoading}
                   />

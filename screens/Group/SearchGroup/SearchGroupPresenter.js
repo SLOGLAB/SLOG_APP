@@ -16,29 +16,23 @@ import { Ionicons } from "@expo/vector-icons"
 import { studyOption_group0 } from "../../../components/LongArray"
 import constants from "../../../constants"
 import { Container, Header, Content, CheckBox } from "native-base"
-
+import AuthButton from "../../../components/AuthButton"
 import useSelect from "../../../hooks/useSelect"
 import Modal from "react-native-modal"
 import SearchGroupButton from "./SearchGroupButton"
 var { height: HEIGHT, width: WIDTH } = Dimensions.get("window")
 
 const TopView = styled.View`
-  /* width: 100%;
-  height: ${constants.height / 15}; */
-
   flex-direction: row;
-  /* border-bottom-width: 0.2; */
   flex: 1;
   align-items: center;
   justify-content: center;
-  /* margin-bottom: 10px; */
 `
 const TopView1 = styled.View`
   flex-direction: row;
-  flex: 0.5;
   align-items: center;
   justify-content: space-between;
-  padding-right: 5;
+  /* background-color: rgba(234, 50, 35, 1); */
 `
 const TopEm = styled.View``
 const FlexBox = styled.View`
@@ -60,8 +54,7 @@ const FlexBox2 = styled.View`
 `
 const GroupBox = styled.TouchableOpacity`
   width: 100%;
-  border-width: 1;
-  justify-content: center;
+  justify-content: flex-start;
   /* border-radius: 10; */
   padding: 2px;
   border-color: rgba(196, 196, 196, 1);
@@ -86,6 +79,8 @@ const GroupName = styled.Text`
 const CheckText = styled.Text`
   font-family: "GmarketMedium";
   font-size: 13;
+  margin-left: 20;
+  margin-right: 5;
   /* margin-top: 5; */
 `
 const GrouptopName = styled.Text`
@@ -114,9 +109,10 @@ const GroupGreyText = styled.Text`
 const RowGroup = styled.View`
   flex-direction: row;
 `
-const BoxTopView = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
+const BoxBottomView = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5;
 `
 const StyledModalContainer = styled.View`
   flex-direction: column;
@@ -166,22 +162,8 @@ const MainText2 = styled.Text`
 `
 const Box = styled.View``
 const dayArray = ["일", "월", "화", "수", "목", "금", "토"]
-
-export default ({
-  groupData,
-  groupRefetch,
-  navigation,
-  onRefresh,
-  refreshing,
-  setRefreshing,
-  modlaOutMember,
-  setmodlaOutMember,
-  myData,
-  loading,
-  groupData2,
-  groupRefetch2,
-  gruupLoading,
-}) => {
+let BoxCount = 3
+export default ({ groupData, groupRefetch, navigation, onRefresh, refreshing }) => {
   //   groupData.sort(function (a, b) {
   //     return a.bookmark === true && b.bookmark !== true
   //       ? -1
@@ -202,62 +184,181 @@ export default ({
   const [checkBox, setcheckBox] = useState(false)
   const [checkBox1, setcheckBox1] = useState(false)
 
-  const [filData, setFilData] = useState(groupData)
+  // const timeSort = () => {
+  //   if (timesort === "낮은 시간순") {
+  //     fileData.sort(function (a, b) {
+  //       return b.lastStudyTime - a.lastStudyTime
+  //     })
+  //   } else if (timesort === "높은 시간순") {
+  //     fileData.sort(function (a, b) {
+  //       return a.lastStudyTime - b.lastStudyTime
+  //     })
+  //   } else if (timesort === "높은 출석률순") {
+  //     fileData.sort(function (a, b) {
+  //       return a.lastAttendance - b.lastAttendance
+  //     })
+  //   } else if (timesort === "낮은 출석률순") {
+  //     fileData.sort(function (a, b) {
+  //       return b.lastAttendance - a.lastAttendance
+  //     })
+  //   }
+  // }
 
-  const getData = () => {
+  const [fileData, setFileData] = useState([])
+
+  const groupTerm = 20
+  // const countHandle = () => {
+  //   setVariables({ first: variables.first + groupTerm })
+  //   if (purpose === "전체") {
+  //     setFileData(groupData.slice(0, variables.first + groupTerm))
+  //   } else {
+  //     const filGroup = groupData.filter((ctr) => ctr.category === purpose)
+  //     setFileData(filGroup.slice(0, variables.first + groupTerm))
+  //   }
+  //   if (checkBox) {
+  //     const filGroup = fileData.filter((ctr) => ctr.publicBool === true)
+  //     setFileData(filGroup)
+  //   }
+  //   if (checkBox1) {
+  //     const filGroup = fileData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+  //     setFileData(filGroup)
+  //   }
+  // }
+  // const getData = () => {
+  //   if (purpose === "전체") {
+  //     // setFileData(groupData.slice(0, groupTerm))
+  //     setFileData(groupData)
+  //   } else {
+  //     const filGroup = groupData.filter((ctr) => ctr.category === purpose)
+  //     // setFileData(filGroup.slice(0, groupTerm))
+  //     setFileData(filGroup)
+  //   }
+  // }
+  // const publicHandler = () => {
+  //   if (checkBox) {
+  //     const filecheckGroup = fileData.filter((ctr) => ctr.publicBool === true)
+  //     setFileData(filecheckGroup)
+  //   }
+  // }
+  // const emptyHandle = () => {
+  //   if (checkBox1) {
+  //     const fileEmptyGroup = fileData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+  //     setFileData(fileEmptyGroup)
+  //   }
+  // }
+  const countHandle = () => {
+    BoxCount += groupTerm
     if (purpose === "전체") {
-      setFilData(groupData)
+      if (checkBox) {
+        if (checkBox1) {
+          const filecheckGroup = groupData.filter((ctr) => ctr.publicBool === true)
+          const fileEmptyGroup = filecheckGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          const filecheckGroup = groupData.filter((ctr) => ctr.publicBool === true)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        }
+      } else {
+        if (checkBox1) {
+          const filecheckGroup = groupData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        } else {
+          setFileData(groupData.slice(0, BoxCount))
+        }
+      }
     } else {
       const filGroup = groupData.filter((ctr) => ctr.category === purpose)
-      setFilData(filGroup)
+      if (checkBox) {
+        if (checkBox1) {
+          const filecheckGroup = filGroup.filter((ctr) => ctr.publicBool === true)
+
+          const fileEmptyGroup = filecheckGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          const filecheckGroup = filGroup.filter((ctr) => ctr.publicBool === true)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        }
+      } else {
+        if (checkBox1) {
+          const fileEmptyGroup = filGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          setFileData(filGroup.slice(0, BoxCount))
+        }
+      }
     }
   }
-  const timeSort = () => {
-    if (timesort === "낮은 시간순") {
-      filData.sort(function (a, b) {
-        return b.lastStudyTime - a.lastStudyTime
-      })
-    } else if (timesort === "높은 시간순") {
-      filData.sort(function (a, b) {
-        return a.lastStudyTime - b.lastStudyTime
-      })
-    } else if (timesort === "높은 출석률순") {
-      filData.sort(function (a, b) {
-        return a.lastAttendance - b.lastAttendance
-      })
-    } else if (timesort === "낮은 출석률순") {
-      filData.sort(function (a, b) {
-        return b.lastAttendance - a.lastAttendance
-      })
+  const getData = () => {
+    BoxCount = groupTerm
+    setFileData([])
+    if (purpose === "전체") {
+      if (checkBox) {
+        if (checkBox1) {
+          const filecheckGroup = groupData.filter((ctr) => ctr.publicBool === true)
+          const fileEmptyGroup = filecheckGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          const filecheckGroup = groupData.filter((ctr) => ctr.publicBool === true)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        }
+      } else {
+        if (checkBox1) {
+          const filecheckGroup = groupData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        } else {
+          setFileData(groupData.slice(0, BoxCount))
+        }
+      }
+    } else {
+      const filGroup = groupData.filter((ctr) => ctr.category === purpose)
+      if (checkBox) {
+        if (checkBox1) {
+          const filecheckGroup = filGroup.filter((ctr) => ctr.publicBool === true)
+
+          const fileEmptyGroup = filecheckGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          const filecheckGroup = filGroup.filter((ctr) => ctr.publicBool === true)
+          setFileData(filecheckGroup.slice(0, BoxCount))
+        }
+      } else {
+        if (checkBox1) {
+          const fileEmptyGroup = filGroup.filter((ctr) => ctr.maxMember > ctr.memberCount)
+          setFileData(fileEmptyGroup.slice(0, BoxCount))
+        } else {
+          setFileData(filGroup.slice(0, BoxCount))
+        }
+      }
     }
   }
   const publicHandler = () => {
     if (checkBox) {
-      const filGroup = filData.filter((ctr) => ctr.publicBool === true)
-      setFilData(filGroup)
+      const filecheckGroup = fileData.filter((ctr) => ctr.publicBool === true)
+      setFileData(filecheckGroup)
     }
   }
-
   const emptyHandle = () => {
     if (checkBox1) {
-      const filGroup = filData.filter((ctr) => ctr.maxMember > ctr.memberCount)
-      setFilData(filGroup)
+      const fileEmptyGroup = fileData.filter((ctr) => ctr.maxMember > ctr.memberCount)
+      setFileData(fileEmptyGroup)
     }
   }
   useEffect(() => {
     getData()
-    timeSort()
     // publicHandler()
     // emptyHandle()
+    // timeSort()
   }, [
     purpose,
-    timesort,
-    //  checkBox, checkBox1
+    checkBox1,
+    checkBox,
+    // timesort
   ])
 
   useEffect(() => {
     groupRefetch()
   }, [])
+
   return (
     <>
       <Container>
@@ -335,7 +436,7 @@ export default ({
                 }}
               />
             </TopView>
-            <TopView>
+            {/* <TopView>
               <RNPickerSelect
                 onValueChange={(value) => {
                   if (value !== null) {
@@ -366,19 +467,31 @@ export default ({
                   )
                 }}
               />
-            </TopView>
-            <TopView1>
-              <CheckBox checked={checkBox} onPress={() => setcheckBox(!checkBox)} />
-              <CheckText>공개</CheckText>
-            </TopView1>
-            <TopView1>
-              <CheckBox checked={checkBox1} onPress={() => setcheckBox1(!checkBox1)} />
+            </TopView> */}
+            <FlexBox>
+              <TopView1>
+                <CheckBox
+                  checked={checkBox}
+                  onPress={() => {
+                    setcheckBox(!checkBox)
+                  }}
+                />
+                <CheckText>공개</CheckText>
+              </TopView1>
+              <TopView1>
+                <CheckBox
+                  checked={checkBox1}
+                  onPress={() => {
+                    setcheckBox1(!checkBox1)
+                  }}
+                />
 
-              <CheckText>빈방</CheckText>
-            </TopView1>
+                <CheckText>빈방</CheckText>
+              </TopView1>
+            </FlexBox>
           </SelectView>
           <ScrollView
-            style={{ backgroundColor: "#FFFFFF", marginBottom: 80 }}
+            style={{ backgroundColor: "#FFFFFF", marginBottom: 20 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -387,7 +500,8 @@ export default ({
               />
             }
           >
-            {filData.map((list) => (
+            {fileData.map((list) => (
+              // {BoxCount.map((list) => (
               <GroupBox
                 key={list.id}
                 onPress={() => {
@@ -399,10 +513,10 @@ export default ({
                   <GroupCate>{list.category}</GroupCate>
 
                   <GroupName>{trimText(list.name, 19)}</GroupName>
-                  <RowGroup>
+                  {/* <RowGroup>
                     <GroupGreyText>평균 학습량</GroupGreyText>
                     <GroupText>{Math.floor(list.lastStudyTime)}시간</GroupText>
-                  </RowGroup>
+                  </RowGroup> */}
                   <RowGroup>
                     <GroupGreyText>평균 출석률</GroupGreyText>
                     <GroupText>{Math.floor(list.lastAttendance)}%</GroupText>
@@ -455,6 +569,18 @@ export default ({
               </GroupBox>
             ))}
           </ScrollView>
+          <BoxBottomView>
+            <AuthButton
+              color="white"
+              onPress={() => {
+                // setVariables({ first: variables.first + groupTerm })
+                countHandle()
+              }}
+              text="더보기"
+              paddingArray={Platform.OS === "ios" ? [6.5, 6.5, 6.5, 6.5] : [10, 10, 10, 10]}
+              // widthRatio={LastWidth(1.7, 2.5, 40)}
+            />
+          </BoxBottomView>
         </Content>
       </Container>
     </>

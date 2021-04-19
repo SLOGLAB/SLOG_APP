@@ -27,6 +27,8 @@ const View = styled.View`
 const DayView = styled.View`
   background-color: rgba(233, 237, 244, 1);
   margin-top: 10;
+  margin-left: 5;
+  margin-right: 5;
 `
 // border-radius: 20;
 // margin-left: 10;
@@ -522,7 +524,7 @@ const Weeks = ({
             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
               <Text>
                 {/* {month}월 {weekOfMonth(nowDate)}주차 */}
-                {thisy[0]}.{thism[0]}.{thisd[0]}~{thisy[6]}.{thism[6]}.{thisd[6]}
+                {thism[0]}.{thisd[0]} ~ {thism[6]}.{thisd[6]}
               </Text>
             </TouchableOpacity>
             <Modal
@@ -561,7 +563,7 @@ const Weeks = ({
           </TouchableOpacity>
           <Line />
           {SumArray(taskArray_week) === 0 && SumArray(taskArray_week_pre) === 0 ? (
-            <View>
+            <View style={{ marginTop: 5 }}>
               <CenterView>
                 <SubText>요일별 학습 시간(시) </SubText>
                 <ChartView1>
@@ -586,7 +588,7 @@ const Weeks = ({
               />
             </View>
           ) : (
-            <View>
+            <View style={{ marginTop: 5 }}>
               <CenterView>
                 <SubText>요일별 학습 시간(시) </SubText>
                 <ChartView1>
@@ -627,7 +629,7 @@ const Weeks = ({
           )}
 
           <Line />
-          <View>
+          <View style={{ marginTop: 5 }}>
             <CenterView>
               <SubText>과목별 학습 시간(시)</SubText>
               <ChartView1>
@@ -637,16 +639,29 @@ const Weeks = ({
                 <BoxText>목표</BoxText>
               </ChartView1>
             </CenterView>
-            <StackedWMBar
-              data_1={taskArray_schedule_week}
-              data_2={taskArray_scheduleT_week}
-              labels={schedule_label}
-              label_1={"학습"}
-              label_2={"목표"}
-              title={"과목별 시간"}
-              title_x={"시간(분)"}
-              stepSize_x={60}
-            />
+            {taskArray_scheduleT_week.length == 0 ? (
+              <StackedWMBar
+                data_1={[0]}
+                data_2={[0]}
+                labels={["스케줄 없음"]}
+                label_1={"학습"}
+                label_2={"목표"}
+                title={"과목별 시간"}
+                title_x={"시간(분)"}
+                stepSize_x={60}
+              />
+            ) : (
+              <StackedWMBar
+                data_1={taskArray_schedule_week}
+                data_2={taskArray_scheduleT_week}
+                labels={schedule_label}
+                label_1={"학습"}
+                label_2={"목표"}
+                title={"과목별 시간"}
+                title_x={"시간(분)"}
+                stepSize_x={60}
+              />
+            )}
           </View>
           <Line />
           {/* <View>

@@ -401,7 +401,9 @@ export default AddTimeSchedule = ({
     setModalVisible(!modalVisible)
     const currentTime = new Date(selectedDate)
     if (currentTime.getMinutes() % 5 !== 0) {
-      Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      if (selectedDate !== undefined) {
+        Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      }
     } else {
       setstartTime(currentTime)
       setstartTimeText(moment(currentTime).format("hh:mm a"))
@@ -411,7 +413,9 @@ export default AddTimeSchedule = ({
     setModalVisibleEnd(!modalVisibleEnd)
     const currentTime = new Date(selectedendTime)
     if (currentTime.getMinutes() % 5 !== 0) {
-      Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      if (selectedendTime !== undefined) {
+        Alert.alert("시간 범위를 5분 단위로 설정해주세요.\n(예: 5분, 10분, 15분, ...)")
+      }
     } else {
       setendTime(currentTime)
       setendTimeText(moment(currentTime).format("hh:mm a"))
@@ -569,7 +573,6 @@ export default AddTimeSchedule = ({
               }}
               onPress={() => {
                 setday1(!day1)
-                console.log("hi")
               }}
             >
               <Text style={{ color: "black" }}>월 </Text>
@@ -686,7 +689,7 @@ export default AddTimeSchedule = ({
                   onPress={() => {
                     setscheduleTodoModal(true)
                   }}
-                  widthRatio={5}
+                  widthRatio={4}
                   marginArray={[0, 0, 0, 0]}
                   // loading={modifyLoading}
                 />
@@ -831,7 +834,6 @@ export default AddTimeSchedule = ({
                   }}
                 >
                   {" "}
-                  :{" "}
                 </Text>
                 <TouchableOpacity onPress={showMode}>
                   <View21>
@@ -865,7 +867,6 @@ export default AddTimeSchedule = ({
                   }}
                 >
                   {" "}
-                  :{" "}
                 </Text>
                 <TouchableOpacity onPress={showModeEnd}>
                   <View21>

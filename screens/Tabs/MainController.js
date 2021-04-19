@@ -88,6 +88,8 @@ export const ME = gql`
 `
 export const EDIT_STUDYSET = gql`
   mutation editStudySet(
+    $autoDarkMode: Boolean
+    $darkModeMin: Int
     $timelapseRecord: Boolean
     $nonScheduleRecord: Boolean
     $autoRefresh: Boolean
@@ -101,6 +103,8 @@ export const EDIT_STUDYSET = gql`
     $dDate: String
   ) {
     editStudySet(
+      autoDarkMode: $autoDarkMode
+      darkModeMin: $darkModeMin
       timelapseRecord: $timelapseRecord
       nonScheduleRecord: $nonScheduleRecord
       autoRefresh: $autoRefresh

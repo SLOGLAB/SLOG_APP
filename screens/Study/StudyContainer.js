@@ -1,29 +1,16 @@
 import React, { useEffect, useState, useRef } from "react"
 import { View, Dimensions, StyleSheet, SafeAreaView, Platform, StatusBar } from "react-native"
 import styled from "styled-components"
-import Constants from "expo-constants"
 import constants from "../../constants"
-import BackButton from "../../components/BackButton"
 import { gql } from "apollo-boost"
 import { useQuery, useMutation } from "@apollo/react-hooks"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 
-import StudyPoseContainer from "./StudyPoseContainer"
-import StudyPoseLand from "../../Object/StudyPoseLand"
-import StudySSd from "../../Object/StudySSd"
-import StudySSdPose from "../../Object/StudySSdPose"
-import Swiper from "react-native-swiper"
-
-import StudyPresenter from "./StudyPresenter"
-import { Container, Header, TabHeading, Tab, Tabs, Text } from "native-base"
-import TodoListController from "../TodoList/TodoListController"
-import TodoListEndController from "../TodoList/TodoListEndController"
 import { withNavigationFocus } from "react-navigation"
 import { useKeepAwake } from "expo-keep-awake"
-import { ScrollView } from "react-native-gesture-handler"
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
-
+import StudyCal from "./StudyCal"
 export const ME = gql`
   {
     me {
@@ -71,6 +58,8 @@ export const ME = gql`
         dDayOn
         dDateName
         dDate
+        autoDarkMode
+        darkModeMin
       }
       followDates {
         id
@@ -205,7 +194,6 @@ const StudyContainer = ({ navigation }) => {
   }, [])
   // useEffect(() => {
   //   if (screenData.isLandscape) {
-  //     console.log("hi")
   //   }
   // }, [screenData.isLandscape])
   return (
@@ -219,7 +207,26 @@ const StudyContainer = ({ navigation }) => {
           ) : (
             <StatusBar barStyle="light-content" />
           )}
-          {!screenData.isLandscape ? (
+          <StudyCal
+            navigation={navigation}
+            myInfoData={myInfoData}
+            myInfoRefetch={myInfoRefetch}
+            deg={"270deg"}
+            // setbool={true}
+            loading={loading}
+            selectDate={selectDate}
+            nextDate={nextDate}
+            Bright={Bright}
+            land={screenData.isLandscape}
+            setting={setting}
+            setSetting={setSetting}
+            androidCam={androidCam}
+            setandroidCam={setandroidCam}
+            personOnoff={personOnoff}
+            setpersonOnoff={setpersonOnoff}
+            myData={myInfoData.me}
+          />
+          {/* {!screenData.isLandscape ? (
             <SafeAreaView>
               <SideView>
                 <StudyPoseContainer
@@ -260,7 +267,6 @@ const StudyContainer = ({ navigation }) => {
             </SafeAreaView>
           ) : (
             <>
-              {/* {Platform.OS == "ios" ? <SideView2 /> : null} */}
               <SideViewLand>
                 <StudyPoseContainer
                   navigation={navigation}
@@ -298,7 +304,7 @@ const StudyContainer = ({ navigation }) => {
                 </SideViewLand2>
               </SideViewLand>
             </>
-          )}
+          )} */}
         </>
       )}
     </>

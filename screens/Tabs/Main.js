@@ -44,6 +44,7 @@ let nowScheduleTimeT = 0
 let nowScheduleColor = "rgba(123, 169, 235, 1)"
 let nowTitle1 = ""
 let nowTitle2 = ""
+let nowMid = ""
 let nowEnd = ""
 let nextScheduleIndex = -1
 let nextTitle1 = ""
@@ -59,6 +60,7 @@ let total_min = 0
 let endPoint = 0
 let existTime_donut = 0
 let targetTime_donut = 0
+
 const Main = ({
   myData,
   selectDate,
@@ -167,6 +169,7 @@ const Main = ({
       const endPoint = new Date(nowSchedule.end)
       nowTitle1 = nowSchedule.subject?.name + " (" + nowSchedule.title + ")"
       nowTitle2 = moment(startPoint).format("hh:mma") + " ~ " + moment(endPoint).format("hh:mma")
+      nowMid = Math.ceil((endPoint - new Date()) / 60000)
       nowEnd = moment(endPoint).format("hh:mma")
     } else {
       nowScheduleTime = 0
@@ -417,6 +420,7 @@ const Main = ({
         nowEnd={nowEnd}
         navigation={navigation}
         editStudyPlaySetMutation={editStudyPlaySetMutation}
+        nowMid={nowMid}
       />
     </MainView1>
   )

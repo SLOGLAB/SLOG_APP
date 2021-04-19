@@ -492,6 +492,7 @@ export default ({
   setandroidCam,
   personOnoff,
   setpersonOnoff,
+  nowMid,
 }) => {
   const [expoPushToken, setExpoPushToken] = useState("")
   const [notification, setNotification] = useState(true)
@@ -888,7 +889,7 @@ export default ({
       console.log(e)
     }
   }
-  useEffect(() => {}, [])
+
   // useEffect(() => {
   //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
   //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
@@ -918,6 +919,7 @@ export default ({
   //     },
   //   })
   // }
+
   return (
     // <ScrollView horizontal={false}>
     <>
@@ -949,7 +951,17 @@ export default ({
         <TimeView>
           <TextCenter>
             <SubText2>{trimText(nowTitle1, 20)}</SubText2>
-            <Text1>{nowTitle2}</Text1>
+            {nowTitle1 == "현재 스케줄 없음" ? (
+              <Text1>{nowTitle2} </Text1>
+            ) : (
+              <Text1>
+                {nowTitle2}(
+                {nowMid < 60
+                  ? nowMid + "분"
+                  : Math.floor(nowMid / 60) + ":" + Math.floor(nowMid % 60)}{" "}
+                남음)
+              </Text1>
+            )}
           </TextCenter>
           {nowScheduleTime == 0 ? (
             <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
@@ -1061,7 +1073,7 @@ export default ({
                           onPress={() => {
                             setscheduleTodoModal(true)
                           }}
-                          widthRatio={5}
+                          widthRatio={4}
                           marginArray={[0, 0, 0, 0]}
                           // loading={modifyLoading}
                         />
@@ -1323,7 +1335,7 @@ export default ({
                           onPress={() => {
                             setscheduleTodoModal(true)
                           }}
-                          widthRatio={5}
+                          widthRatio={4}
                           marginArray={[0, 0, 0, 0]}
                           // loading={modifyLoading}
                         />

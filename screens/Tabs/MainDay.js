@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import styled from "styled-components"
 import VdayProgress from "../../graphsVictory/VdayProgress"
 import VdayBar from "../../graphsVictory/VdayBar"
@@ -406,6 +406,7 @@ const MainDay = ({
   nowScheduleColor,
   nowTitle1,
   nowTitle2,
+  nowMid,
   break_title,
   break_time,
   break_countdown,
@@ -430,6 +431,8 @@ const MainDay = ({
   const [modalPlayVisible, setModalPlayVisible] = useState(false)
   const [isEnabled, setIsEnabled] = useState(myData.studyDefaultSet.nonScheduleRecord)
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+  const [autoDark, setautoDark] = useState(false)
+  const toggleDarkSwitch = () => setautoDark((previousState) => !previousState)
 
   const onSaveSet = async () => {
     try {
@@ -437,7 +440,9 @@ const MainDay = ({
         data: { editStudySet },
       } = await editStudyPlaySetMutation({
         variables: {
+          autoDarkMode: autoDark,
           nonScheduleRecord: isEnabled,
+          darkModeMin: 60,
           autoRefresh: myData.studyDefaultSet.autoRefresh,
           autoRefreshTerm: myData.studyDefaultSet.autoRefreshTerm,
           startScheduleTerm: myData.studyDefaultSet.startScheduleTerm,
@@ -509,20 +514,21 @@ const MainDay = ({
     }
     navigation.navigate("StudyContainer", { Bright: brightness })
   }
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-  //   notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-  //     setNotification(notification)
-  //   })
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(
-  //     (response) => {}
-  //   )
+  //
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification)
+    })
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {}
+    )
 
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener)
-  //     Notifications.removeNotificationSubscription(responseListener)
-  //   }
-  // }, [])
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener)
+      Notifications.removeNotificationSubscription(responseListener)
+    }
+  }, [])
   const pushToken = async () => {
     await sendPushNotification(expoPushToken)
   }
@@ -537,18 +543,11 @@ const MainDay = ({
       },
     })
   }
-  // Notifications.scheduleNotificationAsync({
-  //   content: {
-  //     title: "슬로그 알람!",
-  //     body: "IAM!",
-  //   },
-  //   trigger: {
-  //     seconds: 10,
-  //   },
-  // })
+
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
   }, [])
+
   return (
     <>
       <MainTView>
@@ -705,6 +704,16 @@ const MainDay = ({
                   value={isEnabled}
                 />
               </ModalPlay>
+              <ModalPlay>
+                <Play_Text>1분 자동 밝기 조절</Play_Text>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={isEnabled ? "#f5dd4b" : "#767577"}
+                  ios_backgroundColor="#F4F3F4"
+                  onValueChange={toggleDarkSwitch}
+                  value={autoDark}
+                />
+              </ModalPlay>
               <PlayBottom>
                 <Container>
                   <AuthButton
@@ -762,7 +771,17 @@ const MainDay = ({
         <TimeView>
           <TextCenter>
             <SubText2>{nowTitle1}</SubText2>
-            <Text1>{nowTitle2}</Text1>
+            {nowTitle1 == "현재 스케줄 없음" ? (
+              <Text1>{nowTitle2} </Text1>
+            ) : (
+              <Text1>
+                {nowTitle2}(
+                {nowMid < 60
+                  ? nowMid + "분"
+                  : Math.floor(nowMid / 60) + ":" + Math.floor(nowMid % 60)}{" "}
+                남음)
+              </Text1>
+            )}
           </TextCenter>
           {nowScheduleTime == 0 ? (
             <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
@@ -788,6 +807,7 @@ const MainDay = ({
           <VdayBar taskArray={taskArray} />
         </TextView>
       </MainTView>
+
       <Modal
         isVisible={modalVisible}
         onBackdropPress={() => setModalVisible(false)}

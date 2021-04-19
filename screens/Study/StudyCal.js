@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useRef } from "react"
+import { View, Dimensions, StyleSheet, SafeAreaView, Platform, StatusBar } from "react-native"
+import styled from "styled-components"
+import constants from "../../constants"
+import Loader from "../../components/Loader"
+
+import StudyPoseLand from "../../Object/StudyPoseLand"
+import * as Notifications from "expo-notifications"
 
 import { gql } from "apollo-boost"
-import Loader from "../../components/Loader"
 import Studyinfo from "./Studyinfo"
 import moment, { Moment } from "moment"
 import SplitArray from "../../components/SplitArray"
@@ -70,6 +76,9 @@ let nowScheduleTimeT = 0
 let nowScheduleColor = "rgba(123, 169, 235, 1)"
 let nowTitle1 = ""
 let nowTitle2 = ""
+let nowMid = ""
+let nowMid2 = ""
+
 let nowEnd = ""
 let nextScheduleIndex = -1
 let nextTitle1 = ""
@@ -86,12 +95,64 @@ let endPoint = 0
 let existTime_donut = 0
 let targetTime_donut = 0
 
-export default ({
-  myData,
+const SideView = styled.View`
+  width: ${constants.width / 1};
+  height: ${constants.height / 1};
+  /* flex: 1; */
+  /* align-items: flex-end;
+  justify-content: flex-end; */
+`
+
+const SideView1 = styled.View`
+  /* flex: ${(props) => props.bool}; */
+  position: absolute;
+  width: ${constants.width / 1};
+  justify-content: center;
+  height: ${(constants.height * 1) / 2.9};
+  align-items: flex-end;
+  background-color: rgba(233, 237, 244, 0);
+  margin-top: ${constants.height / 1.65};
+`
+const SideViewLand = styled.View`
+  width: ${constants.height / 1};
+  height: ${constants.width / 1};
+  align-items: flex-start;
+  justify-content: flex-end;
+`
+const SideViewLand2 = styled.View`
+  position: absolute;
+  width: ${constants.height / 2};
+  height: ${constants.width / 2};
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 20;
+
+  background-color: rgba(233, 237, 244, 0);
+`
+const SideView2 = styled.View`
+  width: ${constants.width / 1};
+  margin-top: 30;
+`
+const BodyView = styled.View`
+  flex-direction: row;
+  /* justify-content: center;
+  align-items: cent
+  er; */
+  width: ${constants.height / 1};
+  height: ${constants.width / 1};
+  background-color: rgba(15, 76, 130, 1);
+`
+
+const StudyCal = ({
+  navigation,
+  myInfoData,
+  myInfoRefetch,
+  deg,
+  // setbool={true}
+  loading,
   selectDate,
   nextDate,
-  loading,
-  myInfoRefetch,
+  Bright,
   land,
   setting,
   setSetting,
@@ -99,6 +160,7 @@ export default ({
   setandroidCam,
   personOnoff,
   setpersonOnoff,
+  myData,
 }) => {
   const scheduleList = myData.schedules
   const { real_weekStart, real_weekEnd } = WeekRange(selectDate)
@@ -196,6 +258,9 @@ export default ({
       const endPoint = new Date(nowSchedule.end)
       nowTitle1 = nowSchedule.subject?.name + " (" + nowSchedule.title + ")"
       nowTitle2 = moment(startPoint).format("hh:mma") + " ~ " + moment(endPoint).format("hh:mma")
+      nowMid = Math.ceil((endPoint - new Date()) / 60000)
+      nowMid2 = (endPoint - new Date()) / 60000
+
       nowEnd = moment(endPoint).format("hh:mma")
     } else {
       nowScheduleTime = 0
@@ -428,71 +493,217 @@ export default ({
   const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
     MY_TODOLIST
   )
-  useEffect(() => {
-    // console.log(myInfoData)
-  }, [])
-
+  const noti = () => {
+    if (nowMid == 3) {
+      Notifications.scheduleNotificationAsync({
+        content: {
+          title: "DeepTime",
+          body: "현재 스케줄이 10분 이내로 남았습니다.",
+        },
+        trigger: {
+          seconds: 1,
+        },
+      })
+    }
+  }
+  useEffect(() => {}, [])
   return (
     <>
-      {todolistLoading || subLoading ? (
+      {loading ? (
         <Loader />
       ) : (
-        <Studyinfo
-          nexistTime={existTime_donut}
-          nowtarget={targetTime_donut}
-          donutPercent={donutPercent}
-          taskArray={taskArray}
-          nowScheduleTime={nowScheduleTime}
-          nowScheduleTimeT={nowScheduleTimeT}
-          nowScheduleColor={nowScheduleColor}
-          nowTitle1={nowTitle1}
-          nowTitle2={nowTitle2}
-          break_title={break_title}
-          break_time={break_time}
-          break_countdown={break_countdown}
-          nextTitle1={nextTitle1}
-          nextTitle2={nextTitle2}
-          next_TimeText={next_TimeText}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          modalVisible2={modalVisible2}
-          setModalVisible2={setModalVisible2}
-          // refreshing={refreshing}
-          // setRefreshing={setRefreshing}
-          // goWithMutation={goWithMutation}
-          myData={myData}
-          myInfoRefetch={myInfoRefetch}
-          loading={loading}
-          nowEnd={nowEnd}
-          startScheduleMutation={startScheduleMutation}
-          cutScheduleMutation={cutScheduleMutation}
-          extensionScheduleMutation={extensionScheduleMutation}
-          stopScheduleMutation={stopScheduleMutation}
-          pullScheduleMutation={pullScheduleMutation}
-          onLoading={onLoading}
-          setOnLoading={setOnLoading}
-          todayGraph_calculate={todayGraph_calculate}
-          nowScheduleIndex={nowScheduleIndex}
-          subjectsName={subjectsName}
-          todolistData={todolistData.myTodolist}
-          scheduleList_selectDay={scheduleList_selectDay}
-          scheduleList_selectDay_length={scheduleList_selectDay_length}
-          nextScheduleIndex={nextScheduleIndex}
-          onstopLoading={onstopLoading}
-          setstopOnLoading={setstopOnLoading}
-          onexLoading={onexLoading}
-          setexOnLoading={setexOnLoading}
-          oncutLoading={oncutLoading}
-          setcutOnLoading={setcutOnLoading}
-          land={land}
-          setting={setting}
-          setSetting={setSetting}
-          androidCam={androidCam}
-          setandroidCam={setandroidCam}
-          personOnoff={personOnoff}
-          setpersonOnoff={setpersonOnoff}
-        />
+        <>
+          {Platform.OS == "ios" ? (
+            <StatusBar barStyle="dark-content" />
+          ) : (
+            <StatusBar barStyle="light-content" />
+          )}
+          {!land ? (
+            <SafeAreaView>
+              <SideView>
+                <StudyPoseLand
+                  loading={loading}
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                  nexistTime={existTime_donut}
+                  Bright={Bright}
+                  land={land}
+                  setting={setting}
+                  setSetting={setSetting}
+                  androidCam={androidCam}
+                  setandroidCam={setandroidCam}
+                  personOnoff={personOnoff}
+                  setpersonOnoff={setpersonOnoff}
+                  nowMid={nowMid}
+                  todayGraph_calculate={todayGraph_calculate}
+                  todaySchedule_calculate={todaySchedule_calculate}
+                  noti={noti}
+                />
+                <SideView1>
+                  <>
+                    {todolistLoading || subLoading ? (
+                      <Loader />
+                    ) : (
+                      <Studyinfo
+                        nexistTime={existTime_donut}
+                        nowtarget={targetTime_donut}
+                        donutPercent={donutPercent}
+                        taskArray={taskArray}
+                        nowScheduleTime={nowScheduleTime}
+                        nowScheduleTimeT={nowScheduleTimeT}
+                        nowScheduleColor={nowScheduleColor}
+                        nowTitle1={nowTitle1}
+                        nowTitle2={nowTitle2}
+                        break_title={break_title}
+                        break_time={break_time}
+                        break_countdown={break_countdown}
+                        nextTitle1={nextTitle1}
+                        nextTitle2={nextTitle2}
+                        next_TimeText={next_TimeText}
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                        modalVisible2={modalVisible2}
+                        setModalVisible2={setModalVisible2}
+                        // refreshing={refreshing}
+                        // setRefreshing={setRefreshing}
+                        // goWithMutation={goWithMutation}
+                        myData={myData}
+                        myInfoRefetch={myInfoRefetch}
+                        loading={loading}
+                        nowEnd={nowEnd}
+                        startScheduleMutation={startScheduleMutation}
+                        cutScheduleMutation={cutScheduleMutation}
+                        extensionScheduleMutation={extensionScheduleMutation}
+                        stopScheduleMutation={stopScheduleMutation}
+                        pullScheduleMutation={pullScheduleMutation}
+                        onLoading={onLoading}
+                        setOnLoading={setOnLoading}
+                        todayGraph_calculate={todayGraph_calculate}
+                        nowScheduleIndex={nowScheduleIndex}
+                        subjectsName={subjectsName}
+                        todolistData={todolistData.myTodolist}
+                        scheduleList_selectDay={scheduleList_selectDay}
+                        scheduleList_selectDay_length={scheduleList_selectDay_length}
+                        nextScheduleIndex={nextScheduleIndex}
+                        onstopLoading={onstopLoading}
+                        setstopOnLoading={setstopOnLoading}
+                        onexLoading={onexLoading}
+                        setexOnLoading={setexOnLoading}
+                        oncutLoading={oncutLoading}
+                        setcutOnLoading={setcutOnLoading}
+                        land={land}
+                        setting={setting}
+                        setSetting={setSetting}
+                        androidCam={androidCam}
+                        setandroidCam={setandroidCam}
+                        personOnoff={personOnoff}
+                        setpersonOnoff={setpersonOnoff}
+                        nowMid={nowMid}
+                      />
+                    )}
+                  </>
+                </SideView1>
+              </SideView>
+            </SafeAreaView>
+          ) : (
+            <>
+              {/* {Platform.OS == "ios" ? <SideView2 /> : null} */}
+              <SideViewLand>
+                <StudyPoseLand
+                  loading={loading}
+                  navigation={navigation}
+                  myInfoData={myInfoData}
+                  myInfoRefetch={myInfoRefetch}
+                  selectDate={selectDate}
+                  nextDate={nextDate}
+                  nexistTime={existTime_donut}
+                  Bright={Bright}
+                  land={land}
+                  setting={setting}
+                  setSetting={setSetting}
+                  androidCam={androidCam}
+                  setandroidCam={setandroidCam}
+                  personOnoff={personOnoff}
+                  setpersonOnoff={setpersonOnoff}
+                  nowMid={nowMid}
+                  todayGraph_calculate={todayGraph_calculate}
+                  todaySchedule_calculate={todaySchedule_calculate}
+                  noti={noti}
+                />
+                <SideViewLand2>
+                  <>
+                    {todolistLoading || subLoading ? (
+                      <Loader />
+                    ) : (
+                      <Studyinfo
+                        nexistTime={existTime_donut}
+                        nowtarget={targetTime_donut}
+                        donutPercent={donutPercent}
+                        taskArray={taskArray}
+                        nowScheduleTime={nowScheduleTime}
+                        nowScheduleTimeT={nowScheduleTimeT}
+                        nowScheduleColor={nowScheduleColor}
+                        nowTitle1={nowTitle1}
+                        nowTitle2={nowTitle2}
+                        break_title={break_title}
+                        break_time={break_time}
+                        break_countdown={break_countdown}
+                        nextTitle1={nextTitle1}
+                        nextTitle2={nextTitle2}
+                        next_TimeText={next_TimeText}
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                        modalVisible2={modalVisible2}
+                        setModalVisible2={setModalVisible2}
+                        // refreshing={refreshing}
+                        // setRefreshing={setRefreshing}
+                        // goWithMutation={goWithMutation}
+                        myData={myData}
+                        myInfoRefetch={myInfoRefetch}
+                        loading={loading}
+                        nowEnd={nowEnd}
+                        startScheduleMutation={startScheduleMutation}
+                        cutScheduleMutation={cutScheduleMutation}
+                        extensionScheduleMutation={extensionScheduleMutation}
+                        stopScheduleMutation={stopScheduleMutation}
+                        pullScheduleMutation={pullScheduleMutation}
+                        onLoading={onLoading}
+                        setOnLoading={setOnLoading}
+                        todayGraph_calculate={todayGraph_calculate}
+                        nowScheduleIndex={nowScheduleIndex}
+                        subjectsName={subjectsName}
+                        todolistData={todolistData.myTodolist}
+                        scheduleList_selectDay={scheduleList_selectDay}
+                        scheduleList_selectDay_length={scheduleList_selectDay_length}
+                        nextScheduleIndex={nextScheduleIndex}
+                        onstopLoading={onstopLoading}
+                        setstopOnLoading={setstopOnLoading}
+                        onexLoading={onexLoading}
+                        setexOnLoading={setexOnLoading}
+                        oncutLoading={oncutLoading}
+                        setcutOnLoading={setcutOnLoading}
+                        land={land}
+                        setting={setting}
+                        setSetting={setSetting}
+                        androidCam={androidCam}
+                        setandroidCam={setandroidCam}
+                        personOnoff={personOnoff}
+                        setpersonOnoff={setpersonOnoff}
+                        nowMid={nowMid}
+                      />
+                    )}
+                  </>
+                </SideViewLand2>
+              </SideViewLand>
+            </>
+          )}
+        </>
       )}
     </>
   )
 }
+
+export default StudyCal

@@ -22,6 +22,7 @@ import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import styled from "styled-components"
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer"
+import * as Notifications from "expo-notifications"
 
 const TimeText = styled.Text`
   font-size: 25;
@@ -87,6 +88,10 @@ export default function StudyPoseLand({
   setandroidCam,
   personOnoff,
   setpersonOnoff,
+  nowMid,
+  todayGraph_calculate,
+  todaySchedule_calculate,
+  noti,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -119,6 +124,10 @@ export default function StudyPoseLand({
       setandroidCam={setandroidCam}
       personOnoff={personOnoff}
       setpersonOnoff={setpersonOnoff}
+      nowMid={nowMid}
+      todayGraph_calculate={todayGraph_calculate}
+      todaySchedule_calculate={todaySchedule_calculate}
+      noti={noti}
     />
   )
 }
@@ -176,12 +185,14 @@ const PoseCamera = ({
   setandroidCam,
   personOnoff,
   setpersonOnoff,
+  nowMid,
+  todayGraph_calculate,
+  todaySchedule_calculate,
+  noti,
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
   const [count, setcount] = useState(false)
-
-  const rafId = useRef(null)
   const camRef = useRef(null)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
   // const [setting, setSetting] = useState(false)
@@ -197,14 +208,14 @@ const PoseCamera = ({
     clearTimeout(isEnabledTime)
     setandroidCam(true)
   }, [land])
-
+  // console.log(myInfoData.me.studyDefaultSet.autoDarkMode)
   const toggleSwitch = async () => {
     // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
     setIsEnabled((previousState) => !previousState)
     if (!isEnabled) {
       isEnabledTime = setTimeout(function () {
         getAndSetSystemBrightnessAsync()
-      }, settingTime)
+      }, myInfoData.me.studyDefaultSet.darkModeMin * 1000)
     } else {
       clearTimeout(brighttime)
       clearTimeout(isEnabledTime)
@@ -259,8 +270,18 @@ const PoseCamera = ({
   async function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
-
   const isFirstRun = useRef(true)
+  // const noti = () => {
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "슬로그 알람!",
+  //       body: "현재 스케줄이 10분 이내로 남았습니다.",
+  //     },
+  //     trigger: {
+  //       seconds: 1,
+  //     },
+  //   })
+  // }
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     if (Platform.OS !== "ios") {
       studySetInterval = setInterval(async () => {
@@ -300,7 +321,13 @@ const PoseCamera = ({
         studyArray.push("false")
         setSetting(false)
       }
+      myInfoRefetch()
+      todaySchedule_calculate()
+      todayGraph_calculate()
+      // noti()
+
       if (studyArray.length == 6) {
+        noti()
         myInfoRefetch()
         if (studyArray.findIndex((obj) => obj == "true") == -1) {
           existToggleMutation({

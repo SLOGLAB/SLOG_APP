@@ -26,6 +26,8 @@ const View = styled.View`
 const DayView = styled.View`
   background-color: rgba(233, 237, 244, 1);
   margin-top: 10;
+  margin-left: 5;
+  margin-right: 5;
 `
 // border-radius: 20;
 // margin-left: 10;
@@ -553,7 +555,7 @@ const Months = ({
           </TouchableOpacity>
           <Line />
           {SumArray(taskArray_month) === 0 && SumArray(taskArray_month_pre) === 0 ? (
-            <View>
+            <View style={{ marginTop: 5 }}>
               <CenterView>
                 <SubText>일별 학습 시간(시) </SubText>
                 <ChartView1>
@@ -572,7 +574,7 @@ const Months = ({
               />
             </View>
           ) : (
-            <View>
+            <View style={{ marginTop: 5 }}>
               <CenterView>
                 {/* {Math.max.apply(null, taskArray_month) < 60 ? (
               <SubText>일별 학습 시간(분) </SubText>
@@ -607,7 +609,7 @@ const Months = ({
             </View>
           )}
           <Line />
-          <View>
+          <View style={{ marginTop: 5 }}>
             <CenterView>
               <SubText>과목 학습 시간(시)</SubText>
               <ChartView1>
@@ -617,16 +619,29 @@ const Months = ({
                 <BoxText>목표</BoxText>
               </ChartView1>
             </CenterView>
-            <StackedWMBar
-              data_1={taskArray_schedule_month}
-              data_2={taskArray_scheduleT_month}
-              labels={schedule_label}
-              label_1={"학습"}
-              label_2={"목표"}
-              title={"과목별 학습 시간"}
-              title_x={"시간(분)"}
-              stepSize_x={60}
-            />
+            {taskArray_scheduleT_month.length == 0 ? (
+              <StackedWMBar
+                data_1={[0]}
+                data_2={[0]}
+                labels={["스케줄 없음"]}
+                label_1={"학습"}
+                label_2={"목표"}
+                title={"과목별 학습 시간"}
+                title_x={"시간(분)"}
+                stepSize_x={60}
+              />
+            ) : (
+              <StackedWMBar
+                data_1={taskArray_schedule_month}
+                data_2={taskArray_scheduleT_month}
+                labels={schedule_label}
+                label_1={"학습"}
+                label_2={"목표"}
+                title={"과목별 학습 시간"}
+                title_x={"시간(분)"}
+                stepSize_x={60}
+              />
+            )}
           </View>
           <Line />
           {/* <View>
