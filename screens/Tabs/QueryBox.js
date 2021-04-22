@@ -227,6 +227,9 @@ export const GO_WITH = gql`
 `
 export const EDIT_STUDYSET = gql`
   mutation editStudySet(
+    $autoDarkMode: Boolean
+    $darkModeMin: Int
+    $timelapseRecord: Boolean
     $nonScheduleRecord: Boolean
     $autoRefresh: Boolean
     $autoRefreshTerm: Int
@@ -239,6 +242,9 @@ export const EDIT_STUDYSET = gql`
     $dDate: String
   ) {
     editStudySet(
+      autoDarkMode: $autoDarkMode
+      darkModeMin: $darkModeMin
+      timelapseRecord: $timelapseRecord
       nonScheduleRecord: $nonScheduleRecord
       autoRefresh: $autoRefresh
       autoRefreshTerm: $autoRefreshTerm
@@ -250,5 +256,79 @@ export const EDIT_STUDYSET = gql`
       dDateName: $dDateName
       dDate: $dDate
     )
+  }
+`
+export const ME = gql`
+  {
+    me {
+      id
+      username
+      fullName
+      avatar
+      email
+      existToggle
+      studyPurpose
+      todayTime {
+        attendanceStatus
+        absenceReason
+      }
+      times {
+        id
+        existTime
+        time_24
+        createdAt
+      }
+      schedules {
+        id
+        isAllDay
+        isPrivate
+        title
+        location
+        state
+        start
+        end
+        totalTime
+        subject {
+          id
+          name
+          bgColor
+        }
+      }
+      studyDefaultSet {
+        nonScheduleRecord
+        autoRefresh
+        autoRefreshTerm
+        startScheduleTerm
+        cutExtenTerm
+        scheduleStart
+        scheduleEnd
+        dDayOn
+        dDateName
+        dDate
+        autoDarkMode
+        darkModeMin
+      }
+      followDates {
+        id
+        followId
+        goWith
+        createdAt
+      }
+      withFollowing {
+        id
+        avatar
+        username
+        existToggle
+        todayTime {
+          existTime
+        }
+      }
+      following {
+        id
+        avatar
+        email
+        username
+      }
+    }
   }
 `

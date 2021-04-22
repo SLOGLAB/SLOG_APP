@@ -30,14 +30,11 @@ export const SEEONE_GROUP = gql`
       }
       memberCount
       imManager
-      lastStudyTime
       lastAttendance
       createdAt
     }
   }
 `
-// lastStudyTime
-// lastAttendance
 
 export const JOIN_GROUP = gql`
   mutation joinGroup($groupId: String!) {

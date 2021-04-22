@@ -431,7 +431,7 @@ const MainDay = ({
   const [modalPlayVisible, setModalPlayVisible] = useState(false)
   const [isEnabled, setIsEnabled] = useState(myData.studyDefaultSet.nonScheduleRecord)
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
-  const [autoDark, setautoDark] = useState(false)
+  const [autoDark, setautoDark] = useState(myData.studyDefaultSet.autoDarkMode)
   const toggleDarkSwitch = () => setautoDark((previousState) => !previousState)
 
   const onSaveSet = async () => {
@@ -506,6 +506,7 @@ const MainDay = ({
       console.log(e)
     }
   }
+  //화면 밝기
   let brightness
   const getAndSetSystemBrightnessAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.SYSTEM_BRIGHTNESS)
@@ -520,29 +521,14 @@ const MainDay = ({
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification)
     })
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response) => {}
-    )
-
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response)
+    })
     return () => {
       Notifications.removeNotificationSubscription(notificationListener)
       Notifications.removeNotificationSubscription(responseListener)
     }
   }, [])
-  const pushToken = async () => {
-    await sendPushNotification(expoPushToken)
-  }
-  const Callnotification = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "슬로그 알람!",
-        body: "IAM!",
-      },
-      trigger: {
-        seconds: 1,
-      },
-    })
-  }
 
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
@@ -695,7 +681,6 @@ const MainDay = ({
               <LineView />
               <ModalPlay>
                 <Play_Text>현재 스케줄 있을 때만 시간기록</Play_Text>
-
                 <Switch
                   trackColor={{ false: "#767577", true: "#81b0ff" }}
                   thumbColor={isEnabled ? "#f5dd4b" : "#767577"}
@@ -703,8 +688,14 @@ const MainDay = ({
                   onValueChange={toggleSwitch}
                   value={isEnabled}
                 />
-              </ModalPlay>
-              <ModalPlay>
+                {/* </ModalPlay>
+              <ModalPlay> */}
+                <LineView />
+                <LineView />
+                <LineView />
+                <LineView />
+                <LineView />
+                <LineView />
                 <Play_Text>1분 자동 밝기 조절</Play_Text>
                 <Switch
                   trackColor={{ false: "#767577", true: "#81b0ff" }}

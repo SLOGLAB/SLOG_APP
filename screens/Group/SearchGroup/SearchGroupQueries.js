@@ -1,8 +1,45 @@
 import { gql } from "apollo-boost"
 
+// export const SEE_GROUP = gql`
+//   {
+//     seeGroup {
+//       id
+//       name
+//       maxMember
+//       category
+//       password
+//       targetTime
+//       publicBool
+//       bio
+//       imgUrl
+//       activeDay
+//       imManager
+//       manager {
+//         id
+//         username
+//       }
+//       memberCount
+//       lastStudyTime
+//       lastAttendance
+//       createdAt
+//     }
+//   }
+// `
 export const SEE_GROUP = gql`
-  {
-    seeGroup {
+  query seeGroup(
+    $category: String!
+    $orderBy: String!
+    $publicBool: Boolean!
+    $empty: Boolean!
+    $first: Int!
+  ) {
+    seeGroup(
+      category: $category
+      orderBy: $orderBy
+      publicBool: $publicBool
+      empty: $empty
+      first: $first
+    ) {
       id
       name
       maxMember
@@ -19,7 +56,6 @@ export const SEE_GROUP = gql`
         username
       }
       memberCount
-      lastStudyTime
       lastAttendance
       createdAt
     }

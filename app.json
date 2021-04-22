@@ -21,12 +21,12 @@
     ],
     "ios": {
       "bundleIdentifier": "com.slog.deeptime",
-      "buildNumber": "1.0.24",
+      "buildNumber": "1.0.25",
       "supportsTablet": true
     },
     "android": {
       "package": "com.slog.deeptime",
-      "versionCode": 25,
+      "versionCode": 26,
       "permissions":[
       "CAMERA","WRITE_SETTINGS","MEDIA_LIBRARY","MEDIA_LIBRARY_WRITE_ONLY",
       "ACCESS_NETWORK_STATE",

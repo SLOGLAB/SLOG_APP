@@ -42,7 +42,7 @@ const BoxMainView = styled.View`
   align-items: flex-start;
   flex: 1;
   /* border-width: 0.5; */
-  /* padding: 10px; */
+  padding-top: 5px;
   margin-left: 1;
 `
 
@@ -67,6 +67,8 @@ const BoxinView = styled.View`
 `
 const BoxinButtonView = styled.View`
   margin-right: 15px;
+  justify-content: center;
+  align-items: center;
 `
 const StyledPlayModalContainer = styled.View`
   flex-direction: column;
@@ -107,6 +109,10 @@ const GroupText = styled.Text`
   font-size: 13;
   margin-right: 5;
 `
+const GroupButtonText = styled.Text`
+  font-family: "GmarketMedium";
+  font-size: 10;
+`
 const GroupGreyText = styled.Text`
   font-family: "GmarketMedium";
   color: #c7c7c7;
@@ -118,13 +124,13 @@ const RowGroup = styled.View`
 `
 const BoxView = styled.View`
   width: 100%;
-  height: 25%;
+  /* height: 20%; */
   justify-content: center;
-  /* background-color: rgba(196, 196, 196, 1); */
+  background-color: rgba(255, 255, 255, 1);
   flex-direction: row;
   border-top-width: 1;
   border-color: rgba(199, 199, 199, 1);
-  padding-top: 10;
+  padding-top: 0;
 `
 const PhotoCircle = styled.View`
   width: 200;
@@ -384,6 +390,7 @@ export default ({
                     name={Platform.OS === "ios" ? "ios-checkbox-outline" : "md-checkbox-outline"}
                     size={30}
                   />
+                  {/* <GroupButtonText>출석부</GroupButtonText> */}
                 </TouchableOpacity>
               </BoxinButtonView>
               {groupData.imManager ? (
@@ -395,6 +402,7 @@ export default ({
                   >
                     <Icon name={Platform.OS === "ios" ? "ios-settings" : "md-settings"} size={30} />
                   </TouchableOpacity>
+                  {/* <GroupButtonText>설정</GroupButtonText> */}
                 </BoxinButtonView>
               ) : null}
               <BoxinButtonView>
@@ -457,10 +465,10 @@ export default ({
             <GroupGreyText>하루 목표</GroupGreyText>
             <GroupText>{groupData.targetTime}시간</GroupText>
           </RowGroup>
-          <RowGroup>
+          {/* <RowGroup>
             <GroupGreyText>평균 학습량</GroupGreyText>
             <GroupText>{Math.floor(groupData.lastStudyTime)}시간</GroupText>
-          </RowGroup>
+          </RowGroup> */}
           <RowGroup>
             <GroupGreyText>평균 출석률</GroupGreyText>
             <GroupText>{Math.floor(groupData.lastAttendance)}%</GroupText>
@@ -488,6 +496,7 @@ export default ({
           </ScrollView>
         ) : null}
         <CaretView>
+          {noti ? null : <GroupGreyText>그룹 소개</GroupGreyText>}
           <TouchableOpacity
             onPress={() => {
               setnoti(!noti)
@@ -604,8 +613,8 @@ export default ({
                 <View1>
                   <Sub>{name.username}</Sub>
                 </View1>
-                {attend_Array[index].map((check) => (
-                  <View2>
+                {attend_Array[index].map((check, i) => (
+                  <View2 key={i}>
                     <CheckBox checked={check} onPress={() => {}} />
                   </View2>
                 ))}

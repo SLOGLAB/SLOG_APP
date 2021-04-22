@@ -26,11 +26,34 @@ export const ME = gql`
     }
   }
 `
+const filterArray = ["최신순", "높은 출석률순"]
+const filterArray_value = ["createdAt_DESC", "lastAttendance_DESC"]
+
+const getAll = studyOption_group.slice()
+getAll.unshift("전체")
+export const feedTerm = 20
+
 const SearchGroupContainer = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
   const [modlaOutMember, setmodlaOutMember] = useState(false)
 
-  const { loading, data: groupData, refetch: groupRefetch } = useQuery(SEE_GROUP)
+  const [empty, setEmpty] = useState(false)
+  const [first, setFirst] = useState(feedTerm)
+
+  const categroyFilter = useSelect(getAll, getAll)
+  const orderFilter = useSelect(filterArray, filterArray_value)
+  const [publicBool, setPublicBool] = useState(false)
+
+  const [variables, setVariables] = useState({
+    category: getAll[0],
+    orderBy: filterArray_value[0],
+    publicBool,
+    empty,
+    first,
+  })
+  const { loading, data: groupData, refetch: groupRefetch } = useQuery(SEE_GROUP, {
+    variables,
+  })
   const { loading: myLoading, data: myData, refetch: myRefetch } = useQuery(ME, {})
 
   const onRefresh = async () => {
@@ -44,6 +67,9 @@ const SearchGroupContainer = ({ navigation }) => {
       setRefreshing(false)
     }
   }
+  useEffect(() => {
+    console.log(groupData)
+  }, [])
   return (
     <>
       {loading || myLoading ? (
