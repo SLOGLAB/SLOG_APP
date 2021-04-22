@@ -46,7 +46,7 @@ const View = styled.View`
   flex: 1;
 `
 
-const Account = ({ navigation }) => {
+const EditAccount = ({ navigation }) => {
   const { loading, data, refetch } = useQuery(ME, {})
   const [refreshing, setRefreshing] = useState(false)
 
@@ -62,7 +62,6 @@ const Account = ({ navigation }) => {
   }
   useEffect(() => {
     onRefresh()
-    // console.log(data)
   }, [])
 
   return (
@@ -81,4 +80,4 @@ const Account = ({ navigation }) => {
     </View>
   )
 }
-export default Account
+export default EditAccount

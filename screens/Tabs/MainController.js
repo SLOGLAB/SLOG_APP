@@ -1,136 +1,15 @@
 import React, { useEffect, useState, useRef } from "react"
 import Main from "./Main"
-import {
-  ScrollView,
-  RefreshControl,
-  Alert,
-  TouchableOpacity,
-  Platform,
-  Dimensions,
-} from "react-native"
+import { ScrollView, RefreshControl } from "react-native"
 import Loader from "../../components/Loader"
 import useInput from "../../hooks/useInput"
 import { useQuery, useMutation } from "@apollo/react-hooks"
-import { gql } from "apollo-boost"
 
 import { GO_WITH } from "../Tabs/QueryBox"
-
-export const ME = gql`
-  {
-    me {
-      id
-      username
-      fullName
-      avatar
-      existToggle
-      studyPurpose
-      todayTime {
-        attendanceStatus
-        absenceReason
-      }
-      times {
-        id
-        existTime
-        time_24
-        createdAt
-      }
-      schedules {
-        id
-        isAllDay
-        isPrivate
-        title
-        location
-        state
-        start
-        end
-        totalTime
-        subject {
-          id
-          name
-          bgColor
-        }
-      }
-      studyDefaultSet {
-        nonScheduleRecord
-        autoRefresh
-        autoRefreshTerm
-        startScheduleTerm
-        cutExtenTerm
-        scheduleStart
-        scheduleEnd
-        dDayOn
-        dDateName
-        dDate
-      }
-      followDates {
-        id
-        followId
-        goWith
-        createdAt
-      }
-      withFollowing {
-        id
-        avatar
-        username
-        existToggle
-        todayTime {
-          existTime
-        }
-      }
-      following {
-        id
-        avatar
-        email
-        username
-      }
-    }
-  }
-`
-export const EDIT_STUDYSET = gql`
-  mutation editStudySet(
-    $autoDarkMode: Boolean
-    $darkModeMin: Int
-    $timelapseRecord: Boolean
-    $nonScheduleRecord: Boolean
-    $autoRefresh: Boolean
-    $autoRefreshTerm: Int
-    $startScheduleTerm: Int
-    $cutExtenTerm: Int
-    $scheduleStart: Int
-    $scheduleEnd: Int
-    $dDayOn: Boolean
-    $dDateName: String
-    $dDate: String
-  ) {
-    editStudySet(
-      autoDarkMode: $autoDarkMode
-      darkModeMin: $darkModeMin
-      timelapseRecord: $timelapseRecord
-      nonScheduleRecord: $nonScheduleRecord
-      autoRefresh: $autoRefresh
-      autoRefreshTerm: $autoRefreshTerm
-      startScheduleTerm: $startScheduleTerm
-      cutExtenTerm: $cutExtenTerm
-      scheduleStart: $scheduleStart
-      scheduleEnd: $scheduleEnd
-      dDayOn: $dDayOn
-      dDateName: $dDateName
-      dDate: $dDate
-    )
-  }
-`
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window")
+import { ME, EDIT_STUDYSET } from "./QueryBox"
 
 export default ({ navigation }) => {
-  const { loading, error, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
-
-  var todaydate = new Date().getDate() //Current Date
-  var todaymonth = new Date().getMonth() + 1 //Current Month
-  var todayyear = new Date().getFullYear() //Current Year
-  var targetMonth = String(todaymonth).length === 1 ? "0" + todaymonth : todaymonth
-  var targetDay = String(todaydate).length === 1 ? "0" + todaydate : todaydate
-
-  var targetToday = todayyear + "-" + targetMonth + "-" + targetDay
+  const { loading, data: myInfoData, refetch: myInfoRefetch } = useQuery(ME)
 
   //현재 스케줄 있을 때만 시간기록 mutation
   const [editStudyPlaySetMutation] = useMutation(EDIT_STUDYSET, {
@@ -138,12 +17,6 @@ export default ({ navigation }) => {
   })
   //
   const minValue_10 = (value) => value >= 10
-  const refreshTerm = useInput(10, minValue_10)
-
-  const todolistName = useInput("")
-  const scheduleTitle = useInput("")
-  const [studyBool, setStudyBool] = useState(false)
-  const [newTodoView, setNewTodoView] = useState(false)
 
   const [refreshing, setRefreshing] = useState(false)
   const [selectDate, setSelectDate] = useState(new Date())
@@ -208,21 +81,6 @@ export default ({ navigation }) => {
             setRefreshing={setRefreshing}
             navigation={navigation}
             editStudyPlaySetMutation={editStudyPlaySetMutation}
-            // targetToday={targetToday}
-            // setSelectDate={setSelectDate}
-            // oneDayHours={oneDayHours}
-            //
-            // selectPercent={selectPercent}
-            // setSelectPercent={setSelectPercent}
-            // refreshTerm={refreshTerm}
-            // studyBool={studyBool}
-            // setStudyBool={setStudyBool}
-            // todolistRefetch={todolistRefetch}
-            // subjectData={subjectData.mySubject}
-            // todolistName={todolistName}
-            // newTodoView={newTodoView}
-            // setNewTodoView={setNewTodoView}
-            // scheduleTitle={scheduleTitle}
           />
         </>
       )}

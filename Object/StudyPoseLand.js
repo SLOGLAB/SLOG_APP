@@ -22,7 +22,6 @@ import { gql } from "apollo-boost"
 import { useMutation } from "@apollo/react-hooks"
 import styled from "styled-components"
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer"
-import * as Notifications from "expo-notifications"
 
 const TimeText = styled.Text`
   font-size: 25;
@@ -91,7 +90,7 @@ export default function StudyPoseLand({
   nowMid,
   todayGraph_calculate,
   todaySchedule_calculate,
-  noti,
+  schedule10Min,
 }) {
   const isTfReady = useInitTensorFlow()
 
@@ -127,7 +126,7 @@ export default function StudyPoseLand({
       nowMid={nowMid}
       todayGraph_calculate={todayGraph_calculate}
       todaySchedule_calculate={todaySchedule_calculate}
-      noti={noti}
+      schedule10Min={schedule10Min}
     />
   )
 }
@@ -166,7 +165,6 @@ let studyArray = []
 let heigt = 812 / HEIGHT
 let studySetInterval = undefined
 let brighttime = undefined
-let isEnabledTime = undefined
 const PoseCamera = ({
   navigation,
   myInfoData,
@@ -188,40 +186,21 @@ const PoseCamera = ({
   nowMid,
   todayGraph_calculate,
   todaySchedule_calculate,
-  noti,
+  schedule10Min,
 }) => {
   const posenetModel = usePosenetModel()
   const [pose, setPose] = useState(null)
   const [count, setcount] = useState(false)
   const camRef = useRef(null)
   const [existToggleMutation] = useMutation(UPDATE_EXISTTOGGLE)
-  // const [setting, setSetting] = useState(false)
   const [brightnessButton, setbrightnessButton] = useState(true)
-  // const [androidCam, setandroidCam] = useState(true)
-  // const [personOnoff, setpersonOnoff] = useState(true)
-  const [settingTime, setsettingTime] = useState(10000)
-  const [isEnabled, setIsEnabled] = useState(false)
+
   useEffect(() => {
     clearInterval(studyInterval)
     clearInterval(studySetInterval)
     clearTimeout(brighttime)
-    clearTimeout(isEnabledTime)
     setandroidCam(true)
   }, [land])
-  // console.log(myInfoData.me.studyDefaultSet.autoDarkMode)
-  const toggleSwitch = async () => {
-    // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
-    setIsEnabled((previousState) => !previousState)
-    if (!isEnabled) {
-      isEnabledTime = setTimeout(function () {
-        getAndSetSystemBrightnessAsync()
-      }, myInfoData.me.studyDefaultSet.darkModeMin * 1000)
-    } else {
-      clearTimeout(brighttime)
-      clearTimeout(isEnabledTime)
-    }
-  }
-  //함수 2개 가로 세로 버전
 
   let OSbright = Platform.OS == "ios" ? 150 : 1
 
@@ -237,17 +216,16 @@ const PoseCamera = ({
         await Brightness.setBrightnessAsync(Bright)
       }
     } else {
-      // Web browsers
       console.error("System brightness permission not granted")
     }
   }
   useEffect(() => {
     if (brightnessButton) {
       brighttime = setTimeout(function () {
-        if (isEnabled) {
+        if (myInfoData.me.studyDefaultSet.autoDarkMode) {
           getAndSetSystemBrightnessAsync()
         }
-      }, settingTime)
+      }, myInfoData.me.studyDefaultSet.darkModeMin * 1000)
     } else {
       clearTimeout(brighttime)
     }
@@ -271,17 +249,7 @@ const PoseCamera = ({
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
   const isFirstRun = useRef(true)
-  // const noti = () => {
-  //   Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "슬로그 알람!",
-  //       body: "현재 스케줄이 10분 이내로 남았습니다.",
-  //     },
-  //     trigger: {
-  //       seconds: 1,
-  //     },
-  //   })
-  // }
+
   const handleImageTensorReady = async (images, updatePreview, gl = ExpoWebGLRenderingContext) => {
     if (Platform.OS !== "ios") {
       studySetInterval = setInterval(async () => {
@@ -324,11 +292,13 @@ const PoseCamera = ({
       myInfoRefetch()
       todaySchedule_calculate()
       todayGraph_calculate()
-      // noti()
+      // schedule10Min()
 
       if (studyArray.length == 6) {
-        noti()
         myInfoRefetch()
+        todaySchedule_calculate()
+        todayGraph_calculate()
+        schedule10Min()
         if (studyArray.findIndex((obj) => obj == "true") == -1) {
           existToggleMutation({
             variables: { email: myInfoData.me.email, existToggle: false, userStatus: "none" },
@@ -460,8 +430,6 @@ const PoseCamera = ({
                 clearInterval(studyInterval)
                 clearInterval(studySetInterval)
                 clearTimeout(brighttime)
-                clearTimeout(isEnabledTime)
-                setIsEnabled(false)
                 Brightness.setBrightnessAsync(Bright)
                 // setandroidCam(true)
                 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
@@ -665,10 +633,7 @@ const PoseCamera = ({
                     clearInterval(studyInterval)
                     clearInterval(studySetInterval)
                     clearTimeout(brighttime)
-                    clearTimeout(isEnabledTime)
-                    setIsEnabled(false)
                     Brightness.setBrightnessAsync(Bright)
-                    // setandroidCam(true)
                     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
                     navigation.navigate("TabNavigation")
                   }}
@@ -1026,8 +991,6 @@ const styles = StyleSheet.create({
               clearInterval(studyInterval)
               clearInterval(studySetInterval)
               clearTimeout(brighttime)
-              clearTimeout(isEnabledTime)
-              setIsEnabled(false)
               Brightness.setBrightnessAsync(Bright)
               // setandroidCam(true)
               ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)

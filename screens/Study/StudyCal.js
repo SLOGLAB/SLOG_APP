@@ -52,49 +52,6 @@ export const MY_TODOLIST = gql`
   }
 `
 
-let scheduleList_selectDay = []
-let scheduleList_selectDay_length = 0
-let taskArray = []
-let taskArray_percent = []
-let taskArray_percentT = []
-let taskArray_schedule = []
-let taskArray_scheduleT = []
-let donutData = []
-let donutData_1 = 0
-let donutData_2 = 0
-let donutPercent = 0
-let rgbBox = []
-let self_percent = []
-let lecture_percent = []
-let self_percentT = []
-let lecture_percentT = []
-let schedule_label = []
-let schedule_color = []
-let nowScheduleIndex = -1
-let nowScheduleTime = 0
-let nowScheduleTimeT = 0
-let nowScheduleColor = "rgba(123, 169, 235, 1)"
-let nowTitle1 = ""
-let nowTitle2 = ""
-let nowMid = ""
-let nowMid2 = ""
-
-let nowEnd = ""
-let nextScheduleIndex = -1
-let nextTitle1 = ""
-let nextTitle2 = ""
-let next_TimeText = ""
-let break_title = ""
-let break_time = ""
-let break_boolean = false
-let break_countdown = 0
-let target_min = 0
-let target_hour = 0
-let total_min = 0
-let endPoint = 0
-let existTime_donut = 0
-let targetTime_donut = 0
-
 const SideView = styled.View`
   width: ${constants.width / 1};
   height: ${constants.height / 1};
@@ -142,6 +99,48 @@ const BodyView = styled.View`
   height: ${constants.width / 1};
   background-color: rgba(15, 76, 130, 1);
 `
+let scheduleList_selectDay = []
+let scheduleList_selectDay_length = 0
+let taskArray = []
+let taskArray_percent = []
+let taskArray_percentT = []
+let taskArray_schedule = []
+let taskArray_scheduleT = []
+let donutData = []
+let donutData_1 = 0
+let donutData_2 = 0
+let donutPercent = 0
+let rgbBox = []
+let self_percent = []
+let lecture_percent = []
+let self_percentT = []
+let lecture_percentT = []
+let schedule_label = []
+let schedule_color = []
+let nowScheduleIndex = -1
+let nowScheduleTime = 0
+let nowScheduleTimeT = 0
+let nowScheduleColor = "rgba(123, 169, 235, 1)"
+let nowTitle1 = ""
+let nowTitle2 = ""
+let nowMid = ""
+let nowMid2 = ""
+let nowStartSchedule = ""
+let nowEnd = ""
+let nextScheduleIndex = -1
+let nextTitle1 = ""
+let nextTitle2 = ""
+let next_TimeText = ""
+let break_title = ""
+let break_time = ""
+let break_boolean = false
+let break_countdown = 0
+let target_min = 0
+let target_hour = 0
+let total_min = 0
+let endPoint = 0
+let existTime_donut = 0
+let targetTime_donut = 0
 
 const StudyCal = ({
   navigation,
@@ -260,7 +259,7 @@ const StudyCal = ({
       nowTitle2 = moment(startPoint).format("hh:mma") + " ~ " + moment(endPoint).format("hh:mma")
       nowMid = Math.ceil((endPoint - new Date()) / 60000)
       nowMid2 = (endPoint - new Date()) / 60000
-
+      nowStartSchedule = Math.ceil((new Date() - startPoint) / 60000)
       nowEnd = moment(endPoint).format("hh:mma")
     } else {
       nowScheduleTime = 0
@@ -493,11 +492,11 @@ const StudyCal = ({
   const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
     MY_TODOLIST
   )
-  const noti = () => {
-    if (nowMid == 3) {
+  const schedule10Min = () => {
+    if (nowMid == 10) {
       Notifications.scheduleNotificationAsync({
         content: {
-          title: "DeepTime",
+          title: nowTitle1,
           body: "현재 스케줄이 10분 이내로 남았습니다.",
         },
         trigger: {
@@ -505,8 +504,22 @@ const StudyCal = ({
         },
       })
     }
+    if (nowStartSchedule !== "" && nowStartSchedule == 1) {
+      Notifications.scheduleNotificationAsync({
+        content: {
+          title: nowTitle1,
+          body: "스케줄 시작",
+        },
+        trigger: {
+          seconds: 1,
+        },
+      })
+    }
   }
-  useEffect(() => {}, [])
+
+  useEffect(() => {
+    // console.log(nowStartSchedule)
+  }, [])
   return (
     <>
       {loading ? (
@@ -540,7 +553,7 @@ const StudyCal = ({
                   nowMid={nowMid}
                   todayGraph_calculate={todayGraph_calculate}
                   todaySchedule_calculate={todaySchedule_calculate}
-                  noti={noti}
+                  schedule10Min={schedule10Min}
                 />
                 <SideView1>
                   <>
@@ -631,7 +644,7 @@ const StudyCal = ({
                   nowMid={nowMid}
                   todayGraph_calculate={todayGraph_calculate}
                   todaySchedule_calculate={todaySchedule_calculate}
-                  noti={noti}
+                  schedule10Min={schedule10Min}
                 />
                 <SideViewLand2>
                   <>

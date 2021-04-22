@@ -32,14 +32,13 @@ const SeatView = styled.View`
   align-items: center;
 `
 const ProfileHeader = styled.View`
-  padding: 20px;
+  padding: 0px;
   justify-content: space-between;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
-  border-radius: 20;
-  margin-left: 20;
-  margin-right: 20;
+  border-radius: 0;
+
   margin-bottom: 45;
 `
 const MainView = styled.View`
@@ -117,12 +116,12 @@ const TotalTimeBold = styled.Text`
 //   font-family: "GmarketBold";
 
 const StatName = styled.Text`
-  font-size: 15;
+  font-size: 12;
   font-family: "GmarketMedium";
 
   color: ${styles.darkGreyColor};
-  margin-left: 8;
-  margin-right: 8;
+  /* margin-left: 8;
+  margin-right: 8; */
 `
 const StatName2 = styled.Text`
   font-size: 15;
@@ -132,18 +131,7 @@ const StatName2 = styled.Text`
 const ProfileMeta = styled.View`
   margin-top: 20;
 `
-const Setting = styled.View`
-  margin-top: 50;
-  /* margin-right: 25; */
-  margin-bottom: 35;
-  justify-content: center;
-  align-items: flex-end;
-`
-const ProfileMeta2 = styled.View``
-const BlueView = styled.View`
-  background-color: rgba(34, 76, 126, 1);
-  height: 2;
-`
+
 const View = styled.View`
   background-color: rgba(237, 237, 239, 1);
   height: 1;
@@ -159,6 +147,8 @@ const StyledModalContainer = styled.View`
   border-radius: 10px;
 `
 const ProfileBox = styled.View`
+  /* border-radius: 20; */
+  /* background-color: rgba(196, 196, 196, 1); */
   flex-direction: row;
 `
 const Box = styled.View`
@@ -202,15 +192,14 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
   }, [])
   return (
     <>
-      {/* <Header hasTabs></Header> */}
-
+      <Header hasTabs></Header>
       <MainView2>
         {Platform.OS == "ios" ? (
           <StatusBar barStyle="dark-content" />
         ) : (
           <StatusBar barStyle="light-content" />
         )}
-        <Setting></Setting>
+        {/* <Setting></Setting> */}
 
         <MainView>
           <ProfileHeader>
@@ -223,9 +212,9 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                 >
                   <Image
                     style={{
-                      height: 100,
-                      width: 100,
-                      borderRadius: 70,
+                      height: 120,
+                      width: 120,
+                      borderRadius: 100,
                       marginTop: 10,
                       marginBottom: 10,
                     }}
@@ -237,7 +226,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                 <ProfileMeta>
                   <QrView>
                     <Bold>{data.me.username} </Bold>
-                    <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("EditAccount")}>
                       <Icon
                         name={Platform.OS === "ios" ? "ios-settings" : "md-settings"}
                         size={25}
@@ -270,8 +259,27 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
                     </Stat5>
                   )}
                 </AdView>
+                <AdView>
+                  {/* <Stat5>
+                <Bold2>게시물 {data.me.posts.length}</Bold2>
+              </Stat5> */}
+                  <Stat5>
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
+                      <Bold2>팔로워 {data.me.followersCount}</Bold2>
+                    </TouchableOpacity>
+                  </Stat5>
+                  <Stat5>
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
+                      <Bold2>팔로잉 {data.me.followingCount}</Bold2>
+                    </TouchableOpacity>
+                  </Stat5>
+                </AdView>
               </Box>
             </ProfileBox>
+            <LineView />
+            <AdView2>
+              <Bold3>{data.me.bio}</Bold3>
+            </AdView2>
             <LineView />
             <StatName2>총 학습 시간</StatName2>
             <TotalTimeBold>
@@ -279,25 +287,6 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               {total_min.length === 1 ? "0" + total_min : total_min}
             </TotalTimeBold>
             <LineView />
-            <AdView2>
-              <Bold3>{data.me.bio}</Bold3>
-            </AdView2>
-            <LineView />
-            <AdView>
-              {/* <Stat5>
-                <Bold2>게시물 {data.me.posts.length}</Bold2>
-              </Stat5> */}
-              <Stat5>
-                <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
-                  <Bold2>팔로워 {data.me.followersCount}</Bold2>
-                </TouchableOpacity>
-              </Stat5>
-              <Stat5>
-                <TouchableOpacity onPress={() => navigation.navigate("FollowSwiper")}>
-                  <Bold2>팔로잉 {data.me.followingCount}</Bold2>
-                </TouchableOpacity>
-              </Stat5>
-            </AdView>
           </ProfileHeader>
           <HandleLogout />
 
