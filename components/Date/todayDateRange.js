@@ -1,6 +1,7 @@
 export default (refDate) => {
-  const startDate = new Date(refDate);
-  const endDate = new Date(refDate);
+  refDate = new Date(refDate)
+  const startDate = new Date(refDate)
+  const endDate = new Date(refDate)
 
   startDate.setMilliseconds(
     -(
@@ -9,7 +10,7 @@ export default (refDate) => {
       refDate.getSeconds() * 1000 +
       refDate.getMilliseconds()
     )
-  );
+  )
 
   endDate.setMilliseconds(
     -(
@@ -18,7 +19,7 @@ export default (refDate) => {
       refDate.getSeconds() * 1000 +
       refDate.getMilliseconds()
     ) + 86400000
-  );
+  )
 
-  return { startDate, endDate };
-};
+  return { startDate, endDate }
+}

@@ -228,7 +228,10 @@ export default ({
   const trimText = (text = "", limit) => (text.length > limit ? `${text.slice(0, limit)}...` : text)
 
   const onTodolistAdd = async () => {
-    if (todolistName.value === "") {
+    if (subjectId === "") {
+      Alert.alert("과목을 선택하세요.")
+      return
+    } else if (todolistName.value === "") {
       Alert.alert("내용을 입력하세요.")
       return
     }
@@ -299,7 +302,10 @@ export default ({
   } //깃발
   const onTodolistEdit = async () => {
     if (subject === "") {
-      alert("과목 선택은 필수 항목입니다.")
+      Alert.alert("과목을 선택하세요.")
+      return
+    } else if (titleInput.value === "") {
+      Alert.alert("내용을 입력하세요.")
       return
     }
 

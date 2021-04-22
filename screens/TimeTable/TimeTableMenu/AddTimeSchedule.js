@@ -28,6 +28,7 @@ import { Calendar } from "react-native-calendars"
 import { CheckBox } from "native-base"
 import AuthButton from "../../../components/AuthButton"
 import { Ionicons } from "@expo/vector-icons"
+import CalendarDate from "../../../components/Date/CalendarDate"
 
 const MarginR = styled.View``
 
@@ -233,9 +234,30 @@ const CopyText = styled.Text`
   font-size: 17;
   font-family: "GmarketBold";
 `
-export const SAVE_SCHEDULE = gql`
-  mutation saveSchedule_my($scheduleArray: [ScheduleArray_my!]!) {
-    saveSchedule_my(scheduleArray: $scheduleArray)
+
+export const CREATE_SCHEDULE = gql`
+  mutation createSchedule(
+    $option: String!
+    $scheduleId: String!
+    $days: [Boolean!]!
+    $calendarId: String!
+    $state: String!
+    $title: String!
+    $location: String!
+    $start: String!
+    $end: String!
+  ) {
+    createSchedule(
+      option: $option
+      scheduleId: $scheduleId
+      days: $days
+      calendarId: $calendarId
+      state: $state
+      title: $title
+      location: $location
+      start: $start
+      end: $end
+    )
   }
 `
 
@@ -290,13 +312,13 @@ export default AddTimeSchedule = ({
   }
 
   //////일주일 날짜
-  const [day1, setday1] = useState(false)
-  const [day2, setday2] = useState(false)
-  const [day3, setday3] = useState(false)
-  const [day4, setday4] = useState(false)
-  const [day5, setday5] = useState(false)
-  const [day6, setday6] = useState(false)
-  const [day7, setday7] = useState(false)
+  const [day1, setday1] = useState(new Date().getDay() === 1)
+  const [day2, setday2] = useState(new Date().getDay() === 2)
+  const [day3, setday3] = useState(new Date().getDay() === 3)
+  const [day4, setday4] = useState(new Date().getDay() === 4)
+  const [day5, setday5] = useState(new Date().getDay() === 5)
+  const [day6, setday6] = useState(new Date().getDay() === 6)
+  const [day7, setday7] = useState(new Date().getDay() === 7)
   var dayLists = [day7, day1, day2, day3, day4, day5, day6]
 
   const dayList = ["일", "월", "화", "수", "목", "금", "토"]
@@ -337,7 +359,7 @@ export default AddTimeSchedule = ({
   const locationInput = useInput("")
   const titleInput = useInput("")
 
-  const [saveSubjectMutation] = useMutation(SAVE_SCHEDULE)
+  const [createScheMutation] = useMutation(CREATE_SCHEDULE)
 
   const allClear = () => {
     setSubjectId("")
@@ -348,13 +370,13 @@ export default AddTimeSchedule = ({
     setendTime(initDate2)
     setstartTimeText(moment(initDate).format("hh:mm a"))
     setendTimeText(moment(initDate2).format("hh:mm a"))
-    setday1(false)
-    setday2(false)
-    setday3(false)
-    setday4(false)
-    setday5(false)
-    setday6(false)
-    setday7(false)
+    // setday1(new Date().getDay() === 1)
+    // setday2(new Date().getDay() === 2)
+    // setday3(new Date().getDay() === 3)
+    // setday4(new Date().getDay() === 4)
+    // setday5(new Date().getDay() === 5)
+    // setday6(new Date().getDay() === 6)
+    // setday7(new Date().getDay() === 0)
     // setPrivate(false)
   }
 
@@ -423,7 +445,10 @@ export default AddTimeSchedule = ({
   }
 
   const finSchedule = async () => {
-    if (subjectId === "") {
+    if (dayLists.findIndex((e) => e === true) === -1) {
+      Alert.alert("요일을 선택하세요")
+      return
+    } else if (subjectId === "") {
       Alert.alert("과목을 선택하세요.")
       return
     } else if (titleInput.value === "") {
@@ -433,81 +458,31 @@ export default AddTimeSchedule = ({
       Alert.alert("시작 시간이 끝나는 시간보다 늦거나 같을 수 없습니다.")
       return
     }
-    for (i = 0; i < 7; i++) {
-      if (dayLists[i] == true) {
-        let overlap = false
 
-        // 끝나는 시간이 0시 0분이면 1초 빼주기
-        const endTime_tmp = new Date(endTime)
-        if (endTime_tmp.getMinutes() === 0 && endTime_tmp.getHours() === 0) {
-          endTime_tmp.setTime(endTime.getTime() - 1000)
-        }
-        const generateId =
-          Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-        var momentObstart = moment(thisWeek[i] + moment(startTime).format("LT"), "YYYY-MM-DDLT")
-        var momentObEnd = moment(thisWeek[i] + moment(endTime_tmp).format("LT"), "YYYY-MM-DDLT")
-        var dateTimeStart = momentObstart.format("YYYY-MM-DDTHH:mm:ss.sssZ")
-        var dateTimeEnd = momentObEnd.format("YYYY-MM-DDTHH:mm:ss.sssZ")
-
-        var Start = momentObstart.format("HH")
-        var End = momentObEnd.format("HH")
-        var StartMin = momentObstart.format("mm")
-        var EndMin = momentObEnd.format("mm")
-        // events_data.map((sch) => {
-        //   if (new Date(sch.endDate) > dateTimeStart && new Date(sch.startDate) < dateTimeEnd) {
-        //     overlap = true
-        //   }
-        // })
-        // if (overlap) {
-        //   Alert.alert("스케줄 시간은 중복될 수 없습니다.")
-        //   return
-        // }
-        const schedules = {
-          id: generateId,
-          isAllDay: false,
-          isPrivate,
-          title: titleInput.value,
-          location: locationInput.value,
-          state: substate,
-          start: dateTimeStart,
-          end: dateTimeEnd,
-          // start: startTime,
-          // end: endTime_tmp,
-          // totalTime: (dateTimeEnd.getTime() - dateTimeStart.getTime()) / 1000,
-          totalTime: (End - Start) * 3600 + (EndMin - StartMin) * 60,
-
-          calendarId: subjectId,
-
-          option: "create",
-        }
-        newScheduleArray.push(schedules)
-      }
-    }
     try {
-      if (!day7 && !day1 && !day2 && !day3 && !day4 && !day5 && !day6) {
-        Alert.alert("요일을 선택하세요")
-        return
-      } else if (subjectId === "") {
-        Alert.alert("과목을 선택하세요")
-        return
-      }
-
       setModifyLoading(true)
       const {
-        data: { saveSchedule_my },
-      } = await saveSubjectMutation({
+        data: { createSchedule },
+      } = await createScheMutation({
         variables: {
-          scheduleArray: newScheduleArray,
+          option: "create",
+          scheduleId: "",
+          days: dayLists,
+          calendarId: subjectId,
+          state: "자습",
+          title: titleInput.value,
+          location: locationInput.value,
+          start: startTime,
+          end: endTime,
         },
         refetchQueries: () => [{ query: SCHEDULE_USER }],
       })
-      if (!saveSchedule_my) {
+      if (!createSchedule) {
         Alert.alert("스케줄을 만들 수 없습니다.")
       } else {
         allClear()
       }
     } catch (e) {
-      console.log(e)
       const realText = e.message.split("GraphQL error: ")
       Alert.alert(realText[1])
     } finally {
@@ -548,6 +523,7 @@ export default AddTimeSchedule = ({
               monthFormat={"yyyy MM"}
               onPressArrowLeft={(subtractMonth) => subtractMonth()}
               onPressArrowRight={(addMonth) => addMonth()}
+              markedDates={CalendarDate(selectDay)}
             />
           </Modal>
         </ModalCalView>

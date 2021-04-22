@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,7 +11,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native"
-import Timetablecontrol from "../../components/Timetablecontrol"
 
 import WeekView from "./react-native-week-view/src/WeekView/WeekView"
 import Loader from "../../components/Loader"
@@ -31,9 +30,10 @@ import AuthButton from "../../components/AuthButton"
 import ObjectCopy from "../../components/ObjectCopy"
 import { Ionicons } from "@expo/vector-icons"
 import ActionButton from "react-native-action-button"
-import Animated from "react-native-reanimated"
 import BottomSheet from "reanimated-bottom-sheet"
 import AddTimetable from "../../screens/TimeTable/AddTimetable"
+import todayDateRange from "../../components/Date/todayDateRange"
+import CalendarDate from "../../components/Date/CalendarDate"
 
 const EmptyView = styled.View``
 const EmptyView10 = styled.View`
@@ -275,6 +275,37 @@ export const SAVE_SCHEDULE = gql`
     saveSchedule_my(scheduleArray: $scheduleArray)
   }
 `
+export const CREATE_SCHEDULE = gql`
+  mutation createSchedule(
+    $option: String!
+    $scheduleId: String!
+    $days: [Boolean!]!
+    $calendarId: String!
+    $state: String!
+    $title: String!
+    $location: String!
+    $start: String!
+    $end: String!
+  ) {
+    createSchedule(
+      option: $option
+      scheduleId: $scheduleId
+      days: $days
+      calendarId: $calendarId
+      state: $state
+      title: $title
+      location: $location
+      start: $start
+      end: $end
+    )
+  }
+`
+export const DELETE_SCHEDULE = gql`
+  mutation deleteSchedule($scheduleId: String!) {
+    deleteSchedule(scheduleId: $scheduleId)
+  }
+`
+
 export let events_data = []
 let newScheduleArray = []
 export let selectDate = [new Date()]
@@ -284,7 +315,6 @@ const TimeWeek = ({
   scheduledata,
   loading,
   onRefresh,
-  targetToday,
   navigation,
   todolistData,
   todolistRefetch,
@@ -346,19 +376,27 @@ const TimeWeek = ({
   const [copyDayModal, setCopyDayModal] = useState(false)
   const [copyStartDay, setCopyStartDay] = useState(new Date())
   const [copyDaySetMdal, setCopydaySetMdal] = useState(false)
-  const [copySetDay, setCopySetDay] = useState(new Date())
+  const [copySetDay, setCopySetDay] = useState(new Date(new Date().getTime() + 86400000))
   const [copyDayLoading, setcopyDayLoading] = useState(false)
 
   //주간 스케줄
-  const [selectDay, setselectDay] = useState(targetToday)
+  const [selectDay, setselectDay] = useState(new Date())
   const [CalmodalVisible, setCalModalVisible] = useState(false)
-  const [selectSetDay, setselectSetDay] = useState(targetToday)
+  const [selectSetDay, setselectSetDay] = useState(new Date(new Date().getTime() + 86400000 * 7))
   const [CalmodalWeekVisible, setCalModalWeekVisible] = useState(false)
   const [copyWeekLoading, setcopyWeekLoading] = useState(false)
 
+  // 날짜 택스트로 변환
+  // const makeDatesValue = (refDate) => {
+  //   const dateText = moment(refDate).format("YYYY-MM-DD")
+  //   const resultObj = { String(dateText): { a: 1 } }
+  //   return resultObj
+  // }
+  // console.log(makeDatesValue(copySetDay))
+
   //
   const dateMark = new Object()
-  dateMark[dateStr] = { selected: true }
+  dateMark[dateStr] = { selected: true, selectedColor: "#0F4C82" }
 
   const locationInput = useInput("")
   const titleInput = useInput("")
@@ -369,13 +407,18 @@ const TimeWeek = ({
     },
     refetchQueries: () => [{ query: SCHEDULE_USER }],
   })
+  const [updateScheduleMutation] = useMutation(CREATE_SCHEDULE, {
+    refetchQueries: () => [{ query: SCHEDULE_USER }],
+  })
+  const [deleteScheduleMutation] = useMutation(DELETE_SCHEDULE, {
+    refetchQueries: () => [{ query: SCHEDULE_USER }],
+  })
 
   //copy 모달
-  var currentDay = new Date(selectDay)
-  var theYear = currentDay.getFullYear()
-  var theMonth = currentDay.getMonth()
-  var theDate = currentDay.getDate()
-  var theDayOfWeek = currentDay.getDay() //요일
+  var theYear = selectDay.getFullYear()
+  var theMonth = selectDay.getMonth()
+  var theDate = selectDay.getDate()
+  var theDayOfWeek = selectDay.getDay() //요일
   var thisWeek = []
   var thism = []
   var thisd = []
@@ -394,11 +437,10 @@ const TimeWeek = ({
     thism[i] = mm
     thisd[i] = dd
   }
-  var currentSetDay = new Date(selectSetDay)
-  var theSetYear = currentSetDay.getFullYear()
-  var theSetMonth = currentSetDay.getMonth()
-  var theSetDate = currentSetDay.getDate()
-  var theSetDayOfWeek = currentSetDay.getDay() //요일
+  var theSetYear = selectSetDay.getFullYear()
+  var theSetMonth = selectSetDay.getMonth()
+  var theSetDate = selectSetDay.getDate()
+  var theSetDayOfWeek = selectSetDay.getDay() //요일
   var thisSetWeek = []
   var thisSetm = []
   var thisSetd = []
@@ -447,28 +489,17 @@ const TimeWeek = ({
   }
 
   const deleteSchedule = async () => {
-    var deleteSchedules = {
-      id: scheduleId,
-      isAllDay,
-      isPrivate,
-      title: "",
-      location: "",
-      state: `${myState[0]}`,
-      start: startTime,
-      end: endTime,
-      totalTime: 10,
-      calendarId: subjectId,
-      option: "delete",
-    }
-    newScheduleArray.push(deleteSchedules)
-
     try {
       setDelLoading(true)
       const {
-        data: { saveSchedule_my },
-      } = await scheduleMutation()
-      if (!saveSchedule_my) {
-        Alert.alert("스케줄을 제거할 수 없습니다.")
+        data: { deleteSchedule },
+      } = await deleteScheduleMutation({
+        variables: {
+          scheduleId,
+        },
+      })
+      if (!deleteSchedule) {
+        Alert.alert("스케줄을 삭제할 수 없습니다.")
       } else {
         issetModalVisible(!isModalVisible)
       }
@@ -476,56 +507,47 @@ const TimeWeek = ({
       const realText = e.message.split("GraphQL error: ")
       Alert.alert(realText[1])
     } finally {
-      newScheduleArray = []
       setDelLoading(false)
     }
   }
 
   const updateSchedule = async () => {
-    if (titleInput.value === "") {
+    if (subjectId === "") {
+      Alert.alert("과목을 선택하세요")
+      return
+    } else if (titleInput.value === "") {
       Alert.alert("제목을 입력하세요.")
       return
-    }
-    let overlap = false
-    const schedules_test = ObjectCopy(events_data)
-    const checkExist = (a) => a.id === scheduleId
-    const checkIndex = events_data.findIndex(checkExist)
-    schedules_test.splice(checkIndex, 1)
-    schedules_test.map((sch) => {
-      if (new Date(sch.endDate) > startTime && new Date(sch.startDate) < endTime) {
-        overlap = true
-      }
-    })
-    if (overlap) {
-      Alert.alert("스케줄 시간은 중복될 수 없습니다.")
+    } else if (startTime >= endTime) {
+      alert("끝 시간이 시작 시간과 같거나 빠를 수 없습니다.")
+      return
+    } else if (endTime.getTime() - startTime.getTime() > 86400000) {
+      alert("스케줄 기간은 24시간 이내로만 가능합니다.")
       return
     }
 
-    const updateSchedules = {
-      id: scheduleId,
-      isAllDay,
-      isPrivate,
-      title: titleInput.value,
-      location: locationInput.value,
-      state: substate,
-      start: startTime,
-      end: endTime,
-      totalTime: (endTime.getTime() - startTime.getTime()) / 1000,
-      calendarId: subjectId,
-      option: "update",
-    }
-    newScheduleArray.push(updateSchedules)
+    // 요일 배열 구성
+    const dayLists = new Array(7).fill(false)
+    dayLists[startTime.getDay()] = true
 
     try {
-      if (subjectId === "") {
-        Alert.alert("과목을 선택하세요")
-        return
-      }
       setModifyLoading(true)
       const {
-        data: { saveSchedule_my },
-      } = await scheduleMutation()
-      if (!saveSchedule_my) {
+        data: { createSchedule },
+      } = await updateScheduleMutation({
+        variables: {
+          option: "update",
+          scheduleId,
+          days: dayLists,
+          calendarId: subjectId,
+          state: "자습",
+          title: titleInput.value,
+          location: locationInput.value,
+          start: startTime,
+          end: endTime,
+        },
+      })
+      if (!createSchedule) {
         Alert.alert("스케줄을 수정할 수 없습니다.")
       } else {
         issetModalVisible(!isModalVisible)
@@ -535,7 +557,6 @@ const TimeWeek = ({
       Alert.alert(realText[1])
     } finally {
       setModifyLoading(false)
-      newScheduleArray = []
     }
   }
 
@@ -611,101 +632,150 @@ const TimeWeek = ({
     }
   }
 
-  //copyStartDay
-  const copyDaySchedule = async () => {
-    var coptSetDay = new Date(copySetDay)
-    var theSetYear = coptSetDay.getFullYear()
-    var theSetMonth = coptSetDay.getMonth() + 1
-    var theSetDate = coptSetDay.getDate()
-    var mm = String(theSetMonth).length === 1 ? "0" + theSetMonth : theSetMonth
-    var dd = String(theSetDate).length === 1 ? "0" + theSetDate : theSetDate
-    var thisCopy = theSetYear + "-" + mm + "-" + dd
-
-    const onday = scheduledata.me.schedules.filter(
-      (i) => moment(i.start).format("YYYY-MM-DD") == moment(copyStartDay).format("YYYY-MM-DD")
-    )
-    // console.log(onday, "onday")
-    for (var i = 0; i < onday.length; i++) {
+  // 스케줄 가공 전처리
+  const schePreTreat = ({ sches, diffTime = 0 }) => {
+    let checkEmpty = true
+    const tmpSchedules = sches.map((sche) => {
+      // 어플만
+      sche.start = new Date(sche.start)
+      sche.end = new Date(sche.end)
+      sche.calendarId = sche.subjectId
+      delete sche.subjectId
+      delete sche.__typename
+      delete sche.subjectName
+      //
+      if (sche.calendarId === "") {
+        checkEmpty = false
+      }
+      delete sche.category
+      delete sche.raw
+      delete sche.dueDateClass
+      delete sche.isVisible
+      delete sche.bgColor
+      delete sche.borderColor
+      delete sche.dragBgColor
+      delete sche.color
+      sche.totalTime = (sche.end.getTime() - sche.start.getTime()) / 1000
+      sche.option = "create"
+      if (diffTime !== 0) {
+        sche.start.setTime(sche.start.getTime() + diffTime)
+        sche.end.setTime(sche.end.getTime() + diffTime)
+      }
       const generateId =
         Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      sche.id = generateId
+      return sche
+    })
 
-      const copyDayschedules = {
-        id: generateId,
-        isAllDay: false,
-        isPrivate,
-        title: onday[i].title,
-        location: onday[i].location,
-        state: onday[i].state,
-        start: moment(thisCopy + moment(onday[i].start).format("LT"), "YYYY-MM-DDLT"),
-        end: moment(thisCopy + moment(onday[i].end).format("LT"), "YYYY-MM-DDLT"),
-        totalTime: onday[i].totalTime,
-        calendarId: onday[i].subjectId,
-        option: "create",
-      }
-      newScheduleArray.push(copyDayschedules)
+    if (!checkEmpty) {
+      return false
     }
+    return tmpSchedules
+  }
+
+  //하루 스케줄 복사
+  const copyDaySchedule = async () => {
+    // 해당일 스케줄 필터링
+    const weekFilter = (sche) => {
+      const { startDate, endDate } = todayDateRange(copyStartDay)
+      return new Date(sche.start) >= startDate && new Date(sche.start) <= endDate
+    }
+    const nowSche = ObjectCopy(scheduledata.me.schedules)
+    const weekSche = nowSche.filter(weekFilter)
+
+    const { startDate: copySD } = todayDateRange(copyStartDay)
+    const { startDate: pasteSD } = todayDateRange(copySetDay)
+    const diffTime = pasteSD.getTime() - copySD.getTime()
+    const scheTmpArray = schePreTreat({
+      sches: weekSche,
+      diffTime,
+    })
+
+    if (scheTmpArray.length === 0) {
+      alert("해당 기간에 복사할 스케줄이 없습니다.")
+      return
+    } else if (scheTmpArray === false) {
+      alert("과목이 할당되지 않은 스케줄이 존재합니다.\n과목 할당 후 다시 시도하세요.")
+      return
+    }
+
     try {
       setcopyDayLoading(true)
       const {
         data: { saveSchedule_my },
-      } = await scheduleMutation()
+      } = await scheduleMutation({
+        variables: {
+          scheduleArray: scheTmpArray,
+        },
+      })
       if (!saveSchedule_my) {
-        Alert.alert("스케줄을 수정할 수 없습니다.")
+        Alert.alert("스케줄을 복사할 수 없습니다.")
       } else {
+        const nowDate = new Date()
         setModalCopyVisible(!modalCopyVisible)
+        setCopyStartDay(nowDate)
+        setCopySetDay(new Date(nowDate.getTime() + 86400000))
       }
     } catch (e) {
       const realText = e.message.split("GraphQL error: ")
       Alert.alert(realText[1])
     } finally {
       setcopyDayLoading(false)
-      newScheduleArray = []
     }
   }
-  //copyStartWeek
+
   const copyWeekSchedule = async () => {
-    for (var i = 0; i < 7; i++) {
-      const onweekDay = scheduledata.me.schedules.filter(
-        (k) => moment(k.start).format("YYYY-MM-DD") == thisWeek[i]
-      )
-      for (var j = 0; j < onweekDay.length; j++) {
-        const generateId =
-          Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-        const copyWeekSchedules = {
-          id: generateId,
-          isAllDay: false,
-          isPrivate,
-          title: onweekDay[j].title,
-          location: onweekDay[j].location,
-          state: onweekDay[j].state,
-          start: moment(thisSetWeek[i] + moment(onweekDay[j].start).format("LT"), "YYYY-MM-DDLT"),
-          end: moment(thisSetWeek[i] + moment(onweekDay[j].end).format("LT"), "YYYY-MM-DDLT"),
-          totalTime: onweekDay[j].totalTime,
-          calendarId: onweekDay[j].subjectId,
-          option: "create",
-        }
-        newScheduleArray.push(copyWeekSchedules)
-      }
+    // 날짜 형식으로 재정립
+    const copyStart = new Date(thisWeek[0]) // 복사하는 날짜 1주일 시작 날짜
+    const copyEnd = new Date(thisWeek[6]) // 복사하는 날짜 1주일 마지막 날짜
+    copyEnd.setDate(copyEnd.getDate() + 1) // 마지막 끝나는 시점으로 맞추기 위해 00시 00분
+    const pasteStart = new Date(thisSetWeek[0]) // 붙여넣는 날짜 1주일 시작 날짜
+
+    // 해당주 스케줄 필터링
+    const weekFilter = (sche) =>
+      new Date(sche.start) >= copyStart && new Date(sche.start) <= copyEnd
+    const nowSche = ObjectCopy(scheduledata.me.schedules)
+    const weekSche = nowSche.filter(weekFilter)
+
+    const diffTime = pasteStart.getTime() - copyStart.getTime()
+    const scheTmpArray = schePreTreat({
+      sches: weekSche,
+      diffTime,
+    })
+
+    if (scheTmpArray.length === 0) {
+      alert("해당 기간에 복사할 스케줄이 없습니다.")
+      return
+    } else if (scheTmpArray === false) {
+      alert("과목이 할당되지 않은 스케줄이 존재합니다.\n과목 할당 후 다시 시도하세요.")
+      return
     }
+
     try {
       setcopyWeekLoading(true)
       const {
         data: { saveSchedule_my },
-      } = await scheduleMutation()
+      } = await scheduleMutation({
+        variables: {
+          scheduleArray: scheTmpArray,
+        },
+      })
       if (!saveSchedule_my) {
-        Alert.alert("스케줄을 수정할 수 없습니다.")
-        newScheduleArray = []
+        Alert.alert("스케줄을 복사할 수 없습니다.")
       } else {
+        const nowDate = new Date()
         setModalCopyVisible(!modalCopyVisible)
+        setselectDay(nowDate)
+        setselectSetDay(new Date(nowDate.getTime() + 86400000 * 7))
       }
     } catch (e) {
       const realText = e.message.split("GraphQL error: ")
       Alert.alert(realText[1])
     } finally {
       setcopyWeekLoading(false)
-      newScheduleArray = []
     }
   }
+
   if (!loading) {
     settingData()
   }
@@ -895,7 +965,7 @@ const TimeWeek = ({
             </ActionButton.Item>
             <ActionButton.Item
               buttonColor="#114074"
-              title="+ To do list"
+              title="+ TO DO"
               onPress={() => navigation.navigate("TodoListSwiper")}
             >
               <Icon
@@ -996,15 +1066,13 @@ const TimeWeek = ({
                   <Calendar
                     current={copyStartDay}
                     onDayPress={(day) => {
-                      const date_tmp = new Date(day.timestamp)
-                      date_tmp.setHours(copyStartDay.getHours())
-                      date_tmp.setMinutes(copyStartDay.getMinutes())
-                      copyStartDay.setTime(date_tmp.getTime())
+                      setCopyStartDay(new Date(day.timestamp))
                       setCopyDayModal(!copyDayModal)
                     }}
                     monthFormat={"yyyy MM"}
                     onPressArrowLeft={(subtractMonth) => subtractMonth()}
                     onPressArrowRight={(addMonth) => addMonth()}
+                    markedDates={CalendarDate(copySetDay)}
                   />
                 </Modal>
                 <Modal
@@ -1017,16 +1085,13 @@ const TimeWeek = ({
                   <Calendar
                     current={copySetDay}
                     onDayPress={(day) => {
-                      // const date_tmp = new Date(day.timestamp)
-                      // date_tmp.setHours(copySetDay.getHours())
-                      // date_tmp.setMinutes(copySetDay.getMinutes())
-                      // copySetDay.setTime(date_tmp.getTime())
-                      setCopySetDay(day.timestamp)
+                      setCopySetDay(new Date(day.timestamp))
                       setCopydaySetMdal(!copyDaySetMdal)
                     }}
                     monthFormat={"yyyy MM"}
                     onPressArrowLeft={(subtractMonth) => subtractMonth()}
                     onPressArrowRight={(addMonth) => addMonth()}
+                    markedDates={CalendarDate(copySetDay)}
                   />
                 </Modal>
               </ModalView04>
@@ -1064,12 +1129,13 @@ const TimeWeek = ({
                         minDate={"2012-05-10"}
                         maxDate={"2030-05-30"}
                         onDayPress={(day) => {
-                          setselectDay(day.timestamp)
+                          setselectDay(new Date(day.timestamp))
                           setCalModalVisible(!CalmodalVisible)
                         }}
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(selectDay)}
                       />
                     </Modal>
                   </ModalView1>
@@ -1108,12 +1174,13 @@ const TimeWeek = ({
                         minDate={"2012-05-10"}
                         maxDate={"2030-05-30"}
                         onDayPress={(day) => {
-                          setselectSetDay(day.timestamp)
+                          setselectSetDay(new Date(day.timestamp))
                           setCalModalWeekVisible(!CalmodalWeekVisible)
                         }}
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(selectSetDay)}
                       />
                     </Modal>
                   </ModalView1>
@@ -1336,6 +1403,7 @@ const TimeWeek = ({
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(startTime)}
                       />
                     </Modal>
                     <View3 />
@@ -1388,6 +1456,7 @@ const TimeWeek = ({
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(endTime)}
                       />
                     </Modal>
                     <View3 />
@@ -1446,6 +1515,7 @@ const TimeWeek = ({
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(startTime)}
                       />
                     </Modal>
                     <TouchableOpacity onPress={showMode}>
@@ -1490,6 +1560,7 @@ const TimeWeek = ({
                         monthFormat={"yyyy MM"}
                         onPressArrowLeft={(subtractMonth) => subtractMonth()}
                         onPressArrowRight={(addMonth) => addMonth()}
+                        markedDates={CalendarDate(endTime)}
                       />
                     </Modal>
                     <TouchableOpacity onPress={showModeEnd}>

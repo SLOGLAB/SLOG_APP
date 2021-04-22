@@ -31,6 +31,12 @@ const Text1 = styled.Text`
 `
 
 export default Bookmark = ({ subjectList, goback, refetch, loading }) => {
+  // '기타' 북마크 못건드리게 제거
+  const etcIndex = subjectList.findIndex((a) => a.name === "기타")
+  if (etcIndex !== -1) {
+    subjectList.splice(etcIndex, 1)
+  }
+
   const [modifyLoading, setModifyLoading] = useState(false)
   const [bookMarkCh, setBookMarkCh] = useState(
     subjectList.map((_, j) => {

@@ -42,6 +42,7 @@ export default ({
 
   const DeleteSubject = () => {
     if (subjectId === "") {
+      console.log("b")
       Alert.alert("과목을 선택하세요.")
       return
     }
@@ -53,7 +54,7 @@ export default ({
           data: { deleteSubject },
         } = await deleteSubjectMutation()
         if (!deleteSubject) {
-          Alert.alert("해당 TASK을 제거할 수 없습니다.")
+          Alert.alert("해당 과목을 제거할 수 없습니다.")
         } else {
           await refetch()
         }
@@ -66,7 +67,7 @@ export default ({
       }
     }
 
-    Alert.alert("", "해당 TASK가 기존 스케줄에서 삭제됩니다.\n그래도 삭제하시겠습니까?", [
+    Alert.alert("", "해당 과목이 기존 스케줄에서 삭제됩니다.\n그래도 삭제하시겠습니까?", [
       {
         text: "NO",
         onPress: () => {
@@ -89,11 +90,7 @@ export default ({
       <SelecView>
         <RNPickerSelect
           onValueChange={(value) => {
-            if (value === null) {
-              Alert.alert("과목을 선택하세요.")
-            } else {
-              setSubjectId(value)
-            }
+            setSubjectId(value)
           }}
           items={list}
           value={subjectId}
