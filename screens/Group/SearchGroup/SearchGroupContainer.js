@@ -54,7 +54,7 @@ const SearchGroupContainer = ({ navigation }) => {
   const { loading, data: groupData, refetch: groupRefetch } = useQuery(SEE_GROUP, {
     variables,
   })
-  const { loading: myLoading, data: myData, refetch: myRefetch } = useQuery(ME, {})
+  const { loading: myLoading, data: myData, refetch: myRefetch } = useQuery(ME)
 
   const onRefresh = async () => {
     try {
@@ -70,6 +70,8 @@ const SearchGroupContainer = ({ navigation }) => {
   useEffect(() => {
     console.log(groupData)
   }, [])
+
+  console.log(groupData)
   return (
     <>
       {loading || myLoading ? (
