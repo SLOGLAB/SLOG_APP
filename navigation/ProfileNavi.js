@@ -1,7 +1,7 @@
 import React from "react"
 import { createStackNavigator } from "react-navigation-stack"
 import UserProfile from "../screens/Profile/UserProfile"
-import QRcode from "../screens/Profile/QRcode"
+import QRcode from "../screens/Book/QRcode"
 import { createAppContainer } from "react-navigation"
 import PhotoNavigation from "./PhotoNavigation"
 import Profiledetail from "../screens/Profile/Profiledetail"

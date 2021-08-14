@@ -234,7 +234,6 @@ const CopyText = styled.Text`
   font-size: 17;
   font-family: "GmarketBold";
 `
-
 export const CREATE_SCHEDULE = gql`
   mutation createSchedule(
     $option: String!
@@ -246,6 +245,7 @@ export const CREATE_SCHEDULE = gql`
     $location: String!
     $start: String!
     $end: String!
+    $userBookId: String!
   ) {
     createSchedule(
       option: $option
@@ -257,9 +257,35 @@ export const CREATE_SCHEDULE = gql`
       location: $location
       start: $start
       end: $end
+      userBookId: $userBookId
     )
   }
 `
+// export const CREATE_SCHEDULE = gql`
+//   mutation createSchedule(
+//     $option: String!
+//     $scheduleId: String!
+//     $days: [Boolean!]!
+//     $calendarId: String!
+//     $state: String!
+//     $title: String!
+//     $location: String!
+//     $start: String!
+//     $end: String!
+//   ) {
+//     createSchedule(
+//       option: $option
+//       scheduleId: $scheduleId
+//       days: $days
+//       calendarId: $calendarId
+//       state: $state
+//       title: $title
+//       location: $location
+//       start: $start
+//       end: $end
+//     )
+//   }
+// `
 
 let newScheduleArray = []
 export default AddTimeSchedule = ({
@@ -724,6 +750,42 @@ export default AddTimeSchedule = ({
                 </StyledModalSetContainer>
               </Modal>
             </TodoRowView>
+            <MarginR style={{ height: constants.height / 50 }} />
+            <RNPickerSelect
+              onValueChange={(value) => {
+                if (value !== null) {
+                  setSubjectId(value)
+                }
+              }}
+              items={SubjectList}
+              placeholder={{
+                label: "(선택사항)교재 선택",
+                value: null,
+                color: "red",
+              }}
+              value={subjectId}
+              style={{
+                ...pickerSelectStyles,
+                iconContainer: {
+                  top: 9,
+                  right: 10,
+                },
+                placeholder: {
+                  color: "black",
+                  fontSize: 15,
+                  fontWeight: "bold",
+                },
+              }}
+              Icon={() => {
+                return (
+                  <Ionicons
+                    name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                    size={24}
+                    color="gray"
+                  />
+                )
+              }}
+            />
             <MarginR style={{ height: constants.height / 50 }} />
 
             <AuthInput

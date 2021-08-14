@@ -11,7 +11,7 @@ import {
   VictoryTheme,
 } from "victory-native"
 
-const StackedWMBar = ({ data_1, data_2, labels, label_1, label_2, title, title_x, stepSize_x }) => {
+const StackedWMBar = ({ data_1, data_2, labels }) => {
   let existArray = []
   let targetArray = []
   if (labels.length !== 0) {

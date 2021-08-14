@@ -930,6 +930,7 @@ export default ({
       </ChartTopView>
       <ChartView>
         <ExistTimeText>{hour < 10 ? `0${hour}` : hour}</ExistTimeText>
+
         <ExistText>시간 </ExistText>
         <ExistTimeText>
           {minutes - hour * 60 < 10 ? `0${minutes - hour * 60}` : minutes - hour * 60}
@@ -950,6 +951,8 @@ export default ({
       <MainView>
         <TimeView>
           <TextCenter>
+            {/* <SubText2>영어 모의고사(1회)풀기</SubText2>
+            <Text1>15:00~17:00</Text1> */}
             <SubText2>{trimText(nowTitle1, 20)}</SubText2>
             {nowTitle1 == "현재 스케줄 없음" ? (
               <Text1>{nowTitle2} </Text1>
@@ -966,6 +969,7 @@ export default ({
           {nowScheduleTime == 0 ? (
             <Barcharts nowScheduleTime={0} nowScheduleTimeT={1} nowScheduleColor={"#E9ECF3"} />
           ) : (
+            // <Barcharts nowScheduleTime={1} nowScheduleTimeT={2} nowScheduleColor={"#00A86B"} />
             <Barcharts
               nowScheduleTime={nowScheduleTime}
               nowScheduleTimeT={nowScheduleTimeT}

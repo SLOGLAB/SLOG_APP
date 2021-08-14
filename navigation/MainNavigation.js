@@ -20,6 +20,10 @@ import UserDetailSwiper from "../screens/UserDetail/UserSwiper/UserDetailSwiper"
 import UserSchedule from "../screens/UserDetail/UserSwiper/UserSchedule"
 import AddTimetable from "../screens/TimeTable/AddTimetable"
 import SelectGroupPhoto from "../screens/Group/SelectGroupPhoto"
+import BookAnalysisContainer from "../screens/Book/BookAnalysisContainer"
+import QRcode from "../screens/Book/QRcode"
+import UserProfile from "../screens/Profile/UserProfile"
+import ProfileNavi from "./ProfileNavi"
 const MainNavigation = createStackNavigator(
   {
     TabNavigation,
@@ -39,6 +43,10 @@ const MainNavigation = createStackNavigator(
     UserSchedule,
     AddTimetable,
     SelectGroupPhoto,
+    BookAnalysisContainer,
+    QRcode,
+    UserProfile,
+    ProfileNavi,
   },
   {
     defaultNavigationOptions: {

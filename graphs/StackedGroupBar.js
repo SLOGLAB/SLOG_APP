@@ -2,14 +2,7 @@ import React, { useState, useEffect } from "react"
 import SumArray from "../components/SumArray"
 import moment, { Moment } from "moment"
 
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryAxis,
-  VictoryStack,
-  VictoryLabel,
-  VictoryTheme,
-} from "victory-native"
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel, VictoryTheme } from "victory-native"
 
 const StackedGroupBar = ({ data_1, labels, data_2 }) => {
   let existArray = []

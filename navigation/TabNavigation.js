@@ -11,11 +11,12 @@ import FeedPhotoNavigation from "../navigation/FeedPhotoNavigation"
 import TimetableWeek from "../screens/AWeekTime/TimetableWeek"
 import ProfileNavi from "../navigation/ProfileNavi"
 import SwiperBase from "../screens/Stat/SwiperBase"
-// import UserProfile from "../screens/Profile/UserProfile"
+import ProfileButton from "../screens/Profile/ProfileButton"
 import ToDoButton from "../screens/TodoList/ToDoButton"
 import MyGroupContainer from "../screens/Group/MyGoup/MyGroupContainer"
 import SearchGroupButton from "../screens/Group/SearchGroup/SearchGroupButton"
-import MenuButton from "../components/MenuButton"
+import BookButton from "../components/BookButton"
+import MyStudyContainer from "../screens/MyStudy/MyStudyContainer"
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator(
     {
@@ -38,7 +39,7 @@ export default createBottomTabNavigator(
   {
     MainController: {
       screen: stackFactory(MainController, {
-        // headerLeft: <MenuButton />,
+        headerLeft: <ProfileButton />,
         headerRight: <ToDoButton />,
         title: "DEEPTIME",
         headerTitleStyle: {
@@ -71,7 +72,7 @@ export default createBottomTabNavigator(
         headerTitleStyle: {
           fontFamily: "GmarketBold",
         },
-        // headerLeft: <MenuButton />,
+        // headerLeft: <BookButton />,
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
@@ -118,6 +119,23 @@ export default createBottomTabNavigator(
     //     ),
     //   }),
     // },
+    MyStudyContainer: {
+      screen: stackFactory(MyStudyContainer, {
+        headerRight: <BookButton />,
+        title: "진도 관리",
+        headerTitleStyle: {
+          fontFamily: "GmarketBold",
+        },
+      }),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <>
+            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-book" : "md-book"} />
+            <Text style={{ fontSize: 10 }}>진도 관리</Text>
+          </>
+        ),
+      },
+    },
     TimetableWeek: {
       screen: TimetableWeek,
       navigationOptions: {
@@ -161,18 +179,19 @@ export default createBottomTabNavigator(
         ),
       },
     },
-    ProfileNavi: {
-      screen: ProfileNavi,
 
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <>
-            <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
-            <Text style={{ fontSize: 10 }}>프로필</Text>
-          </>
-        ),
-      },
-    },
+    // ProfileNavi: {
+    //   screen: ProfileNavi,
+
+    //   navigationOptions: {
+    //     tabBarIcon: ({ focused }) => (
+    //       <>
+    //         <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+    //         <Text style={{ fontSize: 10 }}>프로필</Text>
+    //       </>
+    //     ),
+    //   },
+    // },
   },
 
   {
@@ -187,7 +206,7 @@ export default createBottomTabNavigator(
 
 // Profile: {
 //   screen: stackFactory(Profile, {
-//     // headerRight: <MenuButton />,
+//     // headerRight: <BookButton />,
 //     title: "계정",
 //     // headerLeft: <Menu2 />
 //   }),

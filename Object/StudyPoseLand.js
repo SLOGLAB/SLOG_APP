@@ -460,6 +460,7 @@ const PoseCamera = ({
                     ? `0${Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}`
                     : Math.floor(nexistTime / 60) - Math.floor(nexistTime / 3600) * 60}
                 </Text>
+
                 <Image
                   style={{
                     height: HEIGHT / 17,

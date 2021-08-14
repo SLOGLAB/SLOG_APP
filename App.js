@@ -31,13 +31,6 @@ export default function App() {
         GmarketLight: require("./assets/fonts/GmarketSansTTFLight.ttf"),
         GmarketMedium: require("./assets/fonts/GmarketSansTTFMedium.ttf"),
       })
-      // await loadAsync({
-      //   roboto: {
-      //     uri: require('./roboto.ttf'),
-      //     // Only effects web
-      //     display: FontDisplay.SWAP,
-      //   },
-      // });
       await Asset.loadAsync([require("./assets/Group80.png")])
 
       const cache = new InMemoryCache()
@@ -85,24 +78,3 @@ export default function App() {
     <AppLoading />
   )
 }
-
-// import { WebSocketLink } from "apollo-link-ws"
-////////
-
-// const wsLink = new WebSocketLink({
-//   uri: `https://slog-iam-backend.herokuapp.com/`,
-//   options: {
-//     reconnect: true
-//   }
-// })
-///////////////
-// import { WebSocketLink } from "apollo-link-ws";
-// import { SubscriptionClient } from "subscriptions-transport-ws";
-
-// const GRAPHQL_ENDPOINT = "ws://localhost:3000/graphql";
-
-// const client = new SubscriptionClient(GRAPHQL_ENDPOINT, {
-//   reconnect: true
-// });
-
-// const link = new WebSocketLink(client);

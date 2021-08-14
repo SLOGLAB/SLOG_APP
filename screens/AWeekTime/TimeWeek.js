@@ -286,6 +286,7 @@ export const CREATE_SCHEDULE = gql`
     $location: String!
     $start: String!
     $end: String!
+    $userBookId: String!
   ) {
     createSchedule(
       option: $option
@@ -297,6 +298,7 @@ export const CREATE_SCHEDULE = gql`
       location: $location
       start: $start
       end: $end
+      userBookId: $userBookId
     )
   }
 `
@@ -1348,6 +1350,49 @@ const TimeWeek = ({
                   </StyledModalSetContainer>
                 </Modal>
               </ModalView>
+              <ModalView style={{ width: constants.width / 1.7, flexDirection: "row" }}>
+                <RNPickerSelect
+                  onValueChange={(value) => {
+                    if (value === null) {
+                      Alert.alert("과목을 선택하세요.")
+                    } else {
+                      const findSubject = (a) => a.id === value
+                      const tmpIndex = scheduledata.mySubject.findIndex(findSubject)
+                      setSelectIndex(tmpIndex)
+                      setSubjectId(value)
+                    }
+                  }}
+                  items={SubjectList}
+                  placeholder={{
+                    label: "(선택사항)교재 선택",
+                    value: null,
+                  }}
+                  // value={scheduledata.mySubject[selectIndex].id}
+                  value={subjectId}
+                  style={{
+                    ...pickerSelectStyles,
+                    iconContainer: {
+                      top: 9,
+                      right: 10,
+                    },
+                    placeholder: {
+                      color: "black",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                    },
+                  }}
+                  Icon={() => {
+                    return (
+                      <Ionicons
+                        name={Platform.OS === "ios" ? "ios-arrow-down" : "md-arrow-down"}
+                        size={24}
+                        color="gray"
+                      />
+                    )
+                  }}
+                />
+              </ModalView>
+
               <AuthInput
                 {...titleInput}
                 placeholder={"(필수) 제목"}

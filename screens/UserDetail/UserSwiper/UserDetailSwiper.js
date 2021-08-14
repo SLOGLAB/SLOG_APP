@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Platform, TouchableOpacity } from "react-native"
-import {
-  Container,
-  TabHeading,
-  Text,
-  Tab,
-  Tabs,
-  ScrollView,
-  RefreshControl,
-  Header,
-} from "native-base"
+import { Container, TabHeading, Text, Tab, Tabs } from "native-base"
 import Today from "../../Stat/Today"
 import Weeks from "../../Stat/Weeks"
 import Months from "../../Stat/Months"

@@ -12,7 +12,6 @@ import RNPickerSelect from "react-native-picker-select"
 import { Ionicons } from "@expo/vector-icons"
 import { StyleSheet } from "react-native"
 import constants from "../../../constants"
-
 // studyOption_group
 const MainView = styled.View`
   justify-content: center;
@@ -106,7 +105,7 @@ const getAll = studyOption_group.slice()
 getAll.unshift({ label: "전체", value: "전체" })
 
 //더보기 개수
-export const feedTerm = 2
+export const feedTerm = 20
 
 let groupData_Box = []
 

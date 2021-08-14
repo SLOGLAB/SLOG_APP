@@ -210,8 +210,8 @@ const Post = ({
           <Swiper showsPagination={false} showsButtons style={{ height: constants.height / 2.5 }}>
             {files.map((file) => (
               <Image
-                style={{ height: constants.height / 2.5, width: constants.width / 1 }}
                 key={file.id}
+                style={{ height: constants.height / 2.5, width: constants.width / 1 }}
                 resizeMode={"contain"}
                 source={{ uri: file.url }}
               />

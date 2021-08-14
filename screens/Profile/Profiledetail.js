@@ -10,6 +10,7 @@ import Icon from "../../components/Icon"
 import Post from "../../components/Post"
 import { Container, Header, Content, Button, Text, Row } from "native-base"
 import constants from "../../constants"
+import BackButton from "../../components/BackButton"
 const ProfileHeader2 = styled.View`
   width: ${constants.width / 1.7};
   flex: 1;
@@ -156,7 +157,6 @@ const Box = styled.View`
 `
 const PostView = styled.View`
   flex-direction: row;
-  margin-top: 10;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
@@ -192,7 +192,11 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
   }, [])
   return (
     <>
-      <Header hasTabs></Header>
+      <Header hasTabs>
+        <PostView>
+          <BackButton />
+        </PostView>
+      </Header>
       <MainView2>
         {Platform.OS == "ios" ? (
           <StatusBar barStyle="dark-content" />
@@ -335,16 +339,7 @@ const Profiledetail = ({ data, navigation, raspberrySerial, onRegist, onUnRegist
               <Bold>Meta 해제</Bold>
             </TouchableOpacity>
           </ProfileMeta> */}
-        {/* <Stat2>
-          <Ionicons
-            name={Platform.OS === "ios" ? "ios-qr-scanner" : "md-qr-scanner"}
-            color={"#0F4C82"}
-            size={20}
-          />
-          <TouchableOpacity onPress={() => navigation.navigate("QRcode")}>
-            <StatName>QR코드 </StatName>
-          </TouchableOpacity>
-        </Stat2> */}
+
         <Modal
           isVisible={isModalVisible2}
           onBackdropPress={() => isSetModalVisible(false)}
