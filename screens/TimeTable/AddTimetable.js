@@ -65,9 +65,11 @@ export const MY_TODOLIST = gql`
 `
 export default AddTimetable = ({ navigation, clesesheetRefhi, setandroidSchedule }) => {
   const { loading, data: subjectsName, refetch } = useQuery(SUBJECT_NAME, {})
-  const { data: todolistData, loading: todolistLoading, refetch: todolistRefetch } = useQuery(
-    MY_TODOLIST
-  )
+  const {
+    data: todolistData,
+    loading: todolistLoading,
+    refetch: todolistRefetch,
+  } = useQuery(MY_TODOLIST)
   const { data: myData, refetch: merefetch } = useQuery(ME)
   var todaydate = new Date().getDate() //Current Date
   var todaymonth = new Date().getMonth() + 1 //Current Month
